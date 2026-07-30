@@ -93,13 +93,25 @@ window.__extractSlide = function (slideSelector) {
   function inlineRuns(el) {
     const kids = Array.from(el.children);
     if (!kids.length) return null;
+    /* un <br> impose des lignes distinctes : on repasse au relevé ligne par ligne */
+    if (el.querySelector("br")) return null;
+    const painted = e => {
+      const cs = getComputedStyle(e);
+      return parseColor(cs.backgroundColor) || parseFloat(cs.borderTopWidth) > 0;
+    };
     for (const k of kids) {
       const kcs = getComputedStyle(k);
       if (!kcs.display.startsWith("inline")) return null;
       if (k.tagName.toLowerCase() === "svg") return null;
-      if (parseColor(kcs.backgroundColor) || parseFloat(kcs.borderTopWidth) > 0) return null;
+      /* un descendant peint (pastille, puce…) est exporté comme forme à sa
+         position propre : le texte ne peut donc pas être fusionné ici */
+      if (painted(k) || Array.from(k.querySelectorAll("*")).some(painted)) return null;
     }
-    if (![...el.childNodes].some(n => n.nodeType === 3 && n.nodeValue.trim())) return null;
+    if (!el.textContent.trim()) return null;
+    /* soit l'élément porte lui-même du texte, soit il enchaîne au moins deux
+       fragments inline qui doivent rester dans le même paragraphe */
+    const hasOwnText = [...el.childNodes].some(n => n.nodeType === 3 && n.nodeValue.trim());
+    if (!hasOwnText && kids.length < 2) return null;
 
     const runs = [];
     for (const n of el.childNodes) {
@@ -168,9 +180,16 @@ window.__extractSlide = function (slideSelector) {
     const runs = inlineRuns(el);
     if (runs) {
       consumed.add(el);
+      /* boîte de contenu : le texte commence après le remplissage interne */
+      const pl = parseFloat(cs.paddingLeft) || 0, pr = parseFloat(cs.paddingRight) || 0;
+      const pt = parseFloat(cs.paddingTop) || 0, pb = parseFloat(cs.paddingBottom) || 0;
       out.texts.push({
-        runs: runs, x: box.x, y: box.y, w: box.w, h: box.h, align: align,
-        lh: parseFloat(cs.lineHeight) || 0
+        runs: runs,
+        x: box.x + pl, y: box.y + pt,
+        w: Math.max(box.w - pl - pr, 1), h: Math.max(box.h - pt - pb, 1),
+        align: align,
+        lh: parseFloat(cs.lineHeight) || 0,
+        nowrap: cs.whiteSpace.indexOf("nowrap") > -1
       });
       continue;
     }

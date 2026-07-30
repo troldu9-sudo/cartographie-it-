@@ -158,10 +158,12 @@ def add_rich_text(shapes, t):
     pour que PowerPoint gère lui-même les espaces et le retour à la ligne."""
     box = shapes.add_textbox(E(t["x"] - 2), E(t["y"] - 2), E(t["w"] + 6), E(t["h"] + 8))
     tf = box.text_frame
-    tf.word_wrap = True
+    tf.word_wrap = not t.get("nowrap")
     tf.auto_size = MSO_AUTO_SIZE.NONE
     tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
-    tf.vertical_anchor = MSO_ANCHOR.TOP
+    # Ancrage centré : le bloc reste aligné sur son emplacement mesuré même si
+    # PowerPoint compose le texte sur un nombre de lignes différent.
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
 
     p = tf.paragraphs[0]
     p.alignment = {"c": PP_ALIGN.CENTER, "r": PP_ALIGN.RIGHT}.get(t["align"], PP_ALIGN.LEFT)
@@ -268,8 +270,8 @@ def scrape(html_path, chromium=None):
         page.goto(url)
         page.wait_for_timeout(900)
         page.add_script_tag(content=js)
-        planches = [page.evaluate("window.__extractSlide('#slide1')"),
-                    page.evaluate("window.__extractSlide('#slide2')")]
+        ids = page.evaluate("[...document.querySelectorAll('.slide')].map(s => s.id)")
+        planches = [page.evaluate("id => window.__extractSlide('#' + id)", i) for i in ids]
         browser.close()
     return planches
 
