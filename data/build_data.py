@@ -45,23 +45,81 @@ ALIAS = {
 }
 
 SERVICE = {
-    "Direction": "dir", "Qualité": "qua", "Méthode/BIM": "met",
-    "Contrat Manager": "ges", "Comptabilité/gestion": "ges",
+    "Direction": "dir", "Méthode/BIM": "met",
+    "Qualité": "qse", "Environnement": "qse",
+    "Contrat Manager": "daf", "Comptabilité/gestion": "daf", "Assistant RH": "daf",
     "Reponsable Travaux": "trv", "Ingé travaux": "trv",
-    "Assistant RH": "rh", "Environnement": "env", "TOPO": "top", "TUNNEL": "tun",
+    "TOPO": "top", "TUNNEL": "tun",
 }
 
 SERVICES = [
-    {"id": "met", "name": "Méthodes & BIM",      "kicker": "Ingénierie · BIM",        "col": "left"},
-    {"id": "top", "name": "Topographie",         "kicker": "Relevés · Implantation",  "col": "left"},
-    {"id": "tun", "name": "Tunnel",              "kicker": "Ouvrage souterrain",      "col": "left"},
-    {"id": "trv", "name": "Travaux",             "kicker": "Exécution chantier",      "col": "left"},
-    {"id": "qua", "name": "Qualité",             "kicker": "Contrôle · Réserves",     "col": "left"},
-    {"id": "dir", "name": "Direction",           "kicker": "Pilotage · Sous-traitance", "col": "right"},
-    {"id": "ges", "name": "Contrats & Gestion",  "kicker": "Contrats · Compta · Facturation", "col": "right"},
-    {"id": "rh",  "name": "Ressources Humaines", "kicker": "Personnel · Formation",   "col": "right"},
-    {"id": "env", "name": "Environnement",       "kicker": "Déchets · Nuisances",     "col": "right"},
+    {"id": "met", "name": "Méthodes & BIM",          "kicker": "Ingénierie · BIM",                 "col": "left"},
+    {"id": "top", "name": "Topographie",             "kicker": "Relevés · Implantation",           "col": "left"},
+    {"id": "tun", "name": "Tunnel",                  "kicker": "Ouvrage souterrain",               "col": "left"},
+    {"id": "trv", "name": "Travaux",                 "kicker": "Exécution chantier",               "col": "left"},
+    {"id": "qse", "name": "Qualité & Environnement", "kicker": "Contrôle · Réserves · Nuisances",  "col": "right"},
+    {"id": "dir", "name": "Direction",               "kicker": "Pilotage · Sous-traitance",        "col": "right"},
+    {"id": "daf", "name": "DAF",                     "kicker": "Contrats · Compta · Achats · RH",  "col": "right"},
 ]
+
+# Missions par pôle : (libellé, valeurs FLUX absorbées, outils rattachés à la main, proposée)
+#
+# La colonne FLUX de la BDD n'est pas exploitable telle quelle : libellés fragmentés
+# (« GESTION CHANTIER » / « GESTION DES CHANTIER »), et vide pour Topographie, Tunnel et
+# les outils Environnement. Les libellés retenus sont ceux de la note de cadrage ; ceux
+# marqués « proposée » ne s'appuient sur aucune ligne d'entretien et restent à valider.
+MISSIONS = {
+    "met": [
+        ("Production de maquettes",              ["PRODUCTION DE MAQUETTES"], []),
+        ("Gestion et partage des maquettes",     ["GESTION DE MAQUETTES"], []),
+    ],
+    "top": [
+        ("Relevés et nuages de points",          [], ["La Scene", "Cyclone 3DR", "Trimble Connect"], True),
+        ("Plans et calculs",                     [], ["AutoCAD", "Covadis"], True),
+        ("Suivi des levers",                     [], ["Pixis", "Excel"], True),
+    ],
+    "tun": [
+        ("Planification et avancement",          [], ["MS Project", "YELLOW", "Power BI"], True),
+        ("Plans et maquettes",                   [], ["AutoCAD", "Trimble Connect"], True),
+        ("Réserves et contrôles",                [], ["IDCapture", "Quick Connect", "Excel"], True),
+        ("Gestion du stock",                     [], ["GMAO"], True),
+    ],
+    "trv": [
+        ("Gestion des jalons de chantier",       ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Commande d'engins et matériels",       ["COMMANDE CHANTIER"], []),
+        ("Gestion des réserves et MaD",          ["MAD"], []),
+        ("Conduite de chantier",                 ["GESTION CHANTIER", "GESTION DES CHANTIER",
+                                                  "GESTION IMPRÉVU CHANTIER"], []),
+        ("Validation et contrats",               ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
+    ],
+    "qse": [
+        ("Contrôle qualité",                     ["CONTRÔLE QUALITÉ",
+                                                  "CONTRÔLE QUALITÉ (VISUALISATION)"], ["CEMEX"]),
+        ("Gestion des MaD et levées de réserve", ["MAD"], ["Trimble Connect"]),
+        ("Suivi environnemental",                ["CONTRÔLE ENVIRONNEMENT",
+                                                  "CONTRÔLE QUALITÉ /ENVIRONNEMENT"], ["PowerPoint"]),
+        ("Suivi des consommations",              [], ["Live Objects (Orange)", "Sixense Monitoring",
+                                                      "Lucee TP", "Lafarge+"], True),
+        ("Gestion des déchets",                  [], ["Wastemarket Place"], True),
+        ("Commande de matériel",                 ["COMMANDE DE MATÉRIEL"], []),
+    ],
+    "dir": [
+        ("Récolte des KPI et avancement",        ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Validation des contrats et dépenses",  ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
+        ("Déclaration et gestion des ST",        ["GESTION DES ST", "GESTION TRAVAUX"], []),
+        ("Gestion des matériels",                ["GESTION DES MATÉRIELS"], []),
+        ("Services généraux",                    [], ["CWT", "Tableau", "Word"], True),
+    ],
+    "daf": [
+        ("Engagement et imputation des dépenses", ["ENGAGEMENT DES DÉPENSES"], []),
+        ("Gestion de la facturation",             ["GESTION DE FACTURATION", "FACTURATION PARTENAIRE"], []),
+        ("Gestion des encaissements",             ["GESTION DES ENCAISSEMENTS"], []),
+        ("Gestion des commandes et achats",       [], ["Achat +", "Pablo"], True),
+        ("Gestion contractuelle",                 ["GESTION DE CONTRATS", "AVANCEMENTS JALON CHANTIER"], []),
+        ("Gestion du personnel et des formations", ["GESTION DU PERSONNEL", "ON BOARDING RH",
+                                                    "GESTION DES FORMATIONS"], ["Neoaccès"]),
+    ],
+}
 
 # Socle commun : outils tagués « Socle de données » dans la BDD, complétés par les
 # plateformes transverses que la cartographie source plaçait déjà en logiciel commun.
@@ -83,9 +141,9 @@ CORE = ["SharePoint", "Power BI"]
 # Outils cités dans la BDD sans ligne d'entretien qualifiée : rattachement proposé.
 A_QUALIFIER = {
     "GMAO":      ("tun", "Gestion du stock tunnel"),
-    "Achat +":   ("ges", "Achats opérationnels (amont Pablo)"),
-    "Neoaccès":  ("rh",  "Création des badges et gestion des accès"),
-    "CEMEX":     ("qua", "Portail fournisseur béton"),
+    "Achat +":   ("daf", "Achats opérationnels (amont Pablo)"),
+    "Neoaccès":  ("daf", "Création des badges et gestion des accès"),
+    "CEMEX":     ("qse", "Portail fournisseur béton"),
 }
 
 # Flux reconstruits depuis « Alimente quel outil » / « Alimenté par qui ».
@@ -97,14 +155,14 @@ FLOWS = [
     ("s:Quick Connect",     "s:SharePoint",  "Fiches de contrôle vers le DOE"),
     ("s:Quick Connect",     "s:Power BI",    "Indicateurs qualité et sécurité"),
     ("s:Pablo",             "s:Harmony",     "Commandes vers l'engagement de dépense"),
-    ("ges:Basware",         "s:Harmony",     "Factures fournisseurs harmonisées"),
-    ("s:Harmony",           "ges:Basware",   "Retour de saisie et litiges"),
+    ("daf:Basware",         "s:Harmony",     "Factures fournisseurs harmonisées"),
+    ("s:Harmony",           "daf:Basware",   "Retour de saisie et litiges"),
     ("s:BIP / BAPS",        "s:Puma",        "Heures chantier vers la paie"),
     ("trv:ERP MAT",         "s:Power BI",    "Inventaire matériel"),
-    ("env:Wastemarket Place", "s:Power BI",  "Suivi des déchets"),
+    ("qse:Wastemarket Place", "s:Power BI",  "Suivi des déchets"),
     ("s:Trimble Connect",   "top:AutoCAD",   "Maquettes vers le dessin 2D"),
     ("s:Trimble Connect",   "top:Cyclone 3DR", "Maquettes vers le nuage de points"),
-    ("s:Trimble Connect",   "env:IDCapture", "Repérage des constats — flux indirect, par captures d'écran", False),
+    ("s:Trimble Connect",   "qse:IDCapture", "Repérage des constats — flux indirect, par captures d'écran", False),
     ("top:La Scene",        "top:Cyclone 3DR", "Scans vers le retraitement"),
     ("top:AutoCAD",         "top:Covadis",   "Plans vers les calculs topo"),
 ]
@@ -117,6 +175,9 @@ def norm(v):
 
 def txt(v):
     return "" if v is None else str(v).replace("\n", " ").strip()
+
+
+PAIRS = set()          # (pôle, valeur FLUX, outil) — sert à ventiler les outils par mission
 
 
 def read(xlsx):
@@ -163,6 +224,8 @@ def read(xlsx):
         elif "manuel" in al:
             t["alim"]["manuel"] += 1
 
+        if sid:
+            PAIRS.add((sid, txt(r[4]).upper(), name))
         if txt(r[9]):
             t["ed"][txt(r[9])] += 1
         if txt(r[15]):
@@ -198,9 +261,31 @@ def build_model(T):
 
     services = []
     for s in SERVICES:
-        own = sorted(n for n, d in tools.items()
-                     if s["id"] in d["svc"] and not d["socle"])
-        services.append(dict(s, tools=own))
+        pid = s["id"]
+        own = sorted(n for n, d in tools.items() if pid in d["svc"])
+
+        def order(names):
+            """Outils métier d'abord, socle ensuite : la mission se lit de ses outils
+            propres vers ce qu'elle emprunte au socle commun."""
+            uniq = sorted(set(n for n in names if n in tools))
+            return (sorted(n for n in uniq if not tools[n]["socle"]) +
+                    sorted(n for n in uniq if tools[n]["socle"]))
+
+        missions, placed = [], set()
+        for entry in MISSIONS.get(pid, []):
+            label, fluxes, extra = entry[:3]
+            todo = entry[3] if len(entry) > 3 else False
+            names = {t for (sid, f, t) in PAIRS if sid == pid and f in fluxes}
+            names.update(extra)
+            ordered = order(names)
+            placed.update(ordered)
+            missions.append({"label": label, "todo": todo, "tools": ordered})
+
+        rest = [n for n in own if n not in placed]
+        if rest:
+            missions.append({"label": "Autres outils", "todo": True, "tools": order(rest)})
+
+        services.append(dict(s, tools=own, missions=missions))
 
     missing = [e for f in FLOWS for e in f[:2]
                if e.split(":", 1)[1] not in tools]
@@ -239,11 +324,16 @@ def main():
     model = build_model(read(args.xlsx))
     inject(model, args.html)
 
+    n_miss = sum(len(s["missions"]) for s in model["services"])
+    orphans = [(s["name"], m["tools"]) for s in model["services"]
+               for m in s["missions"] if m["label"] == "Autres outils"]
+    for name, outils in orphans:
+        print(f"  ! {name} : outils sans mission — {', '.join(outils)}", file=sys.stderr)
     n_int = sum(1 for d in model["tools"].values() if d["ie"] == "interne")
     n_ext = sum(1 for d in model["tools"].values() if d["ie"] == "externe")
     n_auto = sum(1 for d in model["tools"].values() if d["alim"] in ("auto", "mixte"))
     print(f'{len(model["tools"])} outils · {len(model["socle"])} groupes socle · '
-          f'{len(model["services"])} services · {len(model["flows"])} flux · '
+          f'{len(model["services"])} pôles · {n_miss} missions · {len(model["flows"])} flux · '
           f'{n_int} internes / {n_ext} externes · {n_auto} alimentés en automatique')
 
 

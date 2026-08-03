@@ -20,16 +20,14 @@
   --hub-line:rgba(255,255,255,.14); --hub-chip:rgba(255,255,255,.06);
   --hub-ink:#FFFFFF; --hub-muted:#95A5C2;
 
-  --met:#3A6BE5;  /* Méthodes & BIM      */
-  --top:#0E9E78;  /* Topographie         */
-  --tun:#0F8FA8;  /* Tunnel              */
-  --trv:#DD7E2C;  /* Travaux             */
-  --qua:#C2456A;  /* Qualité             */
-  --dir:#5B57D6;  /* Direction           */
-  --ges:#8257E6;  /* Contrats & Gestion  */
-  --rh:#B4562A;   /* Ressources Humaines */
-  --env:#2E8B49;  /* Environnement       */
-  --core:#4CC9E8; /* socle / automatique */
+  --met:#3A6BE5;  /* Méthodes & BIM          */
+  --top:#0E9E78;  /* Topographie             */
+  --tun:#0F8FA8;  /* Tunnel                  */
+  --trv:#DD7E2C;  /* Travaux                 */
+  --qse:#C2456A;  /* Qualité & Environnement */
+  --dir:#5B57D6;  /* Direction               */
+  --daf:#8257E6;  /* DAF                     */
+  --core:#4CC9E8; /* socle / automatique     */
 
   --shadow:0 1px 2px rgba(13,21,38,.05), 0 12px 28px -14px rgba(13,21,38,.22);
   --shadow-hub:0 18px 44px -18px rgba(13,21,38,.55);
@@ -101,28 +99,36 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .wire.manuel{stroke-dasharray:6 5}
 .port{transition:opacity .2s ease}
 
-.col{position:absolute;width:392px;display:flex;flex-direction:column;gap:12px;z-index:2}
+.col{position:absolute;width:392px;display:flex;flex-direction:column;gap:10px;z-index:2;justify-content:space-evenly}
 .col.left{left:0;top:0;bottom:0}
 .col.right{right:0;top:0;bottom:0}
 
 /* ---------- cartes service ---------- */
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;
-      box-shadow:var(--shadow);padding:12px 14px 13px;display:flex;flex-direction:column;flex:1 1 auto;
+      box-shadow:var(--shadow);padding:11px 13px 12px;display:flex;flex-direction:column;flex:0 1 auto;
       transition:box-shadow .2s ease,border-color .2s ease,opacity .2s ease}
 .card-head{display:flex;align-items:center;gap:9px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;align-self:center;
      box-shadow:0 0 0 3.5px color-mix(in srgb,var(--accent) 18%,transparent)}
 .card h2{margin:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
-.card .kicker{margin:3px 0 9px 18px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.tools{display:flex;flex-wrap:wrap;gap:6px;align-content:center;flex:1 1 auto}
+.card .kicker{margin:2px 0 7px 18px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.missions{display:flex;flex-direction:column;gap:7px;flex:0 1 auto}
+.mission{display:flex;flex-direction:column;gap:4px}
+.mlab{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+      color:var(--accent);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.mlab i{height:1px;flex:1;background:var(--line-2);display:block;min-width:8px}
+.mission.todo .mlab{color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:4px}
 
 /* pastille outil : le fond porte la nature interne / externe */
 .tool{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;line-height:1;
-      padding:6px 10px;border-radius:999px;white-space:nowrap;text-align:center;
+      padding:5px 9px;border-radius:999px;white-space:nowrap;text-align:center;
       background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .tool.int{background:color-mix(in srgb,var(--accent) 12%,transparent);
           border-color:color-mix(in srgb,var(--accent) 36%,transparent);color:var(--accent)}
 .tool.todo{border-style:dashed;color:var(--muted);background:transparent}
+.tool.socle{background:transparent;border-color:color-mix(in srgb,var(--core) 55%,transparent);
+            color:color-mix(in srgb,var(--core) 62%,var(--ink-2))}
 .tool i.auto{width:7px;height:7px;border-radius:50%;background:var(--core);flex:none;display:block}
 
 /* ---------- socle commun ---------- */
@@ -247,53 +253,9 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 
 <div class="deck">
 
-<!-- ══════════════ PLANCHE 1 — CARTOGRAPHIE ══════════════ -->
-<div class="stage"><div class="slide" id="slide1"><div class="slide-inner">
-  <div class="masthead">
-    <div>
-      <p class="eyebrow">Système d'information chantier · vue d'ensemble</p>
-      <h1>Cartographie des outils IT</h1>
-      <p class="sub">Socle applicatif commun et applications métier, par service</p>
-    </div>
-    <div class="legend">
-      <div class="swatchrow">
-        <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
-        <span class="item"><span class="key">Externe</span>Éditeur du marché</span>
-        <span class="item"><span class="key k-todo">À qualifier</span>Entretien à compléter</span>
-      </div>
-      <div class="swatchrow">
-        <span class="item"><span class="kdot"></span>Alimentation automatique</span>
-        <span class="item">
-          <svg width="32" height="10" aria-hidden="true" data-pptx="arrow"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
-          Flux automatisé
-        </span>
-        <span class="item">
-          <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" data-dash="1"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
-          Flux manuel (ressaisie)
-        </span>
-      </div>
-    </div>
-  </div>
+<!-- Les deux planches de cartographie sont générées par le script (voir BOARDS). -->
 
-  <div class="board" id="board">
-    <svg class="wires" id="wires" aria-hidden="true"></svg>
-    <div class="col left"  id="colLeft"></div>
-    <div class="hub" id="hub">
-      <div class="hub-head">
-        <span class="tag">Socle applicatif</span>
-        <h2>Logiciels communs</h2>
-        <p>Plateformes partagées par plusieurs services</p>
-      </div>
-      <div class="hub-body" id="hubBody"></div>
-      <div class="core" id="hubCore"></div>
-    </div>
-    <div class="col right" id="colRight"></div>
-  </div>
-
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 1/3</span></div>
-</div></div></div>
-
-<!-- ══════════════ PLANCHE 2 — FLUX & ALIMENTATION ══════════════ -->
+<!-- ══════════════ PLANCHE 3 — FLUX & ALIMENTATION ══════════════ -->
 <div class="stage"><div class="slide" id="slide2"><div class="slide-inner">
   <div class="masthead">
     <div>
@@ -324,10 +286,10 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
     </aside>
   </div>
 
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 2/3</span></div>
+  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 3/4</span></div>
 </div></div></div>
 
-<!-- ══════════════ PLANCHE 3 — RÉFÉRENTIEL ══════════════ -->
+<!-- ══════════════ PLANCHE 4 — RÉFÉRENTIEL ══════════════ -->
 <div class="stage"><div class="slide" id="slide3"><div class="slide-inner">
   <div class="masthead">
     <div>
@@ -340,7 +302,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 
   <div class="wrap"><div class="ref" id="refWrap"></div></div>
 
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 3/3</span></div>
+  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 4/4</span></div>
 </div></div></div>
 
 </div>
@@ -412,10 +374,37 @@ const BDD = {
     "BIM Vision",
     "Civil 3D",
     "Inventor",
+    "Mezzoteam",
     "QGIS",
     "Revit",
     "Simple BIM",
-    "Sofistik Bridge"
+    "Sofistik Bridge",
+    "Trimble Connect"
+   ],
+   "missions": [
+    {
+     "label": "Production de maquettes",
+     "todo": false,
+     "tools": [
+      "AutoCAD",
+      "Civil 3D",
+      "Revit"
+     ]
+    },
+    {
+     "label": "Gestion et partage des maquettes",
+     "todo": false,
+     "tools": [
+      "Anaconda",
+      "BIM Vision",
+      "Inventor",
+      "QGIS",
+      "Simple BIM",
+      "Sofistik Bridge",
+      "Mezzoteam",
+      "Trimble Connect"
+     ]
+    }
    ]
   },
   {
@@ -427,8 +416,37 @@ const BDD = {
     "AutoCAD",
     "Covadis",
     "Cyclone 3DR",
+    "Excel",
     "La Scene",
-    "Pixis"
+    "Pixis",
+    "Trimble Connect"
+   ],
+   "missions": [
+    {
+     "label": "Relevés et nuages de points",
+     "todo": true,
+     "tools": [
+      "Cyclone 3DR",
+      "La Scene",
+      "Trimble Connect"
+     ]
+    },
+    {
+     "label": "Plans et calculs",
+     "todo": true,
+     "tools": [
+      "AutoCAD",
+      "Covadis"
+     ]
+    },
+    {
+     "label": "Suivi des levers",
+     "todo": true,
+     "tools": [
+      "Pixis",
+      "Excel"
+     ]
+    }
    ]
   },
   {
@@ -438,9 +456,49 @@ const BDD = {
    "col": "left",
    "tools": [
     "AutoCAD",
+    "Excel",
     "GMAO",
     "IDCapture",
-    "MS Project"
+    "MS Project",
+    "Power BI",
+    "Quick Connect",
+    "Trimble Connect",
+    "YELLOW"
+   ],
+   "missions": [
+    {
+     "label": "Planification et avancement",
+     "todo": true,
+     "tools": [
+      "MS Project",
+      "Power BI",
+      "YELLOW"
+     ]
+    },
+    {
+     "label": "Plans et maquettes",
+     "todo": true,
+     "tools": [
+      "AutoCAD",
+      "Trimble Connect"
+     ]
+    },
+    {
+     "label": "Réserves et contrôles",
+     "todo": true,
+     "tools": [
+      "IDCapture",
+      "Excel",
+      "Quick Connect"
+     ]
+    },
+    {
+     "label": "Gestion du stock",
+     "todo": true,
+     "tools": [
+      "GMAO"
+     ]
+    }
    ]
   },
   {
@@ -449,20 +507,140 @@ const BDD = {
    "kicker": "Exécution chantier",
    "col": "left",
    "tools": [
+    "E-Paraph",
     "ERP MAT",
+    "Excel",
     "IDCapture",
     "MMS",
-    "MS Project"
+    "MS Project",
+    "Mezzoteam",
+    "Pablo",
+    "Quick Connect",
+    "Traktor",
+    "Trimble Connect",
+    "Word"
+   ],
+   "missions": [
+    {
+     "label": "Gestion des jalons de chantier",
+     "todo": false,
+     "tools": [
+      "MMS",
+      "MS Project"
+     ]
+    },
+    {
+     "label": "Commande d'engins et matériels",
+     "todo": false,
+     "tools": [
+      "ERP MAT",
+      "Pablo",
+      "Traktor"
+     ]
+    },
+    {
+     "label": "Gestion des réserves et MaD",
+     "todo": false,
+     "tools": [
+      "IDCapture"
+     ]
+    },
+    {
+     "label": "Conduite de chantier",
+     "todo": false,
+     "tools": [
+      "Excel",
+      "Mezzoteam",
+      "Quick Connect",
+      "Trimble Connect"
+     ]
+    },
+    {
+     "label": "Validation et contrats",
+     "todo": false,
+     "tools": [
+      "E-Paraph",
+      "Pablo",
+      "Word"
+     ]
+    }
    ]
   },
   {
-   "id": "qua",
-   "name": "Qualité",
-   "kicker": "Contrôle · Réserves",
-   "col": "left",
+   "id": "qse",
+   "name": "Qualité & Environnement",
+   "kicker": "Contrôle · Réserves · Nuisances",
+   "col": "right",
    "tools": [
     "CEMEX",
-    "IDCapture"
+    "Excel",
+    "IDCapture",
+    "Lafarge+",
+    "Live Objects (Orange)",
+    "Lucee TP",
+    "Mezzoteam",
+    "Pablo",
+    "Power BI",
+    "PowerPoint",
+    "Quick Connect",
+    "Sixense Monitoring",
+    "Trimble Connect",
+    "Wastemarket Place"
+   ],
+   "missions": [
+    {
+     "label": "Contrôle qualité",
+     "todo": false,
+     "tools": [
+      "CEMEX",
+      "IDCapture",
+      "Excel",
+      "Mezzoteam",
+      "Power BI",
+      "Quick Connect"
+     ]
+    },
+    {
+     "label": "Gestion des MaD et levées de réserve",
+     "todo": false,
+     "tools": [
+      "IDCapture",
+      "Trimble Connect"
+     ]
+    },
+    {
+     "label": "Suivi environnemental",
+     "todo": false,
+     "tools": [
+      "PowerPoint",
+      "Power BI",
+      "Quick Connect"
+     ]
+    },
+    {
+     "label": "Suivi des consommations",
+     "todo": true,
+     "tools": [
+      "Lafarge+",
+      "Live Objects (Orange)",
+      "Lucee TP",
+      "Sixense Monitoring"
+     ]
+    },
+    {
+     "label": "Gestion des déchets",
+     "todo": true,
+     "tools": [
+      "Wastemarket Place"
+     ]
+    },
+    {
+     "label": "Commande de matériel",
+     "todo": false,
+     "tools": [
+      "Pablo"
+     ]
+    }
    ]
   },
   {
@@ -471,50 +649,158 @@ const BDD = {
    "kicker": "Pilotage · Sous-traitance",
    "col": "right",
    "tools": [
+    "BATIS",
     "Basware",
     "CWT",
+    "DocuSign",
+    "E-Checking",
+    "E-Paraph",
+    "Excel",
     "MIRO",
     "MMS",
     "Oasis",
-    "Tableau"
+    "Power BI",
+    "Quick Connect",
+    "Tableau",
+    "Word",
+    "YELLOW"
+   ],
+   "missions": [
+    {
+     "label": "Récolte des KPI et avancement",
+     "todo": false,
+     "tools": [
+      "MIRO",
+      "MMS",
+      "Excel",
+      "Power BI",
+      "Word",
+      "YELLOW"
+     ]
+    },
+    {
+     "label": "Validation des contrats et dépenses",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "DocuSign",
+      "E-Paraph",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Déclaration et gestion des ST",
+     "todo": false,
+     "tools": [
+      "BATIS",
+      "E-Checking",
+      "Quick Connect"
+     ]
+    },
+    {
+     "label": "Gestion des matériels",
+     "todo": false,
+     "tools": [
+      "Oasis"
+     ]
+    },
+    {
+     "label": "Services généraux",
+     "todo": true,
+     "tools": [
+      "CWT",
+      "Tableau",
+      "Word"
+     ]
+    }
    ]
   },
   {
-   "id": "ges",
-   "name": "Contrats & Gestion",
-   "kicker": "Contrats · Compta · Facturation",
+   "id": "daf",
+   "name": "DAF",
+   "kicker": "Contrats · Compta · Achats · RH",
    "col": "right",
    "tools": [
     "Achat +",
+    "BIP / BAPS",
     "Basware",
-    "E-Project",
-    "NotebookLM"
-   ]
-  },
-  {
-   "id": "rh",
-   "name": "Ressources Humaines",
-   "kicker": "Personnel · Formation",
-   "col": "right",
-   "tools": [
     "By My Site",
+    "DocuSign",
+    "E-Checking",
+    "E-Project",
+    "Excel",
     "H&R For You",
-    "Neoaccès"
-   ]
-  },
-  {
-   "id": "env",
-   "name": "Environnement",
-   "kicker": "Déchets · Nuisances",
-   "col": "right",
-   "tools": [
-    "IDCapture",
-    "Lafarge+",
-    "Live Objects (Orange)",
-    "Lucee TP",
-    "PowerPoint",
-    "Sixense Monitoring",
-    "Wastemarket Place"
+    "Harmony",
+    "Neoaccès",
+    "NotebookLM",
+    "Pablo",
+    "Power BI",
+    "Puma",
+    "SharePoint",
+    "TIPS",
+    "Word"
+   ],
+   "missions": [
+    {
+     "label": "Engagement et imputation des dépenses",
+     "todo": false,
+     "tools": [
+      "Harmony"
+     ]
+    },
+    {
+     "label": "Gestion de la facturation",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "DocuSign",
+      "Excel",
+      "Harmony",
+      "Pablo",
+      "TIPS"
+     ]
+    },
+    {
+     "label": "Gestion des encaissements",
+     "todo": false,
+     "tools": [
+      "E-Project",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Gestion des commandes et achats",
+     "todo": true,
+     "tools": [
+      "Achat +",
+      "Pablo"
+     ]
+    },
+    {
+     "label": "Gestion contractuelle",
+     "todo": false,
+     "tools": [
+      "NotebookLM",
+      "Excel",
+      "Power BI",
+      "SharePoint",
+      "Word"
+     ]
+    },
+    {
+     "label": "Gestion du personnel et des formations",
+     "todo": false,
+     "tools": [
+      "By My Site",
+      "H&R For You",
+      "Neoaccès",
+      "BIP / BAPS",
+      "E-Checking",
+      "Excel",
+      "Pablo",
+      "Puma"
+     ]
+    }
    ]
   }
  ],
@@ -550,8 +836,8 @@ const BDD = {
    "ed": "Docusign",
    "mat": "Mature",
    "svc": [
-    "dir",
-    "ges"
+    "daf",
+    "dir"
    ],
    "nb": 2,
    "usage": "Notification d'un  nouveau contrats",
@@ -599,15 +885,14 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
+    "daf",
     "dir",
-    "ges",
-    "qua",
-    "rh",
+    "qse",
     "top",
     "trv",
     "tun"
    ],
-   "nb": 7,
+   "nb": 6,
    "usage": "Contrats avenant, ordre de service, courrier",
    "socle": true
   },
@@ -617,8 +902,8 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
+    "daf",
     "dir",
-    "ges",
     "trv"
    ],
    "nb": 3,
@@ -631,8 +916,8 @@ const BDD = {
    "ed": "BYCN",
    "mat": "Mature",
    "svc": [
-    "dir",
-    "rh"
+    "daf",
+    "dir"
    ],
    "nb": 2,
    "usage": "Pour les  entreprises, Julie créer l'acces de l'entreprise(ST, prestataire )",
@@ -645,12 +930,11 @@ const BDD = {
    "mat": "Pas mature => plein de bug, niveau connexion ok,",
    "svc": [
     "dir",
-    "env",
-    "qua",
+    "qse",
     "trv",
     "tun"
    ],
-   "nb": 5,
+   "nb": 4,
    "usage": "Workflow de contrôle qualité bétonnage, eprouvettes, accueil sécurité, formation post travail",
    "socle": true
   },
@@ -660,12 +944,11 @@ const BDD = {
    "ed": "Systra",
    "mat": "",
    "svc": [
-    "ges",
-    "qua",
-    "rh",
+    "daf",
+    "qse",
     "trv"
    ],
-   "nb": 4,
+   "nb": 3,
    "usage": "Acheter du matériel",
    "socle": true
   },
@@ -675,13 +958,12 @@ const BDD = {
    "ed": "BYCN",
    "mat": "Mature",
    "svc": [
+    "daf",
     "dir",
-    "env",
-    "ges",
-    "qua",
+    "qse",
     "tun"
    ],
-   "nb": 5,
+   "nb": 4,
    "usage": "Pas utilisé",
    "socle": true
   },
@@ -691,12 +973,11 @@ const BDD = {
    "ed": "IDCAPTURE",
    "mat": "Mature",
    "svc": [
-    "env",
-    "qua",
+    "qse",
     "trv",
     "tun"
    ],
-   "nb": 4,
+   "nb": 3,
    "usage": "Lever de reserve(mis à disposition pour les prochain prestataire, code couleur, visuel plus parlant , suivi da",
    "socle": false
   },
@@ -707,7 +988,7 @@ const BDD = {
    "mat": "Mature",
    "svc": [
     "met",
-    "qua",
+    "qse",
     "trv"
    ],
    "nb": 3,
@@ -720,8 +1001,8 @@ const BDD = {
    "ed": "tekla bimsight",
    "mat": "Mature",
    "svc": [
-    "env",
     "met",
+    "qse",
     "top",
     "trv",
     "tun"
@@ -846,7 +1127,7 @@ const BDD = {
    "ed": "Tisseo",
    "mat": "En developpement",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Permet d'activer la facturation , voir la situation",
@@ -858,8 +1139,8 @@ const BDD = {
    "ed": "Soletanche",
    "mat": "Mature",
    "svc": [
-    "dir",
-    "ges"
+    "daf",
+    "dir"
    ],
    "nb": 2,
    "usage": "Validé les facturations partenaires,",
@@ -871,7 +1152,7 @@ const BDD = {
    "ed": "GOOGLE",
    "mat": "Mature",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Redaction de document, mémoire, reclamation",
@@ -883,7 +1164,7 @@ const BDD = {
    "ed": "MICROSOFT",
    "mat": "",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Accès aux documents",
@@ -895,7 +1176,7 @@ const BDD = {
    "ed": "",
    "mat": "Mature",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Engagements des dépenses à la reception des bl, suivre les commandes , envoi des avis de paiement, Pour les ST",
@@ -907,7 +1188,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Pointage soletanche bachis",
@@ -919,7 +1200,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "rh"
+    "daf"
    ],
    "nb": 1,
    "usage": "Prime de poste , heures de travail , compagnon BYT",
@@ -931,7 +1212,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "rh"
+    "daf"
    ],
    "nb": 1,
    "usage": "Intérim, heures , renouvellement, verification",
@@ -943,7 +1224,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "rh"
+    "daf"
    ],
    "nb": 1,
    "usage": "Logiciel de fomation, centralisation de formation",
@@ -955,7 +1236,7 @@ const BDD = {
    "ed": "BYCN",
    "mat": "",
    "svc": [
-    "rh"
+    "daf"
    ],
    "nb": 1,
    "usage": "Demande de CP, monaitisation, placement gérance fonds, attestation employeur",
@@ -1042,7 +1323,7 @@ const BDD = {
    "ed": "",
    "mat": "Mature",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "Renvoie de les indicateurs de consommation sur les compteurs de pompage",
@@ -1054,7 +1335,7 @@ const BDD = {
    "ed": "",
    "mat": "Mature",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "Accoustique, sonomètre",
@@ -1066,7 +1347,7 @@ const BDD = {
    "ed": "",
    "mat": "Mature (quelques ysfonctionnement dû à l'humain)",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "Gestion des déchets",
@@ -1078,7 +1359,7 @@ const BDD = {
    "ed": "",
    "mat": "Mature",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "SUIVI bl, m3 coulé",
@@ -1090,7 +1371,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "Déterminer les espèces envahissantes",
@@ -1102,7 +1383,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "env"
+    "qse"
    ],
    "nb": 1,
    "usage": "Déclaration de HIPO",
@@ -1175,7 +1456,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "ges"
+    "daf"
    ],
    "nb": 1,
    "usage": "Achats opérationnels (amont Pablo)",
@@ -1188,7 +1469,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "rh"
+    "daf"
    ],
    "nb": 1,
    "usage": "Création des badges et gestion des accès",
@@ -1201,7 +1482,7 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "qua"
+    "qse"
    ],
    "nb": 1,
    "usage": "Portail fournisseur béton",
@@ -1246,7 +1527,7 @@ const BDD = {
    "alim": "manuel"
   },
   {
-   "from": "ges:Basware",
+   "from": "daf:Basware",
    "to": "s:Harmony",
    "obj": "Factures fournisseurs harmonisées",
    "map": true,
@@ -1254,7 +1535,7 @@ const BDD = {
   },
   {
    "from": "s:Harmony",
-   "to": "ges:Basware",
+   "to": "daf:Basware",
    "obj": "Retour de saisie et litiges",
    "map": true,
    "alim": "manuel"
@@ -1274,7 +1555,7 @@ const BDD = {
    "alim": "auto"
   },
   {
-   "from": "env:Wastemarket Place",
+   "from": "qse:Wastemarket Place",
    "to": "s:Power BI",
    "obj": "Suivi des déchets",
    "map": true,
@@ -1296,7 +1577,7 @@ const BDD = {
   },
   {
    "from": "s:Trimble Connect",
-   "to": "env:IDCapture",
+   "to": "qse:IDCapture",
    "obj": "Repérage des constats — flux indirect, par captures d'écran",
    "map": false,
    "alim": "manuel"
@@ -1320,100 +1601,174 @@ const BDD = {
 /* ==== DONNÉES BDD — fin ==== */
 
 /* ============================================================
-   1. RENDU DES PLANCHES DEPUIS LE MODÈLE
+   1. LES DEUX PLANCHES DE CARTOGRAPHIE
+   ------------------------------------------------------------
+   31 missions ne tiennent pas sur un seul plateau : les pôles sont
+   répartis sur deux planches, le socle commun étant repris au centre
+   de chacune. Chaque planche ne trace que les flux qui la concernent.
    ============================================================ */
+const BOARDS = [
+  { id: "b1", eyebrow: "Vue d'ensemble · pôles techniques",
+    sub: "Méthodes & BIM, Topographie, Tunnel et Travaux, autour du socle applicatif commun",
+    left: ["met", "top"], right: ["tun", "trv"] },
+  { id: "b2", eyebrow: "Vue d'ensemble · pôles support & pilotage",
+    sub: "Qualité & Environnement, Direction et DAF, autour du socle applicatif commun",
+    left: ["qse", "dir"], right: ["daf"] }
+];
+
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const SVC = Object.fromEntries(BDD.services.map(s => [s.id, s]));
-const idOf = ref => {
-  const [scope, name] = ref.split(":");
-  return scope === "s" ? "s-" + slug(name) : "t-" + scope + "-" + slug(name);
-};
 const isAuto = d => d && (d.alim === "auto" || d.alim === "mixte");
 
-function toolChip(name, svcId){
+/* « s:Excel » ou « daf:Basware » → identifiant d'élément, propre à une planche */
+const idOf = (ref, bid) => {
+  const [scope, name] = ref.split(":");
+  return scope === "s" ? `${bid}-s-${slug(name)}` : `${bid}-t-${scope}-${slug(name)}`;
+};
+
+const LEGEND = `
+  <div class="legend">
+    <div class="swatchrow">
+      <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
+      <span class="item"><span class="key">Externe</span>Éditeur du marché</span>
+      <span class="item"><span class="key k-todo">À valider</span>Outil ou mission à confirmer</span>
+    </div>
+    <div class="swatchrow">
+      <span class="item"><span class="kdot"></span>Alimentation automatique</span>
+      <span class="item">
+        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
+        Flux automatisé
+      </span>
+      <span class="item">
+        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" data-dash="1"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
+        Flux manuel (ressaisie)
+      </span>
+    </div>
+  </div>`;
+
+/* Un même outil peut servir à plusieurs missions d'un pôle : la première
+   occurrence garde l'identifiant canonique visé par les flux, les suivantes
+   sont suffixées pour rester uniques. */
+function toolChip(name, bid, svcId, seen){
   const d = BDD.tools[name] || {};
-  const cls = d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext");
+  const cls = [d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext")];
+  if (d.socle) cls.push("socle");
   const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-  return `<span class="tool ${cls}" id="t-${svcId}-${slug(name)}">${auto}${name}</span>`;
+  const base = `${bid}-t-${svcId}-${slug(name)}`;
+  const n = (seen[base] = (seen[base] || 0) + 1);
+  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">${auto}${name}</span>`;
 }
 
-/* --- cartes service --- */
-BDD.services.forEach(s => {
-  const host = document.getElementById(s.col === "left" ? "colLeft" : "colRight");
-  const card = document.createElement("div");
-  card.className = "card";
-  card.id = "card-" + s.id;
-  card.dataset.svc = s.id;
-  card.style.setProperty("--accent", `var(--${s.id})`);
-  card.innerHTML =
+function cardHTML(pid, bid){
+  const s = SVC[pid];
+  const seen = {};
+  return `<div class="card" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
     `<div class="card-head"><span class="dot"></span><h2>${s.name}</h2></div>` +
     `<p class="kicker">${s.kicker}</p>` +
-    `<div class="tools">${s.tools.map(t => toolChip(t, s.id)).join("")}</div>`;
-  host.appendChild(card);
-});
+    `<div class="missions">` + s.missions.map(m =>
+      `<div class="mission${m.todo ? " todo" : ""}">` +
+        `<span class="mlab">${m.label}<i></i></span>` +
+        `<div class="tools">${m.tools.map(t => toolChip(t, bid, pid, seen)).join("")}</div>` +
+      `</div>`).join("") + `</div></div>`;
+}
 
-/* --- socle commun --- */
-const hubBody = document.getElementById("hubBody");
-BDD.socle.forEach(g => {
-  const block = document.createElement("div");
-  block.className = "hub-group";
-  const odd = g.tools.length % 2 === 1;
-  block.innerHTML = `<span>${g.group}</span><div class="hub-grid">` +
-    g.tools.map((n, i) => {
-      const d = BDD.tools[n] || {};
-      const wide = odd && i === g.tools.length - 1 ? " wide" : "";
-      const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-      return `<div class="app ${d.ie === "interne" ? "int" : "ext"}${wide}" id="s-${slug(n)}">${auto}${n}</div>`;
-    }).join("") + `</div>`;
-  hubBody.appendChild(block);
-});
 const CORE_SUB = { "SharePoint": "Référentiel", "Power BI": "Cabine de pilotage" };
-document.getElementById("hubCore").innerHTML = BDD.core.map(n =>
-  `<div class="core-app" id="s-${slug(n)}"><b>${n}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
+
+function hubHTML(bid){
+  const groups = BDD.socle.map(g => {
+    const odd = g.tools.length % 2 === 1;
+    return `<div class="hub-group"><span>${g.group}</span><div class="hub-grid">` +
+      g.tools.map((n, i) => {
+        const d = BDD.tools[n] || {};
+        const wide = odd && i === g.tools.length - 1 ? " wide" : "";
+        const auto = isAuto(d) ? '<i class="auto"></i>' : "";
+        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}${wide}" id="${bid}-s-${slug(n)}">${auto}${n}</div>`;
+      }).join("") + `</div></div>`;
+  }).join("");
+  const core = BDD.core.map(n =>
+    `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${n}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
+  return `<div class="hub">
+      <div class="hub-head"><span class="tag">Socle applicatif</span><h2>Logiciels communs</h2>
+        <p>Plateformes partagées par plusieurs services</p></div>
+      <div class="hub-body">${groups}</div>
+      <div class="core">${core}</div>
+    </div>`;
+}
+
+const deck = document.querySelector(".deck");
+BOARDS.forEach((b, n) => {
+  const stage = document.createElement("div");
+  stage.className = "stage";
+  stage.innerHTML = `<div class="slide" id="slide-${b.id}"><div class="slide-inner">
+      <div class="masthead">
+        <div><p class="eyebrow">${b.eyebrow}</p><h1>Cartographie des outils IT</h1>
+             <p class="sub">${b.sub}</p></div>
+        ${LEGEND}
+      </div>
+      <div class="board" id="board-${b.id}" data-board="${b.id}">
+        <svg class="wires" aria-hidden="true"></svg>
+        <div class="col left">${b.left.map(p => cardHTML(p, b.id)).join("")}</div>
+        ${hubHTML(b.id)}
+        <div class="col right">${b.right.map(p => cardHTML(p, b.id)).join("")}</div>
+      </div>
+      <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
+        <span>Planche ${n + 1}/4</span></div>
+    </div></div>`;
+  deck.insertBefore(stage, deck.firstChild ? deck.children[n] : null);
+});
 
 /* ============================================================
    2. CONNECTEURS
    ============================================================ */
-const board = document.getElementById("board");
-const svg   = document.getElementById("wires");
 const SVGNS = "http://www.w3.org/2000/svg";
 const css   = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
-function localRect(el, scale){
-  const b = board.getBoundingClientRect(), r = el.getBoundingClientRect();
-  return { x:(r.left-b.left)/scale, y:(r.top-b.top)/scale, w:r.width/scale, h:r.height/scale,
-           cx:(r.left-b.left+r.width/2)/scale, cy:(r.top-b.top+r.height/2)/scale };
+/* Flux à tracer sur une planche : ceux internes au socle, et ceux dont
+   l'extrémité métier appartient à un pôle présent sur la planche. */
+function boardFlows(b){
+  const poles = new Set([...b.left, ...b.right]);
+  return BDD.flows.map((f, i) => ({ f, i })).filter(({ f }) => {
+    if (f.map === false) return false;
+    return [f.from, f.to].every(r => {
+      const sc = r.split(":")[0];
+      return sc === "s" || poles.has(sc);
+    });
+  });
+}
+
+function localRect(el, board, scale){
+  const bb = board.getBoundingClientRect(), r = el.getBoundingClientRect();
+  return { x:(r.left-bb.left)/scale, y:(r.top-bb.top)/scale, w:r.width/scale, h:r.height/scale,
+           cx:(r.left-bb.left+r.width/2)/scale, cy:(r.top-bb.top+r.height/2)/scale };
 }
 
 /* Un flux entre deux cartes sort du bord de la carte ; un flux interne à une
    carte (ou impliquant le socle) s'accroche à la pastille elle-même. */
-function anchor(el, towardRight, scale, dy, useCard){
+function anchor(el, board, towardRight, scale, dy, useCard){
   const card = useCard ? el.closest(".card") : null;
-  const box  = localRect(el, scale);
-  const edge = card ? localRect(card, scale) : box;
+  const box  = localRect(el, board, scale);
+  const edge = card ? localRect(card, board, scale) : box;
   return { x: towardRight ? edge.x + edge.w : edge.x, y: box.cy + (dy || 0) };
 }
 
-function spread(scale){
-  const el = id => document.getElementById(id);
-  const cx = id => { const e = el(id); return e ? localRect(e, scale).cx : 0; };
-  const cy = id => { const e = el(id); return e ? localRect(e, scale).cy : 0; };
-  const offsets = BDD.flows.map(() => ({ from:0, to:0 }));
-  const groups = {};
-  BDD.flows.forEach((f, i) => {
-    if (f.map === false) return;
-    const a = idOf(f.from), b = idOf(f.to);
-    const aFirst = cx(a) <= cx(b);
-    [["from", a, aFirst ? "R" : "L", b], ["to", b, aFirst ? "L" : "R", a]]
-      .forEach(([role, id, side, other]) => {
-        const k = id + "|" + side;
+function spread(items, b, board, scale){
+  const el = ref => document.getElementById(idOf(ref, b.id));
+  const cx = ref => { const e = el(ref); return e ? localRect(e, board, scale).cx : 0; };
+  const cy = ref => { const e = el(ref); return e ? localRect(e, board, scale).cy : 0; };
+  const offsets = {}, groups = {};
+  items.forEach(({ f, i }) => {
+    offsets[i] = { from: 0, to: 0 };
+    const aFirst = cx(f.from) <= cx(f.to);
+    [["from", f.from, aFirst ? "R" : "L", f.to], ["to", f.to, aFirst ? "L" : "R", f.from]]
+      .forEach(([role, ref, side, other]) => {
+        const k = idOf(ref, b.id) + "|" + side;
         (groups[k] = groups[k] || []).push({ i, role, oy: cy(other) });
       });
   });
   Object.values(groups).forEach(list => {
     if (list.length < 2) return;
-    list.sort((a, b) => a.oy - b.oy);
+    list.sort((a, b2) => a.oy - b2.oy);
     const step = 11, mid = (list.length - 1) / 2;
     list.forEach((it, k) => offsets[it.i][it.role] = (k - mid) * step);
   });
@@ -1421,13 +1776,15 @@ function spread(scale){
 }
 
 function wireColor(f){
-  const svcOf = ref => ref.split(":")[0];
-  const s = svcOf(f.from), t = svcOf(f.to);
-  if (s === "s" && t === "s") return css("--core");        // plomberie interne au socle
-  return css("--" + (s !== "s" ? s : t));                  // couleur du service concerné
+  const s = f.from.split(":")[0], t = f.to.split(":")[0];
+  if (s === "s" && t === "s") return css("--core");        /* plomberie interne au socle */
+  return css("--" + (s !== "s" ? s : t));                  /* couleur du pôle concerné */
 }
 
-function draw(){
+function drawBoard(b){
+  const board = document.getElementById("board-" + b.id);
+  if (!board) return;
+  const svg = board.querySelector("svg.wires");
   const scale = board.getBoundingClientRect().width / board.offsetWidth || 1;
   svg.setAttribute("viewBox", `0 0 ${board.offsetWidth} ${board.offsetHeight}`);
   svg.innerHTML = "";
@@ -1435,7 +1792,7 @@ function draw(){
   const defs = document.createElementNS(SVGNS, "defs");
   const marks = new Set();
   const addMarker = color => {
-    const key = "ah-" + color.replace(/[^a-z0-9]/gi, "");
+    const key = `ah-${b.id}-` + color.replace(/[^a-z0-9]/gi, "");
     if (marks.has(key)) return key;
     marks.add(key);
     const m = document.createElementNS(SVGNS, "marker");
@@ -1450,26 +1807,27 @@ function draw(){
   };
   svg.appendChild(defs);
 
-  const off = spread(scale);
+  const items = boardFlows(b);
+  const off = spread(items, b, board, scale);
 
-  BDD.flows.forEach((f, i) => {
-    if (f.map === false) return;                          /* flux indirect : matrice seulement */
-    const a = document.getElementById(idOf(f.from)), b = document.getElementById(idOf(f.to));
-    if (!a || !b) return;
+  items.forEach(({ f, i }) => {
+    const a = document.getElementById(idOf(f.from, b.id));
+    const c = document.getElementById(idOf(f.to, b.id));
+    if (!a || !c) return;
     const color = wireColor(f);
-    const ra = localRect(a, scale), rb = localRect(b, scale);
-    const cardA = a.closest(".card"), cardB = b.closest(".card");
+    const ra = localRect(a, board, scale), rb = localRect(c, board, scale);
+    const cardA = a.closest(".card"), cardB = c.closest(".card");
     const useCard = !(cardA && cardA === cardB);
     const aFirst = ra.cx <= rb.cx;
-    const p0 = anchor(a,  aFirst, scale, off[i].from, useCard);
-    const p1 = anchor(b, !aFirst, scale, off[i].to,   useCard);
+    const p0 = anchor(a, board,  aFirst, scale, off[i].from, useCard);
+    const p1 = anchor(c, board, !aFirst, scale, off[i].to,   useCard);
 
     let d;
     if (Math.abs(ra.cx - rb.cx) < 30){
       /* Pastilles alignées verticalement : on contourne par le couloir central
          du conteneur plutôt que de traverser les pastilles intermédiaires. */
       const host = a.closest(".hub") || a.closest(".card");
-      const hc = host ? localRect(host, scale).cx : ra.cx;
+      const hc = host ? localRect(host, board, scale).cx : ra.cx;
       const sgn = ra.cx <= hc ? 1 : -1;
       p0.x = sgn > 0 ? ra.x + ra.w : ra.x; p0.y = ra.cy + off[i].from;
       p1.x = sgn > 0 ? rb.x + rb.w : rb.x; p1.y = rb.cy + off[i].to;
@@ -1488,63 +1846,69 @@ function draw(){
 
     const path = document.createElementNS(SVGNS, "path");
     path.setAttribute("d", d);
-    path.setAttribute("class", "wire " + (f.alim === "auto" || f.alim === "mixte" ? "auto" : "manuel"));
+    path.setAttribute("class", "wire " + (isAuto(f) ? "auto" : "manuel"));
     path.setAttribute("stroke", color);
     path.setAttribute("marker-end", `url(#${addMarker(color)})`);
     path.dataset.idx = i;
     svg.appendChild(path);
 
-    const c = document.createElementNS(SVGNS, "circle");
-    c.setAttribute("cx", p0.x); c.setAttribute("cy", p0.y); c.setAttribute("r", "3.2");
-    c.setAttribute("fill", css("--surface")); c.setAttribute("stroke", color); c.setAttribute("stroke-width", "2");
-    c.setAttribute("class", "port"); c.dataset.idx = i;
-    svg.appendChild(c);
+    const dot = document.createElementNS(SVGNS, "circle");
+    dot.setAttribute("cx", p0.x); dot.setAttribute("cy", p0.y); dot.setAttribute("r", "3.2");
+    dot.setAttribute("fill", css("--surface")); dot.setAttribute("stroke", color);
+    dot.setAttribute("stroke-width", "2"); dot.setAttribute("class", "port");
+    dot.dataset.idx = i;
+    svg.appendChild(dot);
   });
 }
+
+const draw = () => BOARDS.forEach(drawBoard);
 
 /* ============================================================
    3. SURBRILLANCE
    ============================================================ */
-function clearFocus(){
+function clearFocus(board){
   board.classList.remove("focusing");
   board.querySelectorAll(".is-active").forEach(e => e.classList.remove("is-active"));
-  svg.querySelectorAll(".is-active").forEach(e => e.classList.remove("is-active"));
 }
-function focusIdx(indexes){
-  clearFocus();
+function focusIdx(board, bid, indexes){
+  clearFocus(board);
   if (!indexes.length) return;
   board.classList.add("focusing");
   indexes.forEach(i => {
     const f = BDD.flows[i];
-    [idOf(f.from), idOf(f.to)].forEach(id => {
+    [idOf(f.from, bid), idOf(f.to, bid)].forEach(id => {
       const el = document.getElementById(id); if (!el) return;
       el.classList.add("is-active");
       const card = el.closest(".card"); if (card) card.classList.add("is-active");
     });
-    svg.querySelectorAll(`[data-idx="${i}"]`).forEach(e => e.classList.add("is-active"));
+    board.querySelectorAll(`[data-idx="${i}"]`).forEach(e => e.classList.add("is-active"));
   });
 }
-board.querySelectorAll(".card").forEach(card => {
-  card.addEventListener("mouseenter", () => {
-    const idx = BDD.flows.map((f, i) => [f, i])
-      .filter(([f]) => f.map !== false &&
-        (f.from.startsWith(card.dataset.svc + ":") || f.to.startsWith(card.dataset.svc + ":")))
-      .map(([, i]) => i);
-    if (idx.length) focusIdx(idx);
-    else { clearFocus(); board.classList.add("focusing"); card.classList.add("is-active"); }
+
+BOARDS.forEach(b => {
+  const board = document.getElementById("board-" + b.id);
+  if (!board) return;
+  const items = boardFlows(b);
+  board.querySelectorAll(".card").forEach(card => {
+    card.addEventListener("mouseenter", () => {
+      const idx = items.filter(({ f }) =>
+        f.from.startsWith(card.dataset.svc + ":") || f.to.startsWith(card.dataset.svc + ":"))
+        .map(({ i }) => i);
+      if (idx.length) focusIdx(board, b.id, idx);
+      else { clearFocus(board); board.classList.add("focusing"); card.classList.add("is-active"); }
+    });
+    card.addEventListener("mouseleave", () => clearFocus(board));
   });
-  card.addEventListener("mouseleave", clearFocus);
-});
-board.querySelectorAll(".app, .core-app, .tool").forEach(el => {
-  el.addEventListener("mouseenter", () => focusIdx(
-    BDD.flows.map((f, i) => [f, i])
-      .filter(([f]) => f.map !== false && (idOf(f.from) === el.id || idOf(f.to) === el.id))
-      .map(([, i]) => i)));
-  el.addEventListener("mouseleave", clearFocus);
+  board.querySelectorAll(".app, .core-app, .tool").forEach(el => {
+    el.addEventListener("mouseenter", () => focusIdx(board, b.id,
+      items.filter(({ f }) => idOf(f.from, b.id) === el.id || idOf(f.to, b.id) === el.id)
+           .map(({ i }) => i)));
+    el.addEventListener("mouseleave", () => clearFocus(board));
+  });
 });
 
 /* ============================================================
-   4. PLANCHE 2 — FLUX, STATISTIQUES, POINTS D'ATTENTION
+   4. PLANCHE 3 — FLUX, STATISTIQUES, POINTS D'ATTENTION
    ============================================================ */
 const label = ref => {
   const [scope, name] = ref.split(":");
@@ -1571,7 +1935,7 @@ const nInt = count(d => d.ie === "interne"), nExt = count(d => d.ie === "externe
 const nAuto = count(d => isAuto(d)), nMan = count(d => d.alim === "manuel");
 
 document.getElementById("statRow").innerHTML = [
-  [BDD.services.length, "Services"], [ALL.length, "Outils recensés"],
+  [BDD.services.length, "Pôles"], [ALL.length, "Outils recensés"],
   [nSocle, "Socle commun"], [BDD.flows.length, "Flux identifiés"]
 ].map(([v, l]) => `<div class="stat"><b>${v}</b><small>${l}</small></div>`).join("");
 
@@ -1599,7 +1963,7 @@ document.getElementById("warnings").innerHTML = [
 ].map((t, i) => `<li><span class="idx">${"ABCD"[i]}</span><span>${t}</span></li>`).join("");
 
 /* ============================================================
-   5. PLANCHE 3 — RÉFÉRENTIEL
+   5. PLANCHE 4 — RÉFÉRENTIEL
    ============================================================ */
 document.getElementById("refLegend").innerHTML =
   `<span class="item"><span class="badge int">INT</span>Outil interne</span>` +

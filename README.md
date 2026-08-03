@@ -6,23 +6,39 @@ autonome et en PowerPoint **entièrement éditable** (formes natives, pas d'imag
 
 | Livrable | Chemin |
 |---|---|
-| Planches HTML (3 planches 16:9) | `index.html` |
+| Planches HTML (4 planches 16:9) | `index.html` |
 | Présentation PowerPoint | `dist/Cartographie-Outils-IT.pptx` |
 | Base de données source | `data/BDD_Cartographie_Outils_IT.xlsx` |
 | Extraction de la BDD | `data/build_data.py` |
 | Générateur PowerPoint | `pptx/build.py` + `pptx/extract.js` |
 | Version issue du seul PDF initial | `archive/` |
 
-## Les trois planches
+## Les quatre planches
 
-**Planche 1 — Cartographie.** Le socle applicatif commun au centre, les neuf
-services autour. Chaque connecteur relie deux outils, dans le sens réel du flux.
+**Planches 1 et 2 — Cartographie.** Le socle applicatif commun au centre, les
+pôles autour. Chaque pôle est décomposé en **missions**, et chaque mission liste
+les outils qu'elle mobilise. Les connecteurs relient deux outils dans le sens réel
+du flux. Les 31 missions ne tenant pas sur un seul plateau, les pôles sont répartis
+sur deux planches — techniques puis support et pilotage — le socle étant repris au
+centre de chacune.
 
-**Planche 2 — Flux et modes d'alimentation.** Les 15 flux en tableau, la
+**Planche 3 — Flux et modes d'alimentation.** Les 15 flux en tableau, la
 répartition du parc, et les points d'attention.
 
-**Planche 3 — Référentiel.** Les 54 outils avec éditeur, services utilisateurs,
+**Planche 4 — Référentiel.** Les 54 outils avec éditeur, pôles utilisateurs,
 nature et mode d'alimentation.
+
+## Les sept pôles
+
+| Pôle | Planche | Origine |
+|---|---|---|
+| Méthodes & BIM | 1 | service `Méthode/BIM` |
+| Topographie | 1 | service `TOPO` |
+| Tunnel | 1 | service `TUNNEL` |
+| Travaux | 1 | `Responsable Travaux` + `Ingé travaux` |
+| Qualité & Environnement | 2 | `Qualité` + `Environnement` |
+| Direction | 2 | service `Direction` |
+| DAF | 2 | `Contrat Manager` + `Comptabilité/gestion` + `Assistant RH` |
 
 ## Les axes de lecture
 
@@ -30,19 +46,22 @@ Trois dimensions de la BDD sont portées visuellement :
 
 | Dimension | Colonne BDD | Encodage |
 |---|---|---|
-| Socle commun / application métier | `Nature` | Position : centre ou carte de service |
+| Socle commun / application métier | `Nature` | Position : centre ou carte de pôle |
 | Interne / externe | `Interne / Externe` | Pastille teintée (interne) ou neutre (externe) |
 | Alimentation | `Alimentation (Manuel/Auto)` | Point cyan sur l'outil ; trait plein (automatisé) ou pointillé (manuel) sur les flux |
 
-Un outil au contour en pointillés est **à qualifier** : il est cité dans la BDD
-mais aucun entretien ne documente sa nature ni son alimentation.
+Dans les cartes de pôle, un outil du socle apparaît en pastille discrète à contour
+cyan : on lit d'un coup d'œil ce que chaque mission emprunte au socle commun.
+
+Un outil au contour en pointillés, ou un libellé de mission en gris, est **à
+valider** : il est cité dans la BDD mais aucun entretien ne le documente.
 
 ## Utilisation
 
 ### En HTML
 
 Ouvrir `index.html` dans un navigateur. La page propose un basculement
-clair / sombre, une mise en évidence interactive (survoler un service ou un
+clair / sombre, une mise en évidence interactive (survoler un pôle ou un
 outil isole ses flux) et un export PDF 16:9 par l'impression.
 
 ### Dans PowerPoint
@@ -71,10 +90,16 @@ de texte. Le HTML est la source unique de vérité.
 
 ## Où intervenir
 
-- **Rattacher un outil au socle ou à un service** : listes `SOCLE`, `CORE` et
+- **Rattacher un outil au socle ou à un pôle** : listes `SOCLE`, `CORE` et
   `SERVICES` dans `data/build_data.py`. L'ordre des listes du socle commande le
   placement dans la grille à deux colonnes, ce qui évite aux connecteurs de
   traverser le socle.
+- **Modifier une mission** : dictionnaire `MISSIONS` dans `data/build_data.py`.
+  Chaque entrée vaut `(libellé, [valeurs FLUX absorbées], [outils ajoutés à la
+  main], proposée)`. Tout outil d'un pôle non rattaché à une mission est signalé
+  en sortie de script et regroupé sous « Autres outils ».
+- **Répartir les pôles entre les deux planches** : constante `BOARDS` en tête du
+  script de `index.html` (`left` et `right` par planche).
 - **Ajouter un flux** : liste `FLOWS` dans `data/build_data.py`, sous la forme
   `("service:Outil", "s:OutilSocle", "objet du flux")`. Un quatrième élément
   `False` documente le flux dans la matrice sans le tracer sur la carte. Aucune
@@ -82,8 +107,8 @@ de texte. Le HTML est la source unique de vérité.
   éléments.
 - **Normaliser un libellé d'outil** : dictionnaire `ALIAS`.
 - **Changer les couleurs** : variables `--met`, `--top`, `--tun`, `--trv`,
-  `--qua`, `--dir`, `--ges`, `--rh`, `--env`, `--core` en tête de la feuille de
-  styles de `index.html`.
+  `--qse`, `--dir`, `--daf`, `--core` en tête de la feuille de styles de
+  `index.html`.
 
 ## Choix et écarts assumés
 
@@ -93,16 +118,21 @@ de texte. Le HTML est la source unique de vérité.
   tagués socle et les plateformes transverses que la cartographie initiale
   plaçait déjà en logiciel commun (Excel, Word, SharePoint, Power BI, E-Paraph,
   DocuSign). À arbitrer avec vous.
-- **Regroupement de services.** « Contrat Manager » et « Comptabilité / gestion »
-  sont réunis en *Contrats & Gestion* ; « Responsable Travaux » et
-  « Ingé travaux » en *Travaux*. Les neuf autres services de la BDD sont conservés
-  tels quels.
+- **Regroupement en pôles.** « Contrat Manager », « Comptabilité / gestion » et
+  « Assistant RH » sont réunis en *DAF* ; « Qualité » et « Environnement » en
+  *Qualité & Environnement* ; « Responsable Travaux » et « Ingé travaux » en
+  *Travaux*.
+- **Libellés de missions.** Ils viennent de la note de cadrage, et absorbent les
+  valeurs fragmentées de la colonne `FLUX` (« GESTION CHANTIER » et « GESTION DES
+  CHANTIER » désignent la même mission). La BDD ne renseigne aucune mission pour
+  Topographie, Tunnel et les outils Environnement : celles-ci sont proposées
+  d'après la colonne *Usage* et restent à valider.
 - **Nature des flux.** La BDD ne qualifie pas l'automatisation flux par flux. Un
   flux est présenté comme automatisé lorsque son outil de **destination** est
   alimenté automatiquement.
 - **Rattachement des outils à qualifier.** GMAO, Achat +, Neoaccès et CEMEX sont
-  cités sans ligne d'entretien : leur service est proposé d'après le commentaire
-  de la BDD, et ils sont marqués comme à qualifier.
-- **Un outil apparaît dans plusieurs cartes** lorsque plusieurs services le
-  déclarent (AutoCAD, IDCapture, MS Project…). C'est volontaire : la carte est
-  organisée par service.
+  cités sans ligne d'entretien : leur pôle est proposé d'après le commentaire de
+  la BDD, et ils sont marqués comme à valider.
+- **Un outil apparaît dans plusieurs cartes ou plusieurs missions** lorsque
+  plusieurs pôles le déclarent (AutoCAD, IDCapture, MS Project…). C'est
+  volontaire : la carte est organisée par pôle puis par mission.
