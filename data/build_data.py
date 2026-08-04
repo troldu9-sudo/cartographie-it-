@@ -71,7 +71,7 @@ SERVICES = [
 MISSIONS = {
     "met": [
         ("Production de maquettes",              ["PRODUCTION DE MAQUETTES"], []),
-        ("Gestion et partage des maquettes",     ["GESTION DE MAQUETTES"], []),
+        ("Gestion des maquettes",                ["GESTION DE MAQUETTES"], []),
     ],
     "top": [
         ("Relevés et nuages de points",          [], ["La Scene", "Cyclone 3DR", "Trimble Connect"], True),
@@ -85,9 +85,9 @@ MISSIONS = {
         ("Gestion du stock",                     [], ["GMAO"], True),
     ],
     "trv": [
-        ("Gestion des jalons de chantier",       ["AVANCEMENTS JALON CHANTIER"], []),
-        ("Commande d'engins et matériels",       ["COMMANDE CHANTIER"], []),
-        ("Gestion des réserves et MaD",          ["MAD"], []),
+        ("Jalons de chantier",                   ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Engins et matériels",                  ["COMMANDE CHANTIER"], []),
+        ("Réserves et MaD",                      ["MAD"], []),
         ("Conduite de chantier",                 ["GESTION CHANTIER", "GESTION DES CHANTIER",
                                                   "GESTION IMPRÉVU CHANTIER"], []),
         ("Validation et contrats",               ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
@@ -95,7 +95,7 @@ MISSIONS = {
     "qse": [
         ("Contrôle qualité",                     ["CONTRÔLE QUALITÉ",
                                                   "CONTRÔLE QUALITÉ (VISUALISATION)"], ["CEMEX"]),
-        ("Gestion des MaD et levées de réserve", ["MAD"], ["Trimble Connect"]),
+        ("MaD et levées de réserve",             ["MAD"], ["Trimble Connect"]),
         ("Suivi environnemental",                ["CONTRÔLE ENVIRONNEMENT",
                                                   "CONTRÔLE QUALITÉ /ENVIRONNEMENT"], ["PowerPoint"]),
         ("Suivi des consommations",              [], ["Live Objects (Orange)", "Sixense Monitoring",
@@ -104,19 +104,19 @@ MISSIONS = {
         ("Commande de matériel",                 ["COMMANDE DE MATÉRIEL"], []),
     ],
     "dir": [
-        ("Récolte des KPI et avancement",        ["AVANCEMENTS JALON CHANTIER"], []),
-        ("Validation des contrats et dépenses",  ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
-        ("Déclaration et gestion des ST",        ["GESTION DES ST", "GESTION TRAVAUX"], []),
-        ("Gestion des matériels",                ["GESTION DES MATÉRIELS"], []),
+        ("Récolte des KPI",                      ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Validation contrats et dépenses",      ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
+        ("Gestion des ST",                       ["GESTION DES ST", "GESTION TRAVAUX"], []),
+        ("Matériels",                            ["GESTION DES MATÉRIELS"], []),
         ("Services généraux",                    [], ["CWT", "Tableau", "Word"], True),
     ],
     "daf": [
-        ("Engagement et imputation des dépenses", ["ENGAGEMENT DES DÉPENSES"], []),
-        ("Gestion de la facturation",             ["GESTION DE FACTURATION", "FACTURATION PARTENAIRE"], []),
-        ("Gestion des encaissements",             ["GESTION DES ENCAISSEMENTS"], []),
-        ("Gestion des commandes et achats",       [], ["Achat +", "Pablo"], True),
+        ("Engagement des dépenses",               ["ENGAGEMENT DES DÉPENSES"], []),
+        ("Facturation",                           ["GESTION DE FACTURATION", "FACTURATION PARTENAIRE"], []),
+        ("Encaissements",                         ["GESTION DES ENCAISSEMENTS"], []),
+        ("Commandes et achats",                   [], ["Achat +", "Pablo"], True),
         ("Gestion contractuelle",                 ["GESTION DE CONTRATS", "AVANCEMENTS JALON CHANTIER"], []),
-        ("Gestion du personnel et des formations", ["GESTION DU PERSONNEL", "ON BOARDING RH",
+        ("Personnel et formations",                ["GESTION DU PERSONNEL", "ON BOARDING RH",
                                                     "GESTION DES FORMATIONS"], ["Neoaccès"]),
     ],
 }

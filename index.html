@@ -99,30 +99,54 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .wire.manuel{stroke-dasharray:6 5}
 .port{transition:opacity .2s ease}
 
-.col{position:absolute;width:392px;display:flex;flex-direction:column;gap:10px;z-index:2;justify-content:space-evenly}
-.col.left{left:0;top:0;bottom:0}
-.col.right{right:0;top:0;bottom:0}
+/* mise en page « une page » : pôles en haut, socle en bandeau, pôles en bas */
+.board{display:flex;flex-direction:column;gap:14px}
+.prow{display:flex;gap:12px;flex:1 1 auto;z-index:2;min-height:0}
+.prow .card{flex:1 1 0;min-width:0}
+.hub-band{flex:0 0 auto;z-index:2;position:relative;
+  background:linear-gradient(168deg,var(--hub-bg-2) 0%,var(--hub-bg) 68%);
+  border:1px solid rgba(255,255,255,.08);border-radius:16px;box-shadow:var(--shadow-hub);
+  padding:9px 14px 11px;display:flex;gap:10px;align-items:flex-start}
+.hub-band .btitle{display:flex;flex-direction:column;justify-content:center;flex:0 0 108px;padding-right:4px}
+.hub-band .btitle span{font-size:8.5px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--core)}
+.hub-band .btitle b{font-size:14.5px;font-weight:800;color:var(--hub-ink);line-height:1.1;margin-top:3px}
+.hub-band .hub-group{flex:1 1 0;display:flex;flex-direction:column;gap:4px;min-width:0}
+.hub-band .chips{display:flex;flex-direction:column;gap:4px}
+.hub-band .hub-group.two .chips{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.hub-band .hub-group > span{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--hub-muted);text-align:center;line-height:1.15}
+.hub-band .app{padding:5px 6px;font-size:11px;border-radius:7px;gap:5px}
+.hub-band .core{background:rgba(76,201,232,.07);border:1px solid rgba(76,201,232,.25);border-radius:10px;
+  padding:6px;display:flex;flex-direction:column;gap:4px;flex:1 1 0;min-width:0;align-self:stretch}
+.hub-band .core-app{padding:5px 4px;border-radius:7px}
+.hub-band .core-app b{font-size:11.5px}
+.hub-band .core-app small{font-size:7.5px;margin-top:1px}
 
 /* ---------- cartes service ---------- */
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;
-      box-shadow:var(--shadow);padding:11px 13px 12px;display:flex;flex-direction:column;flex:0 1 auto;
+      box-shadow:var(--shadow);padding:9px 11px 10px;display:flex;flex-direction:column;flex:0 1 auto;
       transition:box-shadow .2s ease,border-color .2s ease,opacity .2s ease}
 .card-head{display:flex;align-items:center;gap:9px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;align-self:center;
      box-shadow:0 0 0 3.5px color-mix(in srgb,var(--accent) 18%,transparent)}
-.card h2{margin:0;font-size:15.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
-.card .kicker{margin:2px 0 7px 18px;font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.missions{display:flex;flex-direction:column;gap:7px;flex:0 1 auto}
+.card h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
+.card .kicker{margin:1px 0 6px 17px;font-size:9px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.missions{display:flex;flex-direction:column;gap:6px;flex:1 1 auto;justify-content:space-evenly}
+.card.wide .missions{display:grid;grid-template-columns:1fr 1fr;gap:7px 26px;align-content:space-evenly}
+.card.wide .mission{min-width:0}
+.tools{min-width:0}
 .mission{display:flex;flex-direction:column;gap:4px}
-.mlab{font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
+.mlab{font-size:8.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
       color:var(--accent);display:flex;align-items:center;gap:7px;white-space:nowrap}
 .mlab i{height:1px;flex:1;background:var(--line-2);display:block;min-width:8px}
 .mission.todo .mlab{color:var(--muted)}
 .tools{display:flex;flex-wrap:wrap;gap:4px}
+.via{font-size:8.8px;font-weight:650;color:var(--muted);line-height:1.25;letter-spacing:.01em}
+.via em{font-style:normal;color:color-mix(in srgb,var(--core) 65%,var(--ink-2));font-weight:750}
 
 /* pastille outil : le fond porte la nature interne / externe */
-.tool{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;line-height:1;
-      padding:5px 9px;border-radius:999px;white-space:nowrap;text-align:center;
+.tool{display:inline-flex;align-items:center;gap:4px;font-size:10.8px;font-weight:700;line-height:1;
+      padding:4px 8px;border-radius:999px;white-space:nowrap;text-align:center;
       background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .tool.int{background:color-mix(in srgb,var(--accent) 12%,transparent);
           border-color:color-mix(in srgb,var(--accent) 36%,transparent);color:var(--accent)}
@@ -286,7 +310,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
     </aside>
   </div>
 
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 3/4</span></div>
+  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 2/3</span></div>
 </div></div></div>
 
 <!-- ══════════════ PLANCHE 4 — RÉFÉRENTIEL ══════════════ -->
@@ -302,7 +326,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 
   <div class="wrap"><div class="ref" id="refWrap"></div></div>
 
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 4/4</span></div>
+  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 3/3</span></div>
 </div></div></div>
 
 </div>
@@ -392,7 +416,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion et partage des maquettes",
+     "label": "Gestion des maquettes",
      "todo": false,
      "tools": [
       "Anaconda",
@@ -522,7 +546,7 @@ const BDD = {
    ],
    "missions": [
     {
-     "label": "Gestion des jalons de chantier",
+     "label": "Jalons de chantier",
      "todo": false,
      "tools": [
       "MMS",
@@ -530,7 +554,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Commande d'engins et matériels",
+     "label": "Engins et matériels",
      "todo": false,
      "tools": [
       "ERP MAT",
@@ -539,7 +563,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion des réserves et MaD",
+     "label": "Réserves et MaD",
      "todo": false,
      "tools": [
       "IDCapture"
@@ -601,7 +625,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion des MaD et levées de réserve",
+     "label": "MaD et levées de réserve",
      "todo": false,
      "tools": [
       "IDCapture",
@@ -667,7 +691,7 @@ const BDD = {
    ],
    "missions": [
     {
-     "label": "Récolte des KPI et avancement",
+     "label": "Récolte des KPI",
      "todo": false,
      "tools": [
       "MIRO",
@@ -679,7 +703,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Validation des contrats et dépenses",
+     "label": "Validation contrats et dépenses",
      "todo": false,
      "tools": [
       "Basware",
@@ -689,7 +713,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Déclaration et gestion des ST",
+     "label": "Gestion des ST",
      "todo": false,
      "tools": [
       "BATIS",
@@ -698,7 +722,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion des matériels",
+     "label": "Matériels",
      "todo": false,
      "tools": [
       "Oasis"
@@ -742,14 +766,14 @@ const BDD = {
    ],
    "missions": [
     {
-     "label": "Engagement et imputation des dépenses",
+     "label": "Engagement des dépenses",
      "todo": false,
      "tools": [
       "Harmony"
      ]
     },
     {
-     "label": "Gestion de la facturation",
+     "label": "Facturation",
      "todo": false,
      "tools": [
       "Basware",
@@ -761,7 +785,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion des encaissements",
+     "label": "Encaissements",
      "todo": false,
      "tools": [
       "E-Project",
@@ -769,7 +793,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion des commandes et achats",
+     "label": "Commandes et achats",
      "todo": true,
      "tools": [
       "Achat +",
@@ -788,7 +812,7 @@ const BDD = {
      ]
     },
     {
-     "label": "Gestion du personnel et des formations",
+     "label": "Personnel et formations",
      "todo": false,
      "tools": [
       "By My Site",
@@ -1607,27 +1631,52 @@ const BDD = {
    répartis sur deux planches, le socle commun étant repris au centre
    de chacune. Chaque planche ne trace que les flux qui la concernent.
    ============================================================ */
-const BOARDS = [
-  { id: "b1", eyebrow: "Vue d'ensemble · pôles techniques",
-    sub: "Méthodes & BIM, Topographie, Tunnel et Travaux, autour du socle applicatif commun",
-    left: ["met", "top"], right: ["tun", "trv"] },
-  { id: "b2", eyebrow: "Vue d'ensemble · pôles support & pilotage",
-    sub: "Qualité & Environnement, Direction et DAF, autour du socle applicatif commun",
-    left: ["qse", "dir"], right: ["daf"] }
-];
+const BOARD = { id: "b1", top: ["met", "top", "tun", "trv"], bottom: ["dir", "daf", "qse"] };
+const BOARDS = [BOARD];
 
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const SVC = Object.fromEntries(BDD.services.map(s => [s.id, s]));
 const isAuto = d => d && (d.alim === "auto" || d.alim === "mixte");
 
-/* « s:Excel » ou « daf:Basware » → identifiant d'élément, propre à une planche */
+/* « s:Excel » ou « daf:Basware » → identifiant d'élément */
 const idOf = (ref, bid) => {
   const [scope, name] = ref.split(":");
   return scope === "s" ? `${bid}-s-${slug(name)}` : `${bid}-t-${scope}-${slug(name)}`;
 };
 
-const LEGEND = `
+/* Un même outil peut servir à plusieurs missions d'un pôle : la première
+   occurrence garde l'identifiant canonique visé par les flux, les suivantes
+   sont suffixées pour rester uniques. */
+function toolChip(name, bid, svcId, seen){
+  const d = BDD.tools[name] || {};
+  const cls = [d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext")];
+  const auto = isAuto(d) ? '<i class="auto"></i>' : "";
+  const base = `${bid}-t-${svcId}-${slug(name)}`;
+  const n = (seen[base] = (seen[base] || 0) + 1);
+  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">${auto}${name}</span>`;
+}
+
+/* Les outils du socle mobilisés par une mission sont cités en ligne plutôt qu'en
+   pastilles : ils figurent déjà dans le bandeau central, et la planche tient. */
+function cardHTML(pid, bid, wide){
+  const s = SVC[pid];
+  const seen = {};
+  return `<div class="card${wide ? " wide" : ""}" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
+    `<div class="card-head"><span class="dot"></span><h2>${s.name}</h2></div>` +
+    `<p class="kicker">${s.kicker}</p>` +
+    `<div class="missions">` + s.missions.map(m => {
+      const metier = m.tools.filter(t => !(BDD.tools[t] || {}).socle);
+      const socle  = m.tools.filter(t =>  (BDD.tools[t] || {}).socle);
+      return `<div class="mission${m.todo ? " todo" : ""}">` +
+        `<span class="mlab">${m.label}<i></i></span>` +
+        (metier.length ? `<div class="tools">${metier.map(t => toolChip(t, bid, pid, seen)).join("")}</div>` : "") +
+        (socle.length ? `<span class="via">via <em>${socle.join(" · ")}</em></span>` : "") +
+      `</div>`;
+    }).join("") + `</div></div>`;
+}
+
+const LEGEND_HTML = `
   <div class="legend">
     <div class="swatchrow">
       <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
@@ -1647,76 +1696,47 @@ const LEGEND = `
     </div>
   </div>`;
 
-/* Un même outil peut servir à plusieurs missions d'un pôle : la première
-   occurrence garde l'identifiant canonique visé par les flux, les suivantes
-   sont suffixées pour rester uniques. */
-function toolChip(name, bid, svcId, seen){
-  const d = BDD.tools[name] || {};
-  const cls = [d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext")];
-  if (d.socle) cls.push("socle");
-  const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-  const base = `${bid}-t-${svcId}-${slug(name)}`;
-  const n = (seen[base] = (seen[base] || 0) + 1);
-  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">${auto}${name}</span>`;
-}
-
-function cardHTML(pid, bid){
-  const s = SVC[pid];
-  const seen = {};
-  return `<div class="card" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
-    `<div class="card-head"><span class="dot"></span><h2>${s.name}</h2></div>` +
-    `<p class="kicker">${s.kicker}</p>` +
-    `<div class="missions">` + s.missions.map(m =>
-      `<div class="mission${m.todo ? " todo" : ""}">` +
-        `<span class="mlab">${m.label}<i></i></span>` +
-        `<div class="tools">${m.tools.map(t => toolChip(t, bid, pid, seen)).join("")}</div>` +
-      `</div>`).join("") + `</div></div>`;
-}
-
 const CORE_SUB = { "SharePoint": "Référentiel", "Power BI": "Cabine de pilotage" };
 
 function hubHTML(bid){
   const groups = BDD.socle.map(g => {
-    const odd = g.tools.length % 2 === 1;
-    return `<div class="hub-group"><span>${g.group}</span><div class="hub-grid">` +
-      g.tools.map((n, i) => {
+    const many = g.tools.length > 3;          /* groupe dense : deux colonnes de pastilles */
+    return `<div class="hub-group${many ? " two" : ""}" style="flex-grow:${many ? 2 : 1}">` +
+      `<span>${g.group}</span><div class="chips">` +
+      g.tools.map(n => {
         const d = BDD.tools[n] || {};
-        const wide = odd && i === g.tools.length - 1 ? " wide" : "";
         const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}${wide}" id="${bid}-s-${slug(n)}">${auto}${n}</div>`;
+        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}" id="${bid}-s-${slug(n)}">${auto}${n}</div>`;
       }).join("") + `</div></div>`;
   }).join("");
   const core = BDD.core.map(n =>
     `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${n}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
-  return `<div class="hub">
-      <div class="hub-head"><span class="tag">Socle applicatif</span><h2>Logiciels communs</h2>
-        <p>Plateformes partagées par plusieurs services</p></div>
-      <div class="hub-body">${groups}</div>
-      <div class="core">${core}</div>
+  return `<div class="hub-band">
+      <div class="btitle"><span>Socle applicatif</span><b>Logiciels communs</b></div>
+      ${groups}<div class="core">${core}</div>
     </div>`;
 }
 
 const deck = document.querySelector(".deck");
-BOARDS.forEach((b, n) => {
-  const stage = document.createElement("div");
-  stage.className = "stage";
-  stage.innerHTML = `<div class="slide" id="slide-${b.id}"><div class="slide-inner">
-      <div class="masthead">
-        <div><p class="eyebrow">${b.eyebrow}</p><h1>Cartographie des outils IT</h1>
-             <p class="sub">${b.sub}</p></div>
-        ${LEGEND}
-      </div>
-      <div class="board" id="board-${b.id}" data-board="${b.id}">
-        <svg class="wires" aria-hidden="true"></svg>
-        <div class="col left">${b.left.map(p => cardHTML(p, b.id)).join("")}</div>
-        ${hubHTML(b.id)}
-        <div class="col right">${b.right.map(p => cardHTML(p, b.id)).join("")}</div>
-      </div>
-      <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
-        <span>Planche ${n + 1}/4</span></div>
-    </div></div>`;
-  deck.insertBefore(stage, deck.firstChild ? deck.children[n] : null);
-});
+const stage = document.createElement("div");
+stage.className = "stage";
+stage.innerHTML = `<div class="slide" id="slide-${BOARD.id}"><div class="slide-inner">
+    <div class="masthead">
+      <div><p class="eyebrow">Système d'information chantier · vue d'ensemble</p>
+           <h1>Cartographie des outils IT</h1>
+           <p class="sub">Sept pôles, leurs missions et leurs outils, autour du socle applicatif commun</p></div>
+      ${LEGEND_HTML}
+    </div>
+    <div class="board" id="board-${BOARD.id}" data-board="${BOARD.id}">
+      <svg class="wires" aria-hidden="true"></svg>
+      <div class="prow">${BOARD.top.map(p => cardHTML(p, BOARD.id)).join("")}</div>
+      ${hubHTML(BOARD.id)}
+      <div class="prow">${BOARD.bottom.map(p => cardHTML(p, BOARD.id, true)).join("")}</div>
+    </div>
+    <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
+      <span>Planche 1/3</span></div>
+  </div></div>`;
+deck.insertBefore(stage, deck.firstChild);
 
 /* ============================================================
    2. CONNECTEURS
@@ -1727,7 +1747,7 @@ const css   = v => getComputedStyle(document.documentElement).getPropertyValue(v
 /* Flux à tracer sur une planche : ceux internes au socle, et ceux dont
    l'extrémité métier appartient à un pôle présent sur la planche. */
 function boardFlows(b){
-  const poles = new Set([...b.left, ...b.right]);
+  const poles = new Set([...(b.top || b.left || []), ...(b.bottom || b.right || [])]);
   return BDD.flows.map((f, i) => ({ f, i })).filter(({ f }) => {
     if (f.map === false) return false;
     return [f.from, f.to].every(r => {
@@ -1819,11 +1839,22 @@ function drawBoard(b){
     const cardA = a.closest(".card"), cardB = c.closest(".card");
     const useCard = !(cardA && cardA === cardB);
     const aFirst = ra.cx <= rb.cx;
-    const p0 = anchor(a, board,  aFirst, scale, off[i].from, useCard);
-    const p1 = anchor(c, board, !aFirst, scale, off[i].to,   useCard);
+    let p0 = anchor(a, board,  aFirst, scale, off[i].from, useCard);
+    let p1 = anchor(c, board, !aFirst, scale, off[i].to,   useCard);
 
     let d;
-    if (Math.abs(ra.cx - rb.cx) < 30){
+    const zone = el => el.closest(".hub-band") ? "band" : (el.closest(".prow") ? "row" : "");
+    const acrossZones = zone(a) && zone(c) && zone(a) !== zone(c);
+    if (acrossZones || Math.abs(ra.cy - rb.cy) > Math.abs(ra.cx - rb.cx) * 1.2){
+      /* Éléments empilés : on sort par le bord horizontal le plus proche de la cible. */
+      const down = ra.cy <= rb.cy;
+      const eA = useCard && cardA ? localRect(cardA, board, scale) : ra;
+      const eB = useCard && cardB ? localRect(cardB, board, scale) : rb;
+      p0 = { x: ra.cx + off[i].from, y: down ? eA.y + eA.h : eA.y };
+      p1 = { x: rb.cx + off[i].to,   y: down ? eB.y : eB.y + eB.h };
+      const dy = (p1.y - p0.y) * .5;
+      d = `M ${p0.x} ${p0.y} C ${p0.x} ${p0.y + dy}, ${p1.x} ${p1.y - dy}, ${p1.x} ${p1.y}`;
+    } else if (Math.abs(ra.cx - rb.cx) < 30){
       /* Pastilles alignées verticalement : on contourne par le couloir central
          du conteneur plutôt que de traverser les pastilles intermédiaires. */
       const host = a.closest(".hub") || a.closest(".card");

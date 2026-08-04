@@ -6,39 +6,43 @@ autonome et en PowerPoint **entièrement éditable** (formes natives, pas d'imag
 
 | Livrable | Chemin |
 |---|---|
-| Planches HTML (4 planches 16:9) | `index.html` |
+| Planches HTML (3 planches 16:9) | `index.html` |
 | Présentation PowerPoint | `dist/Cartographie-Outils-IT.pptx` |
 | Base de données source | `data/BDD_Cartographie_Outils_IT.xlsx` |
 | Extraction de la BDD | `data/build_data.py` |
 | Générateur PowerPoint | `pptx/build.py` + `pptx/extract.js` |
 | Version issue du seul PDF initial | `archive/` |
 
-## Les quatre planches
+## Les trois planches
 
-**Planches 1 et 2 — Cartographie.** Le socle applicatif commun au centre, les
-pôles autour. Chaque pôle est décomposé en **missions**, et chaque mission liste
-les outils qu'elle mobilise. Les connecteurs relient deux outils dans le sens réel
-du flux. Les 31 missions ne tenant pas sur un seul plateau, les pôles sont répartis
-sur deux planches — techniques puis support et pilotage — le socle étant repris au
-centre de chacune.
+**Planche 1 — Cartographie.** Toute la cartographie sur une seule page : les
+quatre pôles techniques en haut, le socle applicatif commun en bandeau central,
+les trois pôles support et pilotage en bas. Chaque pôle est décomposé en
+**missions**, et chaque mission liste les outils qu'elle mobilise. Les connecteurs
+relient deux outils dans le sens réel du flux.
 
-**Planche 3 — Flux et modes d'alimentation.** Les 15 flux en tableau, la
+Pour que les 31 missions tiennent sur une page, les outils du socle mobilisés par
+une mission sont cités en ligne (« via Excel · Power BI ») plutôt qu'en pastilles :
+ils figurent déjà dans le bandeau central. Seuls les outils propres au pôle
+apparaissent en pastille.
+
+**Planche 2 — Flux et modes d'alimentation.** Les 15 flux en tableau, la
 répartition du parc, et les points d'attention.
 
-**Planche 4 — Référentiel.** Les 54 outils avec éditeur, pôles utilisateurs,
+**Planche 3 — Référentiel.** Les 54 outils avec éditeur, pôles utilisateurs,
 nature et mode d'alimentation.
 
 ## Les sept pôles
 
-| Pôle | Planche | Origine |
+| Pôle | Rangée | Origine |
 |---|---|---|
-| Méthodes & BIM | 1 | service `Méthode/BIM` |
-| Topographie | 1 | service `TOPO` |
-| Tunnel | 1 | service `TUNNEL` |
-| Travaux | 1 | `Responsable Travaux` + `Ingé travaux` |
-| Qualité & Environnement | 2 | `Qualité` + `Environnement` |
-| Direction | 2 | service `Direction` |
-| DAF | 2 | `Contrat Manager` + `Comptabilité/gestion` + `Assistant RH` |
+| Méthodes & BIM | haut | service `Méthode/BIM` |
+| Topographie | haut | service `TOPO` |
+| Tunnel | haut | service `TUNNEL` |
+| Travaux | haut | `Responsable Travaux` + `Ingé travaux` |
+| Direction | bas | service `Direction` |
+| DAF | bas | `Contrat Manager` + `Comptabilité/gestion` + `Assistant RH` |
+| Qualité & Environnement | bas | `Qualité` + `Environnement` |
 
 ## Les axes de lecture
 
@@ -50,8 +54,9 @@ Trois dimensions de la BDD sont portées visuellement :
 | Interne / externe | `Interne / Externe` | Pastille teintée (interne) ou neutre (externe) |
 | Alimentation | `Alimentation (Manuel/Auto)` | Point cyan sur l'outil ; trait plein (automatisé) ou pointillé (manuel) sur les flux |
 
-Dans les cartes de pôle, un outil du socle apparaît en pastille discrète à contour
-cyan : on lit d'un coup d'œil ce que chaque mission emprunte au socle commun.
+Dans les cartes de pôle, les outils du socle mobilisés par une mission sont cités
+en ligne après ses pastilles : on lit d'un coup d'œil ce que la mission emprunte au
+socle commun.
 
 Un outil au contour en pointillés, ou un libellé de mission en gris, est **à
 valider** : il est cité dans la BDD mais aucun entretien ne le documente.
@@ -98,8 +103,10 @@ de texte. Le HTML est la source unique de vérité.
   Chaque entrée vaut `(libellé, [valeurs FLUX absorbées], [outils ajoutés à la
   main], proposée)`. Tout outil d'un pôle non rattaché à une mission est signalé
   en sortie de script et regroupé sous « Autres outils ».
-- **Répartir les pôles entre les deux planches** : constante `BOARDS` en tête du
-  script de `index.html` (`left` et `right` par planche).
+- **Répartir les pôles entre les deux rangées** : constante `BOARD` en tête du
+  script de `index.html` (`top` et `bottom`). L'ordre commande aussi la longueur
+  des connecteurs : un pôle placé sous la zone du socle qu'il alimente évite les
+  fils qui traversent la planche.
 - **Ajouter un flux** : liste `FLOWS` dans `data/build_data.py`, sous la forme
   `("service:Outil", "s:OutilSocle", "objet du flux")`. Un quatrième élément
   `False` documente le flux dans la matrice sans le tracer sur la carte. Aucune
