@@ -226,7 +226,9 @@ window.__extractSlide = function (slideSelector) {
               [n[4] + B.x, n[5] + B.y], [n[6] + B.x, n[7] + B.y]],
         color: parseColor(getComputedStyle(p).stroke),
         width: parseFloat(getComputedStyle(p).strokeWidth),
-        dashed: p.classList.contains("dashed")
+        /* le pointillé se lit sur le style calculé, jamais sur un nom de classe :
+           le CSS reste la source unique, rien à tenir synchronisé avec index.html */
+        dashed: getComputedStyle(p).strokeDasharray !== "none"
       });
     });
     slide.querySelectorAll("svg.wires circle.port").forEach(c => {
@@ -244,7 +246,10 @@ window.__extractSlide = function (slideSelector) {
   /* ---------- flèches de légende --------------------------------------- */
   slide.querySelectorAll('svg[data-pptx="arrow"]').forEach(sv => {
     const b = rel(sv.getBoundingClientRect());
-    const col = parseColor(getComputedStyle(sv.parentElement).color);
+    /* couleur relevée sur le SVG lui-même : « color » étant héritée, une flèche sans
+       couleur propre rend comme avant, et une flèche teintée peut rester enfant
+       direct de .item — l'en sortir casserait le garde-fou « svg » d'inlineRuns() */
+    const col = parseColor(getComputedStyle(sv).color);
     out.wires.push({
       pts: [[b.x + 1, b.y + b.h / 2], [b.x + 10, b.y + b.h / 2],
             [b.x + 24, b.y + b.h / 2], [b.x + b.w, b.y + b.h / 2]],

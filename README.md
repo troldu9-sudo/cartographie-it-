@@ -51,8 +51,8 @@ Trois dimensions de la BDD sont portées visuellement :
 | Dimension | Colonne BDD | Encodage |
 |---|---|---|
 | Socle commun / application métier | `Nature` | Position : centre ou carte de pôle |
-| Interne / externe | `Interne / Externe` | Pastille teintée (interne) ou neutre (externe) |
-| Alimentation | `Alimentation (Manuel/Auto)` | Point cyan sur l'outil ; trait plein (automatisé) ou pointillé (manuel) sur les flux |
+| Interne / externe | `Interne / Externe` | Badge `INT` / `EXT` sur chaque pastille — `?` si la BDD ne tranche pas — doublé d'une pastille teintée pour les internes |
+| Alimentation | `Alimentation (Manuel/Auto)` | Badge `AUTO` sur l'outil ; sur les flux, trait plein à la couleur du pôle (automatisé) ou **gris pointillé** (manuel) |
 
 Dans les cartes de pôle, les outils du socle mobilisés par une mission sont cités
 en ligne après ses pastilles : on lit d'un coup d'œil ce que la mission emprunte au

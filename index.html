@@ -88,9 +88,12 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .legend svg{flex:none}
 .key{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.04em;padding:3px 8px;border-radius:999px;text-align:center;
      border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2)}
-.key.k-int{background:color-mix(in srgb,var(--dir) 13%,transparent);border-color:color-mix(in srgb,var(--dir) 34%,transparent);color:var(--dir)}
 .key.k-todo{border-style:dashed;color:var(--muted)}
-.kdot{width:8px;height:8px;border-radius:50%;background:var(--core);flex:none;display:block}
+/* La légende montre les mêmes runs de texte que la carte, en corps lisible. */
+.legend em.ie,.legend em.al{font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.06em}
+.legend em.ie{color:var(--muted)}
+.legend em.ie.int{color:var(--dir)}
+.legend em.al{color:#0B7E99}
 
 /* ---------- plateau ---------- */
 .board{position:absolute;left:44px;right:44px;top:140px;bottom:34px}
@@ -115,7 +118,7 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .hub-band .hub-group.two .chips{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .hub-band .hub-group > span{font-size:8px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
   color:var(--hub-muted);text-align:center;line-height:1.15}
-.hub-band .app{padding:5px 6px;font-size:11px;border-radius:7px;gap:5px}
+.hub-band .app{padding:5px 6px;font-size:11px;border-radius:7px;line-height:1.15}
 .hub-band .core{background:rgba(76,201,232,.07);border:1px solid rgba(76,201,232,.25);border-radius:10px;
   padding:6px;display:flex;flex-direction:column;gap:4px;flex:1 1 0;min-width:0;align-self:stretch}
 .hub-band .core-app{padding:5px 4px;border-radius:7px}
@@ -144,8 +147,11 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .via{font-size:8.8px;font-weight:650;color:var(--muted);line-height:1.25;letter-spacing:.01em}
 .via em{font-style:normal;color:color-mix(in srgb,var(--core) 65%,var(--ink-2));font-weight:750}
 
-/* pastille outil : le fond porte la nature interne / externe */
-.tool{display:inline-flex;align-items:center;gap:4px;font-size:10.8px;font-weight:700;line-height:1;
+/* pastille outil : le fond porte la nature interne / externe, les badges la nomment.
+   La pastille n'est PAS un conteneur flex — un conteneur flex « blockifie » ses
+   enfants, et inlineRuns() (extract.js) renonce alors à fusionner : le badge et le
+   nom repartiraient en deux zones de texte côte à côte, donc superposées. */
+.tool{display:inline-block;font-size:10.8px;font-weight:700;line-height:1.1;
       padding:4px 8px;border-radius:999px;white-space:nowrap;text-align:center;
       background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .tool.int{background:color-mix(in srgb,var(--accent) 12%,transparent);
@@ -153,7 +159,18 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .tool.todo{border-style:dashed;color:var(--muted);background:transparent}
 .tool.socle{background:transparent;border-color:color-mix(in srgb,var(--core) 55%,transparent);
             color:color-mix(in srgb,var(--core) 62%,var(--ink-2))}
-.tool i.auto{width:7px;height:7px;border-radius:50%;background:var(--core);flex:none;display:block}
+
+/* Nature (INT / EXT / ?) et alimentation (AUTO) : du texte, jamais une pastille
+   peinte. Les marges ne sont pas décoratives — inlineRuns() en déduit les espaces
+   entre runs à l'export. */
+.tool em.ie,.tool em.al,.app em.ie,.app em.al{
+  font-style:normal;font-size:7.6px;font-weight:800;letter-spacing:.04em}
+.tool em.ie{margin-right:4px;color:var(--muted)}
+.tool.int em.ie{color:var(--accent)}
+.tool em.al{margin-left:4px;color:color-mix(in srgb,var(--core) 70%,var(--ink-2))}
+.app em.ie{margin-right:5px;color:var(--hub-muted)}
+.app.int em.ie{color:var(--core)}
+.app em.al{margin-left:5px;color:var(--core)}
 
 /* ---------- socle commun ---------- */
 .hub{position:absolute;left:516px;width:480px;top:0;bottom:0;z-index:2;
@@ -170,11 +187,10 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .hub-group{display:flex;flex-direction:column;gap:6px}
 .hub-group > span{font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--hub-muted);text-align:center}
 .hub-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 24px}
-.app{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--hub-chip);
+.app{display:block;background:var(--hub-chip);
      border:1px solid var(--hub-line);border-radius:9px;padding:8px 8px;text-align:center;
      font-size:12.5px;font-weight:750;color:var(--hub-ink);transition:.18s ease}
 .app.int{background:rgba(76,201,232,.13);border-color:rgba(76,201,232,.42)}
-.app i.auto{width:7px;height:7px;border-radius:50%;background:var(--core);flex:none;display:block}
 .app.wide{grid-column:1 / -1}
 .core{background:rgba(76,201,232,.07);border:1px solid rgba(76,201,232,.25);border-radius:12px;
       padding:10px;position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -277,9 +293,9 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 
 <div class="deck">
 
-<!-- Les deux planches de cartographie sont générées par le script (voir BOARDS). -->
+<!-- La planche de cartographie est générée par le script (voir BOARD). -->
 
-<!-- ══════════════ PLANCHE 3 — FLUX & ALIMENTATION ══════════════ -->
+<!-- ══════════════ PLANCHE 2 — FLUX & ALIMENTATION ══════════════ -->
 <div class="stage"><div class="slide" id="slide2"><div class="slide-inner">
   <div class="masthead">
     <div>
@@ -313,7 +329,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
   <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 2/3</span></div>
 </div></div></div>
 
-<!-- ══════════════ PLANCHE 4 — RÉFÉRENTIEL ══════════════ -->
+<!-- ══════════════ PLANCHE 3 — RÉFÉRENTIEL ══════════════ -->
 <div class="stage"><div class="slide" id="slide3"><div class="slide-inner">
   <div class="masthead">
     <div>
@@ -1625,11 +1641,11 @@ const BDD = {
 /* ==== DONNÉES BDD — fin ==== */
 
 /* ============================================================
-   1. LES DEUX PLANCHES DE CARTOGRAPHIE
+   1. LA PLANCHE DE CARTOGRAPHIE
    ------------------------------------------------------------
-   31 missions ne tiennent pas sur un seul plateau : les pôles sont
-   répartis sur deux planches, le socle commun étant repris au centre
-   de chacune. Chaque planche ne trace que les flux qui la concernent.
+   Les sept pôles tiennent sur une planche unique : quatre en haut, le socle
+   commun en bandeau central, trois en bas. Un pôle n'est jamais scindé entre
+   deux planches — voir « Règles non négociables » dans CLAUDE.md.
    ============================================================ */
 const BOARD = { id: "b1", top: ["met", "top", "tun", "trv"], bottom: ["dir", "daf", "qse"] };
 const BOARDS = [BOARD];
@@ -1645,16 +1661,23 @@ const idOf = (ref, bid) => {
   return scope === "s" ? `${bid}-s-${slug(name)}` : `${bid}-t-${scope}-${slug(name)}`;
 };
 
+/* Nature et alimentation sont nommées dans la pastille, en runs de texte non
+   peints : un point ou un badge à fond ferait renoncer inlineRuns() côté export
+   et le marqueur se retrouverait posé sur le nom. */
+const IE_TAG = { interne: "INT", externe: "EXT" };
+const ieRun = d => `<em class="ie">${IE_TAG[d.ie] || "?"}</em>`;
+const alRun = d => isAuto(d) ? '<em class="al">AUTO</em>' : "";
+
 /* Un même outil peut servir à plusieurs missions d'un pôle : la première
    occurrence garde l'identifiant canonique visé par les flux, les suivantes
    sont suffixées pour rester uniques. */
 function toolChip(name, bid, svcId, seen){
   const d = BDD.tools[name] || {};
   const cls = [d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext")];
-  const auto = isAuto(d) ? '<i class="auto"></i>' : "";
   const base = `${bid}-t-${svcId}-${slug(name)}`;
   const n = (seen[base] = (seen[base] || 0) + 1);
-  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">${auto}${name}</span>`;
+  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">` +
+         `${ieRun(d)}${name}${alRun(d)}</span>`;
 }
 
 /* Les outils du socle mobilisés par une mission sont cités en ligne plutôt qu'en
@@ -1676,21 +1699,23 @@ function cardHTML(pid, bid, wide){
     }).join("") + `</div></div>`;
 }
 
+/* La flèche automatisée est teintée d'une couleur de pôle, la manuelle en gris :
+   c'est la règle de couleur des connecteurs, elle doit se lire ici. */
 const LEGEND_HTML = `
   <div class="legend">
     <div class="swatchrow">
-      <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
-      <span class="item"><span class="key">Externe</span>Éditeur du marché</span>
+      <span class="item"><em class="ie int">INT</em>Développé / porté en interne</span>
+      <span class="item"><em class="ie">EXT</em>Éditeur du marché</span>
       <span class="item"><span class="key k-todo">À valider</span>Outil ou mission à confirmer</span>
     </div>
     <div class="swatchrow">
-      <span class="item"><span class="kdot"></span>Alimentation automatique</span>
+      <span class="item"><em class="al">AUTO</em>Alimentation automatique</span>
       <span class="item">
-        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
+        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" style="color:var(--met)"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
         Flux automatisé
       </span>
       <span class="item">
-        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" data-dash="1"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
+        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" data-dash="1" style="color:var(--muted)"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
         Flux manuel (ressaisie)
       </span>
     </div>
@@ -1705,12 +1730,17 @@ function hubHTML(bid){
       `<span>${g.group}</span><div class="chips">` +
       g.tools.map(n => {
         const d = BDD.tools[n] || {};
-        const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}" id="${bid}-s-${slug(n)}">${auto}${n}</div>`;
+        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}" id="${bid}-s-${slug(n)}">` +
+               `${ieRun(d)}${n}${alRun(d)}</div>`;
       }).join("") + `</div></div>`;
   }).join("");
-  const core = BDD.core.map(n =>
-    `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${n}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
+  /* Le socle de données porte sa nature dans le sous-titre existant : un élément
+     de plus ferait passer le bloc de deux à trois lignes et grandir le bandeau. */
+  const core = BDD.core.map(n => {
+    const d = BDD.tools[n] || {};
+    const sub = [CORE_SUB[n] || "", IE_TAG[d.ie] || "?"].concat(isAuto(d) ? ["AUTO"] : []).join(" · ");
+    return `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${n}</b><small>${sub}</small></div>`;
+  }).join("");
   return `<div class="hub-band">
       <div class="btitle"><span>Socle applicatif</span><b>Logiciels communs</b></div>
       ${groups}<div class="core">${core}</div>
@@ -1795,7 +1825,11 @@ function spread(items, b, board, scale){
   return offsets;
 }
 
+/* Un flux manuel passe en gris pointillé : la ressaisie est le point de fragilité
+   du dispositif, elle doit se repérer sans lire la légende. Un flux automatisé
+   garde la couleur du pôle concerné. */
 function wireColor(f){
+  if (!isAuto(f)) return css("--muted");
   const s = f.from.split(":")[0], t = f.to.split(":")[0];
   if (s === "s" && t === "s") return css("--core");        /* plomberie interne au socle */
   return css("--" + (s !== "s" ? s : t));                  /* couleur du pôle concerné */
@@ -1939,7 +1973,7 @@ BOARDS.forEach(b => {
 });
 
 /* ============================================================
-   4. PLANCHE 3 — FLUX, STATISTIQUES, POINTS D'ATTENTION
+   4. PLANCHE 2 — FLUX, STATISTIQUES, POINTS D'ATTENTION
    ============================================================ */
 const label = ref => {
   const [scope, name] = ref.split(":");
@@ -1994,7 +2028,7 @@ document.getElementById("warnings").innerHTML = [
 ].map((t, i) => `<li><span class="idx">${"ABCD"[i]}</span><span>${t}</span></li>`).join("");
 
 /* ============================================================
-   5. PLANCHE 4 — RÉFÉRENTIEL
+   5. PLANCHE 3 — RÉFÉRENTIEL
    ============================================================ */
 document.getElementById("refLegend").innerHTML =
   `<span class="item"><span class="badge int">INT</span>Outil interne</span>` +
