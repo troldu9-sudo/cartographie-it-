@@ -17,11 +17,12 @@ autonome et en PowerPoint **entièrement éditable** (formes natives, pas d'imag
 
 **Planche 1 — Cartographie.** Toute la cartographie sur une seule page : les
 quatre pôles techniques en haut, le socle applicatif commun en bandeau central,
-les trois pôles support et pilotage en bas. Chaque pôle est décomposé en
-**missions**, et chaque mission liste les outils qu'elle mobilise. Les connecteurs
-relient deux outils dans le sens réel du flux.
+les quatre pôles support et pilotage en bas. Chaque pôle est décomposé en
+**missions**, et chaque mission liste les outils qu'elle mobilise. Un bandeau de
+titre à la couleur du pôle délimite chaque carte. Les connecteurs relient deux
+outils dans le sens réel du flux.
 
-Pour que les 31 missions tiennent sur une page, les outils du socle mobilisés par
+Pour que les 32 missions tiennent sur une page, les outils du socle mobilisés par
 une mission sont cités en ligne (« via Excel · Power BI ») plutôt qu'en pastilles :
 ils figurent déjà dans le bandeau central. Seuls les outils propres au pôle
 apparaissent en pastille.
@@ -32,7 +33,7 @@ répartition du parc, et les points d'attention.
 **Planche 3 — Référentiel.** Les 54 outils avec éditeur, pôles utilisateurs,
 nature et mode d'alimentation.
 
-## Les sept pôles
+## Les huit pôles
 
 | Pôle | Rangée | Origine |
 |---|---|---|
@@ -41,8 +42,14 @@ nature et mode d'alimentation.
 | Tunnel | haut | service `TUNNEL` |
 | Travaux | haut | `Responsable Travaux` + `Ingé travaux` |
 | Direction | bas | service `Direction` |
-| DAF | bas | `Contrat Manager` + `Comptabilité/gestion` + `Assistant RH` |
+| DAF | bas | `Comptabilité/gestion` + `Assistant RH` |
+| Contrat Manager | bas | service `Contrat Manager`, **plus** le contractuel déclaré par la Direction et les Travaux |
 | Qualité & Environnement | bas | `Qualité` + `Environnement` |
+
+Contrat Manager est un **pôle transverse** : outre ses propres entretiens, il
+rassemble le circuit de validation et la gestion des contrats que la Direction et
+les Travaux déclaraient chacun de leur côté. Ces deux pôles ont donc cédé leur
+mission de validation contractuelle.
 
 ## Les axes de lecture
 

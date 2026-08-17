@@ -27,6 +27,7 @@
   --qse:#C2456A;  /* Qualité & Environnement */
   --dir:#5B57D6;  /* Direction               */
   --daf:#8257E6;  /* DAF                     */
+  --ctr:#5F7A1B;  /* Contrat Manager         */
   --core:#4CC9E8; /* socle / automatique     */
 
   --shadow:0 1px 2px rgba(13,21,38,.05), 0 12px 28px -14px rgba(13,21,38,.22);
@@ -102,9 +103,13 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .wire.manuel{stroke-dasharray:6 5}
 .port{transition:opacity .2s ease}
 
-/* mise en page « une page » : pôles en haut, socle en bandeau, pôles en bas */
+/* mise en page « une page » : quatre pôles en haut, socle en bandeau, quatre en bas.
+   La rangée technique compte 2 à 5 missions par carte, la rangée support 4 à 6 :
+   elle lui cède de la hauteur, d'où les deux facteurs de croissance. */
 .board{display:flex;flex-direction:column;gap:14px}
-.prow{display:flex;gap:12px;flex:1 1 auto;z-index:2;min-height:0}
+.prow{display:flex;gap:12px;z-index:2;min-height:0}
+.prow.tech{flex:85 1 0}
+.prow.support{flex:100 1 0}
 .prow .card{flex:1 1 0;min-width:0}
 .hub-band{flex:0 0 auto;z-index:2;position:relative;
   background:linear-gradient(168deg,var(--hub-bg-2) 0%,var(--hub-bg) 68%);
@@ -128,8 +133,13 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 /* ---------- cartes service ---------- */
 .card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:16px;
       box-shadow:var(--shadow);padding:9px 11px 10px;display:flex;flex-direction:column;flex:0 1 auto;
-      transition:box-shadow .2s ease,border-color .2s ease,opacity .2s ease}
-.card-head{display:flex;align-items:center;gap:9px}
+      overflow:hidden;transition:box-shadow .2s ease,border-color .2s ease,opacity .2s ease}
+/* Bandeau de titre : c'est lui qui rend la frontière entre services indiscutable.
+   Sans border-radius — rounded_adj() (build.py) plafonne l'ajustement à 0,5 et un
+   bandeau de 5 px arrondi sortirait en pilule dans PowerPoint. Ce sont les coins de
+   la carte qui le rognent en HTML. */
+.card-band{position:absolute;inset:0 0 auto;height:5px;background:var(--accent)}
+.card-head{display:flex;align-items:center;gap:9px;margin-top:1px}
 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);flex:none;align-self:center;
      box-shadow:0 0 0 3.5px color-mix(in srgb,var(--accent) 18%,transparent)}
 .card h2{margin:0;font-size:14.5px;font-weight:800;letter-spacing:-.01em;color:var(--ink);line-height:1.1}
@@ -594,15 +604,6 @@ const BDD = {
       "Quick Connect",
       "Trimble Connect"
      ]
-    },
-    {
-     "label": "Validation et contrats",
-     "todo": false,
-     "tools": [
-      "E-Paraph",
-      "Pablo",
-      "Word"
-     ]
     }
    ]
   },
@@ -616,14 +617,14 @@ const BDD = {
     "Excel",
     "IDCapture",
     "Lafarge+",
-    "Live Objects (Orange)",
+    "Live Objects",
     "Lucee TP",
     "Mezzoteam",
     "Pablo",
     "Power BI",
     "PowerPoint",
     "Quick Connect",
-    "Sixense Monitoring",
+    "Sixense",
     "Trimble Connect",
     "Wastemarket Place"
    ],
@@ -662,9 +663,9 @@ const BDD = {
      "todo": true,
      "tools": [
       "Lafarge+",
-      "Live Objects (Orange)",
+      "Live Objects",
       "Lucee TP",
-      "Sixense Monitoring"
+      "Sixense"
      ]
     },
     {
@@ -719,16 +720,6 @@ const BDD = {
      ]
     },
     {
-     "label": "Validation contrats et dépenses",
-     "todo": false,
-     "tools": [
-      "Basware",
-      "DocuSign",
-      "E-Paraph",
-      "Excel"
-     ]
-    },
-    {
      "label": "Gestion des ST",
      "todo": false,
      "tools": [
@@ -758,7 +749,7 @@ const BDD = {
   {
    "id": "daf",
    "name": "DAF",
-   "kicker": "Contrats · Compta · Achats · RH",
+   "kicker": "Compta · Achats · RH",
    "col": "right",
    "tools": [
     "Achat +",
@@ -767,18 +758,13 @@ const BDD = {
     "By My Site",
     "DocuSign",
     "E-Checking",
-    "E-Project",
     "Excel",
     "H&R For You",
     "Harmony",
     "Neoaccès",
-    "NotebookLM",
     "Pablo",
-    "Power BI",
     "Puma",
-    "SharePoint",
-    "TIPS",
-    "Word"
+    "TIPS"
    ],
    "missions": [
     {
@@ -801,30 +787,11 @@ const BDD = {
      ]
     },
     {
-     "label": "Encaissements",
-     "todo": false,
-     "tools": [
-      "E-Project",
-      "Excel"
-     ]
-    },
-    {
      "label": "Commandes et achats",
      "todo": true,
      "tools": [
       "Achat +",
       "Pablo"
-     ]
-    },
-    {
-     "label": "Gestion contractuelle",
-     "todo": false,
-     "tools": [
-      "NotebookLM",
-      "Excel",
-      "Power BI",
-      "SharePoint",
-      "Word"
      ]
     },
     {
@@ -839,6 +806,66 @@ const BDD = {
       "Excel",
       "Pablo",
       "Puma"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ctr",
+   "name": "Contrat Manager",
+   "kicker": "Contractuel · Validation · Encaissements",
+   "col": "right",
+   "tools": [
+    "Basware",
+    "E-Project",
+    "Excel",
+    "NotebookLM",
+    "Power BI",
+    "SharePoint",
+    "Word"
+   ],
+   "missions": [
+    {
+     "label": "Gestion des contrats",
+     "todo": false,
+     "tools": [
+      "NotebookLM",
+      "Excel",
+      "Power BI",
+      "SharePoint",
+      "Word"
+     ]
+    },
+    {
+     "label": "Facturation partenaire",
+     "todo": false,
+     "tools": [
+      "Basware"
+     ]
+    },
+    {
+     "label": "Encaissements",
+     "todo": false,
+     "tools": [
+      "E-Project",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Avancement des jalons",
+     "todo": false,
+     "tools": [
+      "Word"
+     ]
+    },
+    {
+     "label": "Circuit de validation",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "DocuSign",
+      "E-Paraph",
+      "Pablo"
      ]
     }
    ]
@@ -925,6 +952,7 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
+    "ctr",
     "daf",
     "dir",
     "qse",
@@ -932,7 +960,7 @@ const BDD = {
     "trv",
     "tun"
    ],
-   "nb": 6,
+   "nb": 7,
    "usage": "Contrats avenant, ordre de service, courrier",
    "socle": true
   },
@@ -942,7 +970,7 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
-    "daf",
+    "ctr",
     "dir",
     "trv"
    ],
@@ -998,7 +1026,7 @@ const BDD = {
    "ed": "BYCN",
    "mat": "Mature",
    "svc": [
-    "daf",
+    "ctr",
     "dir",
     "qse",
     "tun"
@@ -1167,7 +1195,7 @@ const BDD = {
    "ed": "Tisseo",
    "mat": "En developpement",
    "svc": [
-    "daf"
+    "ctr"
    ],
    "nb": 1,
    "usage": "Permet d'activer la facturation , voir la situation",
@@ -1179,10 +1207,11 @@ const BDD = {
    "ed": "Soletanche",
    "mat": "Mature",
    "svc": [
+    "ctr",
     "daf",
     "dir"
    ],
-   "nb": 2,
+   "nb": 3,
    "usage": "Validé les facturations partenaires,",
    "socle": false
   },
@@ -1192,7 +1221,7 @@ const BDD = {
    "ed": "GOOGLE",
    "mat": "Mature",
    "svc": [
-    "daf"
+    "ctr"
    ],
    "nb": 1,
    "usage": "Redaction de document, mémoire, reclamation",
@@ -1204,7 +1233,7 @@ const BDD = {
    "ed": "MICROSOFT",
    "mat": "",
    "svc": [
-    "daf"
+    "ctr"
    ],
    "nb": 1,
    "usage": "Accès aux documents",
@@ -1357,7 +1386,7 @@ const BDD = {
    "usage": "KPI tunnel",
    "socle": true
   },
-  "Live Objects (Orange)": {
+  "Live Objects": {
    "ie": "externe",
    "alim": "auto",
    "ed": "",
@@ -1369,7 +1398,7 @@ const BDD = {
    "usage": "Renvoie de les indicateurs de consommation sur les compteurs de pompage",
    "socle": false
   },
-  "Sixense Monitoring": {
+  "Sixense": {
    "ie": "externe",
    "alim": "auto",
    "ed": "",
@@ -1643,11 +1672,17 @@ const BDD = {
 /* ============================================================
    1. LA PLANCHE DE CARTOGRAPHIE
    ------------------------------------------------------------
-   Les sept pôles tiennent sur une planche unique : quatre en haut, le socle
-   commun en bandeau central, trois en bas. Un pôle n'est jamais scindé entre
-   deux planches — voir « Règles non négociables » dans CLAUDE.md.
+   Les huit pôles tiennent sur une planche unique : quatre techniques en haut,
+   le socle commun en bandeau central, quatre support en bas. Un pôle n'est
+   jamais scindé entre deux planches — voir « Règles non négociables » dans
+   CLAUDE.md.
    ============================================================ */
-const BOARD = { id: "b1", top: ["met", "top", "tun", "trv"], bottom: ["dir", "daf", "qse"] };
+/* « wide » = missions sur deux colonnes. Réservé aux cartes qui débordent : à
+   361 px de large les colonnes tombent à 156 px, les libellés de mission y sont
+   à l'étroit. Qualité & Environnement porte 6 missions dont 3 avec ligne « via »,
+   soit 359 px de contenu pour 318 disponibles — elle ne tient qu'ainsi. */
+const BOARD = { id: "b1", top: ["met", "top", "tun", "trv"],
+                bottom: ["dir", "daf", "ctr", "qse"], wide: ["qse"] };
 const BOARDS = [BOARD];
 
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
@@ -1686,6 +1721,7 @@ function cardHTML(pid, bid, wide){
   const s = SVC[pid];
   const seen = {};
   return `<div class="card${wide ? " wide" : ""}" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
+    `<span class="card-band"></span>` +
     `<div class="card-head"><span class="dot"></span><h2>${s.name}</h2></div>` +
     `<p class="kicker">${s.kicker}</p>` +
     `<div class="missions">` + s.missions.map(m => {
@@ -1754,14 +1790,14 @@ stage.innerHTML = `<div class="slide" id="slide-${BOARD.id}"><div class="slide-i
     <div class="masthead">
       <div><p class="eyebrow">Système d'information chantier · vue d'ensemble</p>
            <h1>Cartographie des outils IT</h1>
-           <p class="sub">Sept pôles, leurs missions et leurs outils, autour du socle applicatif commun</p></div>
+           <p class="sub">Huit pôles, leurs missions et leurs outils, autour du socle applicatif commun</p></div>
       ${LEGEND_HTML}
     </div>
     <div class="board" id="board-${BOARD.id}" data-board="${BOARD.id}">
       <svg class="wires" aria-hidden="true"></svg>
-      <div class="prow">${BOARD.top.map(p => cardHTML(p, BOARD.id)).join("")}</div>
+      <div class="prow tech">${BOARD.top.map(p => cardHTML(p, BOARD.id, BOARD.wide.includes(p))).join("")}</div>
       ${hubHTML(BOARD.id)}
-      <div class="prow">${BOARD.bottom.map(p => cardHTML(p, BOARD.id, true)).join("")}</div>
+      <div class="prow support">${BOARD.bottom.map(p => cardHTML(p, BOARD.id, BOARD.wide.includes(p))).join("")}</div>
     </div>
     <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
       <span>Planche 1/3</span></div>

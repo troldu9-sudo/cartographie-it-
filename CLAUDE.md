@@ -8,10 +8,10 @@ Tout le contenu visible est en **français** ; les commentaires du code aussi.
 
 ## Règles non négociables
 
-Ces cinq règles définissent ce que la cartographie doit dire. Une modification qui
+Ces six règles définissent ce que la cartographie doit dire. Une modification qui
 en casse une est un défaut, quelle que soit sa qualité par ailleurs.
 
-1. **Un pôle, une carte, une seule planche.** Les sept pôles tiennent sur la
+1. **Un pôle, une carte, une seule planche.** Les huit pôles tiennent sur la
    planche 1. Un pôle n'est jamais scindé entre deux planches, jamais dupliqué,
    jamais renvoyé en annexe. Si le contenu déborde, on comprime — voir les leviers
    plus bas — on ne coupe pas.
@@ -23,6 +23,9 @@ en casse une est un défaut, quelle que soit sa qualité par ailleurs.
 4. **Toute pastille dit la nature de son outil** : badge `INT`, `EXT`, ou `?`
    quand la BDD ne tranche pas — cartes de pôle **et** bandeau socle.
 5. **Un outil alimenté automatiquement porte le badge `AUTO`**.
+6. **Chaque carte porte un bandeau de titre à la couleur de son pôle.** C'est lui
+   qui rend la frontière entre services indiscutable, la teinte seule n'y suffit
+   pas : Méthodes & BIM, Direction et DAF sont à ΔE 13 à 24 les unes des autres.
 
 Structure de référence, reprise du tableau blanc et des notes d'entretien :
 **conteneur de pôle → mission → pastille d'outil**, et les flux se tracent d'outil
@@ -63,7 +66,7 @@ compléter, pas que la sortie est cassée.
 
 | Clé | Contenu |
 |---|---|
-| `services[]` | les 7 pôles : `{id, name, kicker, missions[]}` |
+| `services[]` | les 8 pôles : `{id, name, kicker, missions[]}` |
 | `services[].missions[]` | `{label, todo, tools[]}` — `todo` = mission proposée, non documentée en BDD |
 | `socle[]` | groupes du socle commun : `{group, tools[]}` |
 | `core[]` | SharePoint, Power BI (bloc « socle de données ») |
@@ -87,38 +90,59 @@ suffixées `-2`, `-3` — la première garde l'identifiant visé par les flux.
 | Besoin | Endroit |
 |---|---|
 | Missions, libellés, rattachements | `MISSIONS` dans `data/build_data.py` |
+| Mission qui puise dans un autre pôle | valeur `"dir:CIRCUIT DE VALIDATION"` dans `MISSIONS` + `ABSORBED` |
 | Composition des pôles | `SERVICE` + `SERVICES` |
 | Composition du socle | `SOCLE` + `CORE` |
 | Flux | `FLOWS` |
 | Libellés d'outils saisis en vrac | `ALIAS` |
-| Répartition haut/bas des pôles | `BOARD` en tête du script de `index.html` |
+| Répartition haut/bas, cartes à deux colonnes | `BOARD` (`top`, `bottom`, `wide`) en tête du script de `index.html` |
+| Hauteur des deux rangées | `.prow.tech` / `.prow.support` |
 | Badges de nature et d'alimentation | `IE_TAG`, `ieRun()`, `alRun()` |
+| Bandeau de titre des cartes | `.card-band` |
 | Couleur et style des flux | `wireColor()` + `.wire.manuel` |
-| Couleurs | `--met --top --tun --trv --qse --dir --daf --core` en tête du CSS |
+| Couleurs | `--met --top --tun --trv --qse --dir --daf --ctr --core` en tête du CSS |
+
+**Missions transverses.** Une valeur `FLUX` nue est lue dans les lignes du pôle
+lui-même ; préfixée — `"dir:CIRCUIT DE VALIDATION"` — elle est lue chez un autre
+pôle. C'est ce qui permet à Contrat Manager de rassembler le contractuel déclaré
+par la Direction et les Travaux. Le garde-fou `ABSORBED` compte ces outils comme
+placés dans leur pôle d'origine : sans lui ils retomberaient dans la mission
+fourre-tout « Autres outils » de Direction (`Basware, DocuSign, E-Paraph`) et de
+Travaux (`E-Paraph, Word`).
 
 ## Mise en page de la planche 1
 
 Format natif 1600 × 900 px = 13,333 × 7,5 po (1 px = 0,6 pt = 7620 EMU).
 
-Quatre pôles techniques en haut, socle en **bandeau horizontal** au centre, trois
-pôles support en bas. Ce n'est pas un choix esthétique : 31 missions, 44 pastilles
-d'outils métier et 18 logiciels de socle ne tiennent pas dans une mise en page à
-socle vertical et deux colonnes. Deux leviers ont rendu la page unique possible,
-à préserver :
+Quatre pôles techniques en haut, socle en **bandeau horizontal** au centre, quatre
+pôles support en bas — huit cartes de 361 px. Ce n'est pas un choix esthétique :
+32 missions, 45 pastilles d'outils métier et 18 logiciels de socle ne tiennent pas
+dans une mise en page à socle vertical et deux colonnes. Trois leviers rendent la
+page unique possible, à préserver :
 
 - les outils du socle mobilisés par une mission sont **cités en ligne**
   (« via Excel · Power BI ») au lieu d'être répétés en pastilles ;
-- les cartes de la rangée du bas (larges) affichent leurs missions **sur deux
-  colonnes** (`.card.wide`).
+- les deux rangées n'ont pas la même hauteur : la rangée technique porte 2 à 4
+  missions par carte, la rangée support 4 à 6, d'où `flex:85` contre `flex:100`
+  (`.prow.tech` / `.prow.support`), soit 266 px et 313 px ;
+- la carte la plus dense affiche ses missions **sur deux colonnes**
+  (`.card.wide`, liste `BOARD.wide`). Aujourd'hui Qualité & Environnement seule :
+  6 missions dont 3 avec ligne « via » font 359 px de contenu pour 318 disponibles.
 
 **Si le contenu déborde, ne pas scinder la planche** (règle 1). Les leviers, dans
 cet ordre :
 
-1. **raccourcir les libellés d'outils** dans `ALIAS` — les plus longs sont
-   `Live Objects (Orange)` (21 car.), `Sixense Monitoring` (18),
-   `Wastemarket Place` (17) ;
-2. resserrer les pastilles (`padding`, `gap`, corps de 10,8 px) ;
-3. étendre le double-colonnage des missions aux cartes du haut.
+1. **raccourcir les libellés d'outils** dans `ALIAS` — restent longs
+   `Wastemarket Place` (17 car.), `Sofistik Bridge` (15). Attention, ce levier ne
+   gagne quelque chose que s'il **supprime une ligne de pastilles** : abréger
+   `Live Objects (Orange)` et `Sixense Monitoring` n'a rien changé au débordement
+   de Qualité & Environnement, dont les pastilles tenaient déjà sur deux lignes ;
+2. **ajouter la carte à `BOARD.wide`** — c'est ce qui a réglé les 41 px de
+   Qualité & Environnement ; à 361 px les colonnes tombent à 156 px, vérifier que
+   les libellés de mission n'y bavent pas (`mission.scrollWidth > clientWidth`) ;
+3. rééquilibrer les deux rangées via `.prow.tech` / `.prow.support` — 3 px
+   suffisaient à Tunnel, `flex:81` est passé à `flex:85` ;
+4. resserrer les pastilles (`padding`, `gap`, corps de 10,8 px).
 
 Un nom canonique est **aussi une extrémité de flux** : le renommer oblige à
 reprendre `FLOWS`, les listes `extra` de `MISSIONS` et `A_QUALIFIER`. Le
@@ -173,6 +197,12 @@ peints** (`.tool em.ie`, `.tool em.al`), et c'est structurel :
   pas dans un élément de plus, sinon le bloc passe à trois lignes et le bandeau
   grandit.
 
+**Bandeau de titre.** `.card-band` n'a **pas** de `border-radius` : `rounded_adj()`
+plafonne l'ajustement d'un rectangle arrondi à 0,5, et un bandeau de 5 px arrondi
+sortirait en pilule dans PowerPoint. Ce sont les coins de la carte
+(`.card{overflow:hidden}`) qui le rognent en HTML ; à l'export il reste un
+rectangle franc au ras du bord, l'écart se limite à un filet aux extrémités.
+
 **Extraction (`extract.js`).**
 - `color-mix()` est calculé par Chromium en `color(srgb r g b / a)`, pas en
   `rgba()` — les deux formes sont gérées, ne pas simplifier.
@@ -211,14 +241,18 @@ passer le binaire présent via `--chromium`.
 
 ## Vérification avant de livrer
 
-1. `python3 data/build_data.py` — attendu : `54 outils · 6 groupes socle · 7 pôles
-   · 31 missions · 15 flux · 16 internes / 28 externes · 8 alimentés en
-   automatique`, et aucun « outils sans mission ».
-2. Capturer les 3 planches avec Playwright et **les regarder** : débordement de
-   carte, badge collé au nom, chevauchement libellé/pastille, fil qui traverse une
-   carte, erreurs JS en console. Mesurer aussi en Carlito (voir les pièges) :
-   `scrollHeight > clientHeight` sur `.card` et `.hub-band`, et texte de pastille
-   plus large que sa boîte de contenu, doivent rester à zéro dans les deux polices.
+1. `python3 data/build_data.py` — attendu : `54 outils · 6 groupes socle · 8 pôles
+   · 32 missions · 15 flux · 16 internes / 28 externes · 8 alimentés en
+   automatique`, et aucun « outils sans mission » — c'est le test du garde-fou
+   `ABSORBED`. Vérifier aussi qu'aucune mission n'est vide : retirer une valeur
+   `FLUX` d'un pôle sans retirer la mission laisse un libellé sans outil.
+2. Capturer les 3 planches avec Playwright et **les regarder** : les 8 bandeaux
+   colorés, débordement de carte, badge collé au nom, chevauchement
+   libellé/pastille, fil qui traverse une carte, erreurs JS en console. Mesurer
+   aussi en Carlito (voir les pièges) : `scrollHeight > clientHeight` sur `.card`
+   et `.hub-band`, `scrollWidth > clientWidth` sur les `.mission` des cartes à deux
+   colonnes, et texte de pastille plus large que sa boîte de contenu — les trois à
+   zéro dans les deux polices.
 3. Compter les flux dans le DOM : 14 tracés, dont **8 en pointillé** gris
    `rgb(120, 135, 159)`.
 4. `python3 pptx/build.py` puis `validate.py` du skill pptx. Attendu sur
@@ -226,10 +260,11 @@ passer le binaire présent via `--chromium`.
    **9 `prstDash`** — les 8 flux manuels plus la flèche manuelle de la légende —
    tous en `78879F`. Un seul `prstDash` signifie que la détection du pointillé est
    de nouveau cassée.
-5. Vérifier que les pastilles sortent en paragraphe unique : 60 paragraphes
+5. Vérifier que les pastilles sortent en paragraphe unique : 61 paragraphes
    multi-runs commençant par `INT`, `EXT` ou `?`. Un badge exporté en zone de
    texte isolée (hors les 3 items de légende) veut dire qu'un élément peint s'est
-   glissé dans la pastille.
+   glissé dans la pastille. Contrôler aussi les **8 bandeaux de titre** : un
+   rectangle de 366 × 5 px par pôle, à la couleur du pôle.
 6. Convertir le PPTX en PDF (LibreOffice, paquet `libreoffice-impress`) et
    inspecter chaque page : c'est là que les défauts de métriques de police
    apparaissent, jamais dans le rendu HTML.
@@ -246,6 +281,16 @@ passer le binaire présent via `--chromium`.
   malgré le coût en largeur. La lecture ne doit pas dépendre de la comparaison de
   deux teintes voisines. Les citations en ligne « via … » restent en texte nu :
   l'outil est déjà badgé dans le bandeau socle.
+- **Contrat Manager est un pôle transverse.** Il rassemble ses 8 lignes
+  d'entretien *et* le contractuel que la Direction et les Travaux déclaraient
+  chacun de leur côté : Direction a cédé « Validation contrats et dépenses »,
+  Travaux « Validation et contrats ». Ne pas leur rendre ces missions sans
+  arbitrage, la carte Contrat Manager perdrait sa raison d'être.
+- **Une seule teinte ajoutée, pas de palette refaite.** `--ctr:#5F7A1B` (olive)
+  est la teinte libre la plus éloignée des huit autres — ΔE minimal 41,8, contre
+  36,7 pour la moutarde et 19,0 pour le bordeaux. Méthodes & BIM, Direction et DAF
+  restent proches entre elles (ΔE 13 à 24) : c'est le bandeau de titre, pas la
+  teinte, qui porte la distinction entre cartes (règle 6).
 - **Composition du socle commun** : la colonne `Nature` de la BDD est
   contradictoire d'un entretien à l'autre. Le socle retenu = outils
   majoritairement tagués socle + plateformes transverses de la cartographie

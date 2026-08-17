@@ -39,7 +39,10 @@ ALIAS = {
     "bim vision": "BIM Vision", "sofistik bridge": "Sofistik Bridge", "e-paraph": "E-Paraph",
     "e-project": "E-Project", "by my site": "By My Site", "h&r for you": "H&R For You",
     "cyclone 3dr": "Cyclone 3DR", "cyclone 3d": "Cyclone 3DR", "la scene": "La Scene",
-    "liveobject(orange)": "Live Objects (Orange)", "sixsense monitoring": "Sixense Monitoring",
+    # Abrégés pour tenir dans la carte Qualité & Environnement, la plus dense :
+    # « Live Objects (Orange) » (21 car.) et « Sixense Monitoring » (18) forçaient
+    # la mission « Suivi des consommations » sur quatre lignes au lieu de deux.
+    "liveobject(orange)": "Live Objects", "sixsense monitoring": "Sixense",
     "lafarge +": "Lafarge+", "power point": "PowerPoint", "baseware": "Basware",
     "docusign": "DocuSign", "notebooklm": "NotebookLM", "puma": "Puma", "covadis": "Covadis",
 }
@@ -47,7 +50,7 @@ ALIAS = {
 SERVICE = {
     "Direction": "dir", "Méthode/BIM": "met",
     "Qualité": "qse", "Environnement": "qse",
-    "Contrat Manager": "daf", "Comptabilité/gestion": "daf", "Assistant RH": "daf",
+    "Contrat Manager": "ctr", "Comptabilité/gestion": "daf", "Assistant RH": "daf",
     "Reponsable Travaux": "trv", "Ingé travaux": "trv",
     "TOPO": "top", "TUNNEL": "tun",
 }
@@ -59,7 +62,8 @@ SERVICES = [
     {"id": "trv", "name": "Travaux",                 "kicker": "Exécution chantier",               "col": "left"},
     {"id": "qse", "name": "Qualité & Environnement", "kicker": "Contrôle · Réserves · Nuisances",  "col": "right"},
     {"id": "dir", "name": "Direction",               "kicker": "Pilotage · Sous-traitance",        "col": "right"},
-    {"id": "daf", "name": "DAF",                     "kicker": "Contrats · Compta · Achats · RH",  "col": "right"},
+    {"id": "daf", "name": "DAF",                     "kicker": "Compta · Achats · RH",             "col": "right"},
+    {"id": "ctr", "name": "Contrat Manager",         "kicker": "Contractuel · Validation · Encaissements", "col": "right"},
 ]
 
 # Missions par pôle : (libellé, valeurs FLUX absorbées, outils rattachés à la main, proposée)
@@ -68,6 +72,11 @@ SERVICES = [
 # (« GESTION CHANTIER » / « GESTION DES CHANTIER »), et vide pour Topographie, Tunnel et
 # les outils Environnement. Les libellés retenus sont ceux de la note de cadrage ; ceux
 # marqués « proposée » ne s'appuient sur aucune ligne d'entretien et restent à valider.
+#
+# Une valeur FLUX nue est lue dans les lignes du pôle lui-même. Préfixée d'un pôle
+# — « dir:CIRCUIT DE VALIDATION » — elle est lue dans les lignes d'un autre pôle :
+# c'est ainsi que Contrat Manager rassemble le contractuel déclaré par la Direction
+# et les Travaux. Même convention que les extrémités de FLOWS.
 MISSIONS = {
     "met": [
         ("Production de maquettes",              ["PRODUCTION DE MAQUETTES"], []),
@@ -90,7 +99,6 @@ MISSIONS = {
         ("Réserves et MaD",                      ["MAD"], []),
         ("Conduite de chantier",                 ["GESTION CHANTIER", "GESTION DES CHANTIER",
                                                   "GESTION IMPRÉVU CHANTIER"], []),
-        ("Validation et contrats",               ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
     ],
     "qse": [
         ("Contrôle qualité",                     ["CONTRÔLE QUALITÉ",
@@ -98,28 +106,53 @@ MISSIONS = {
         ("MaD et levées de réserve",             ["MAD"], ["Trimble Connect"]),
         ("Suivi environnemental",                ["CONTRÔLE ENVIRONNEMENT",
                                                   "CONTRÔLE QUALITÉ /ENVIRONNEMENT"], ["PowerPoint"]),
-        ("Suivi des consommations",              [], ["Live Objects (Orange)", "Sixense Monitoring",
+        ("Suivi des consommations",              [], ["Live Objects", "Sixense",
                                                       "Lucee TP", "Lafarge+"], True),
         ("Gestion des déchets",                  [], ["Wastemarket Place"], True),
         ("Commande de matériel",                 ["COMMANDE DE MATÉRIEL"], []),
     ],
     "dir": [
         ("Récolte des KPI",                      ["AVANCEMENTS JALON CHANTIER"], []),
-        ("Validation contrats et dépenses",      ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
         ("Gestion des ST",                       ["GESTION DES ST", "GESTION TRAVAUX"], []),
         ("Matériels",                            ["GESTION DES MATÉRIELS"], []),
         ("Services généraux",                    [], ["CWT", "Tableau", "Word"], True),
     ],
     "daf": [
         ("Engagement des dépenses",               ["ENGAGEMENT DES DÉPENSES"], []),
-        ("Facturation",                           ["GESTION DE FACTURATION", "FACTURATION PARTENAIRE"], []),
-        ("Encaissements",                         ["GESTION DES ENCAISSEMENTS"], []),
+        ("Facturation",                           ["GESTION DE FACTURATION"], []),
         ("Commandes et achats",                   [], ["Achat +", "Pablo"], True),
-        ("Gestion contractuelle",                 ["GESTION DE CONTRATS", "AVANCEMENTS JALON CHANTIER"], []),
         ("Personnel et formations",                ["GESTION DU PERSONNEL", "ON BOARDING RH",
                                                     "GESTION DES FORMATIONS"], ["Neoaccès"]),
     ],
+    # Pôle transverse : ses quatre premières missions viennent de ses propres lignes
+    # d'entretien, les deux dernières du contractuel que la Direction et les Travaux
+    # déclaraient chacun de leur côté. « GESTION DE CONTRATS » et « GESTION DES
+    # CONTRATS » sont le même objet, fragmenté par la saisie : une seule mission.
+    "ctr": [
+        ("Gestion des contrats",                  ["GESTION DE CONTRATS",
+                                                   "dir:GESTION DES CONTRATS",
+                                                   "trv:GESTION DES CONTRATS"], []),
+        ("Facturation partenaire",                ["FACTURATION PARTENAIRE"], []),
+        ("Encaissements",                         ["GESTION DES ENCAISSEMENTS"], []),
+        ("Avancement des jalons",                 ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Circuit de validation",                 ["dir:CIRCUIT DE VALIDATION",
+                                                   "trv:CIRCUIT DE VALIDATION"], []),
+    ],
 }
+
+
+def flux_pairs(pid, fluxes):
+    """(pôle où lire, valeur FLUX) pour chaque entrée d'une mission."""
+    for f in fluxes:
+        src, _, value = f.rpartition(":")
+        yield (src or pid, value)
+
+
+# Paires (pôle, FLUX) revendiquées par une mission transverse. Les outils qu'elles
+# apportent se lisent dans la carte du pôle transverse : sans ce garde-fou ils
+# retomberaient dans la mission fourre-tout « Autres outils » de leur pôle d'origine.
+ABSORBED = {p for pid, entries in MISSIONS.items() for entry in entries
+            for p in flux_pairs(pid, entry[1]) if p[0] != pid}
 
 # Socle commun : outils tagués « Socle de données » dans la BDD, complétés par les
 # plateformes transverses que la cartographie source plaçait déjà en logiciel commun.
@@ -275,11 +308,16 @@ def build_model(T):
         for entry in MISSIONS.get(pid, []):
             label, fluxes, extra = entry[:3]
             todo = entry[3] if len(entry) > 3 else False
-            names = {t for (sid, f, t) in PAIRS if sid == pid and f in fluxes}
+            wanted = set(flux_pairs(pid, fluxes))
+            names = {t for (sid, f, t) in PAIRS if (sid, f) in wanted}
             names.update(extra)
             ordered = order(names)
             placed.update(ordered)
             missions.append({"label": label, "todo": todo, "tools": ordered})
+
+        # Un outil cédé à un pôle transverse se lit dans la carte de celui-ci : il
+        # n'est pas « sans mission » ici.
+        placed.update(t for (sid, f, t) in PAIRS if sid == pid and (sid, f) in ABSORBED)
 
         rest = [n for n in own if n not in placed]
         if rest:
