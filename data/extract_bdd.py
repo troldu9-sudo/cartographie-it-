@@ -57,6 +57,9 @@ CHARTE = OrderedDict([
     ("blanc", "#FFFFFF"),
     ("trait", "#D8D8D8"),
     ("police", "Segoe UI, Calibri, DejaVu Sans, Arial, sans-serif"),
+    # PowerPoint ne comprend pas une pile CSS : les largeurs de texte du
+    # module layout sont celles de Calibri, c'est donc Calibri qui est posé.
+    ("police_pptx", "Calibri"),
 ])
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -121,16 +124,27 @@ CANON_OUTIL = {
 # ─────────────────────────────────────────────────────────────────────────────
 # Les 9 services de la cartographie
 # ─────────────────────────────────────────────────────────────────────────────
+# « court » sert aux axes de graphique : un libellé qui se replie sur deux
+# lignes fait sauter une étiquette sur deux dans le classement.
 SERVICES = OrderedDict([
-    ("direction",     {"nom": "Direction",             "kicker": "Pilotage du chantier"}),
-    ("daf",           {"nom": "DAF",                   "kicker": "RH · Comptabilité · Gestion"}),
-    ("contrat",       {"nom": "Contrat",               "kicker": "Contract management"}),
-    ("methode-bim",   {"nom": "Méthode & BIM",         "kicker": "Maquettes et plans"}),
-    ("travaux",       {"nom": "Travaux",               "kicker": "Conduite de travaux"}),
-    ("travaux-tunnel", {"nom": "Travaux tunnel",       "kicker": "Creusement et tunnelier"}),
-    ("topo",          {"nom": "Topo",                  "kicker": "Topographie et implantation"}),
-    ("qualite-env",   {"nom": "Qualité & Environnement", "kicker": "Contrôle et conformité"}),
-    ("securite",      {"nom": "Sécurité",              "kicker": "À documenter"}),
+    ("direction",     {"nom": "Direction", "court": "Direction",
+                       "kicker": "Pilotage du chantier"}),
+    ("daf",           {"nom": "DAF", "court": "DAF",
+                       "kicker": "RH · Comptabilité · Gestion"}),
+    ("contrat",       {"nom": "Contrat", "court": "Contrat",
+                       "kicker": "Contract management"}),
+    ("methode-bim",   {"nom": "Méthode & BIM", "court": "Méthode & BIM",
+                       "kicker": "Maquettes et plans"}),
+    ("travaux",       {"nom": "Travaux", "court": "Travaux",
+                       "kicker": "Conduite de travaux"}),
+    ("travaux-tunnel", {"nom": "Travaux tunnel", "court": "Trav. tunnel",
+                        "kicker": "Creusement et tunnelier"}),
+    ("topo",          {"nom": "Topo", "court": "Topo",
+                       "kicker": "Topographie et implantation"}),
+    ("qualite-env",   {"nom": "Qualité & Environnement", "court": "Qualité & Env.",
+                       "kicker": "Contrôle et conformité"}),
+    ("securite",      {"nom": "Sécurité", "court": "Sécurité",
+                       "kicker": "À documenter"}),
 ])
 
 # Service vide sur consigne : aucun outil prélevé, blocs éditables
@@ -680,6 +694,7 @@ def construire_services(lignes, outils, ecarts):
         services.append(OrderedDict([
             ("id", sid),
             ("nom", meta["nom"]),
+            ("court", meta["court"]),
             ("kicker", meta["kicker"]),
             ("vide", vide),
             ("outils", sorted(outils_service, key=str.lower)),

@@ -19,7 +19,8 @@
     "graph_b": "#4A7C59",
     "blanc": "#FFFFFF",
     "trait": "#D8D8D8",
-    "police": "Segoe UI, Calibri, DejaVu Sans, Arial, sans-serif"
+    "police": "Segoe UI, Calibri, DejaVu Sans, Arial, sans-serif",
+    "police_pptx": "Calibri"
   },
   "hub": [
     "SharePoint",
@@ -31,6 +32,7 @@
     {
       "id": "direction",
       "nom": "Direction",
+      "court": "Direction",
       "kicker": "Pilotage du chantier",
       "vide": false,
       "outils": [
@@ -267,6 +269,7 @@
     {
       "id": "daf",
       "nom": "DAF",
+      "court": "DAF",
       "kicker": "RH · Comptabilité · Gestion",
       "vide": false,
       "outils": [
@@ -485,6 +488,7 @@
     {
       "id": "contrat",
       "nom": "Contrat",
+      "court": "Contrat",
       "kicker": "Contract management",
       "vide": false,
       "outils": [
@@ -629,6 +633,7 @@
     {
       "id": "methode-bim",
       "nom": "Méthode & BIM",
+      "court": "Méthode & BIM",
       "kicker": "Maquettes et plans",
       "vide": false,
       "outils": [
@@ -790,6 +795,7 @@
     {
       "id": "travaux",
       "nom": "Travaux",
+      "court": "Travaux",
       "kicker": "Conduite de travaux",
       "vide": false,
       "outils": [
@@ -1034,6 +1040,7 @@
     {
       "id": "travaux-tunnel",
       "nom": "Travaux tunnel",
+      "court": "Trav. tunnel",
       "kicker": "Creusement et tunnelier",
       "vide": false,
       "outils": [
@@ -1122,6 +1129,7 @@
     {
       "id": "topo",
       "nom": "Topo",
+      "court": "Topo",
       "kicker": "Topographie et implantation",
       "vide": false,
       "outils": [
@@ -1201,6 +1209,7 @@
     {
       "id": "qualite-env",
       "nom": "Qualité & Environnement",
+      "court": "Qualité & Env.",
       "kicker": "Contrôle et conformité",
       "vide": false,
       "outils": [
@@ -1452,6 +1461,7 @@
     {
       "id": "securite",
       "nom": "Sécurité",
+      "court": "Sécurité",
       "kicker": "À documenter",
       "vide": true,
       "outils": [],

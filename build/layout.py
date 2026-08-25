@@ -808,7 +808,7 @@ CODE_SERVICE = OrderedDict([
     ("methode-bim", "M&B"), ("travaux", "TRV"), ("travaux-tunnel", "TUN"),
     ("topo", "TOP"), ("qualite-env", "Q&E"), ("securite", "SEC"),
 ])
-COLONNES = [("Outil", 86.0, "left"), ("Fonction", 158.0, "left"),
+COLONNES = [("Outil", 94.0, "left"), ("Fonction", 150.0, "left"),
             ("Services", 92.0, "left"), ("Nature", 24.0, "center"),
             ("Int/Ext", 24.0, "center"), ("Alim.", 28.0, "center"),
             ("Origine", 32.0, "center")]
@@ -936,6 +936,7 @@ def page_synthese(carto, indice, total, lien_macro, liens):
             "Synthèse chiffrée", retour=lien_macro)
 
     utile = PAGE_W - 2 * MARGE
+    globale = model.indicateurs(carto, model.TOUS)
 
     # ── sélecteur de service (interactif en HTML, statique en PPTX)
     y = 54.0
@@ -961,7 +962,8 @@ def page_synthese(carto, indice, total, lien_macro, liens):
         scene.rect(tx, y, largeur_tuile, 62, fill=c["blanc"], line=c["trait"],
                    lw=0.8, radius=4, classe="tuile")
         scene.rect(tx, y, largeur_tuile, 2.4, fill=c["primary"], lw=0)
-        scene.texte(tx + 8, y + 12, largeur_tuile - 16, 24, "—", taille=21,
+        scene.texte(tx + 8, y + 12, largeur_tuile - 16, 24,
+                    model.valeur_tuile(globale, cle), taille=21,
                     gras=True, couleur=c["primary"], align="left",
                     classe="tuile-valeur", cle=cle)
         scene.texte(tx + 8, y + 38, largeur_tuile - 16, 10, titre, taille=6.8,

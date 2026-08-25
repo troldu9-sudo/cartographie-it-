@@ -83,6 +83,23 @@ def indicateurs(carto, sid=TOUS):
     ])
 
 
+def valeur_tuile(vue, cle):
+    """Valeur affichée par une tuile de la synthèse, pour un périmètre donné.
+
+    Le HTML recalcule la même chose au changement d'onglet ; le PPTX prend
+    cette valeur telle quelle pour la vue globale. Une seule règle, deux rendus.
+    """
+    def part(partie, total):
+        return "%d %%" % round(100.0 * partie / total) if total else "—"
+    if cle == "pct_auto":
+        return part(vue["flux_mode"]["auto"], vue["nb_flux"])
+    if cle == "pct_interne":
+        return part(vue["outils_ie"]["interne"], vue["nb_outils"])
+    if cle == "nb_todo_ie":
+        return str(vue["outils_ie"]["todo"])
+    return str(vue[cle])
+
+
 def classement(carto):
     """Services triés par nombre de flux décroissant, puis par nom."""
     lignes = []
@@ -90,6 +107,7 @@ def classement(carto):
         lignes.append(OrderedDict([
             ("id", service["id"]),
             ("nom", service["nom"]),
+            ("court", service["court"]),
             ("nb_flux", len(flux_du_service(carto, service["id"]))),
             ("nb_outils", len(service["outils"])),
         ]))

@@ -359,6 +359,8 @@ JS = r"""
   var graphiques = {};
   var courant = D.tous;
 
+  // même règle que model.valeur_tuile côté Python : les deux rendus doivent
+  // afficher exactement le même chiffre pour un périmètre donné
   function pourcent(partie, total) {
     return total ? Math.round((100 * partie) / total) + " %" : "—";
   }
@@ -398,7 +400,7 @@ JS = r"""
     return new Chart(contexte, {
       type: "bar",
       data: {
-        labels: classement.map(function (l) { return l.nom; }),
+        labels: classement.map(function (l) { return l.court; }),
         datasets: [{
           data: classement.map(function (l) { return l[spec.champ]; }),
           backgroundColor: classement.map(function (l) {
