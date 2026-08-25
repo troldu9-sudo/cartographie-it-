@@ -1,0 +1,3171 @@
+{
+  "meta": {
+    "titre": "Cartographie des outils IT — chantier Bouygues Construction",
+    "source": "BDD_Cartographie_Outils_IT.xlsx",
+    "lignes_bdd": 99,
+    "genere_le": "2026-08-25",
+    "format_pt": [
+      960,
+      540
+    ]
+  },
+  "charte": {
+    "primary": "#E85A0C",
+    "accent": "#C1121F",
+    "encre": "#1C1C1C",
+    "gris": "#6B6B6B",
+    "fond": "#F4F4F4",
+    "graph_a": "#3A6B8A",
+    "graph_b": "#4A7C59",
+    "blanc": "#FFFFFF",
+    "trait": "#D8D8D8",
+    "police": "Segoe UI, Calibri, DejaVu Sans, Arial, sans-serif"
+  },
+  "hub": [
+    "SharePoint",
+    "OneDrive",
+    "Probity",
+    "Mezzoteam"
+  ],
+  "services": [
+    {
+      "id": "direction",
+      "nom": "Direction",
+      "kicker": "Pilotage du chantier",
+      "vide": false,
+      "outils": [
+        "Basware",
+        "BATIS",
+        "CWT",
+        "DocuSign",
+        "E-Checking",
+        "E-Paraph",
+        "Excel",
+        "Miro",
+        "MMS",
+        "Oasis",
+        "Power BI",
+        "QuickConnect",
+        "Tableau",
+        "Word",
+        "Yellow"
+      ],
+      "processus": [
+        {
+          "nom": "Gestion des sous-traitants",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "BATIS",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Declaration des ST(paiement direct)"
+            },
+            {
+              "outil": "E-Checking",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Pour les entreprises, Julie créer l'acces de l'entreprise(ST, prestataire )"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            4,
+            12
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Circuit de validation",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "E-Paraph",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Circuit de validation en interne avant signature"
+            },
+            {
+              "outil": "DocuSign",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "Basware",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Validation"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            5,
+            6,
+            38,
+            77
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Processus non renseigné",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "CWT",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Plateforme de voyage adapté à la politique voyage de Bouygues"
+            },
+            {
+              "outil": "Tableau",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Commande traiteur"
+            },
+            {
+              "outil": "Word",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Courrier"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": true,
+          "lignes": [
+            7,
+            8,
+            11
+          ],
+          "todo": "processus déduit de la colonne Usage — la colonne FLUX est vide sur ces lignes"
+        },
+        {
+          "nom": "Gestion des matériels",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Oasis",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Déclaration d'incidents"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            9
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion des contrats",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Contrats avenant, ordre de service, courrier"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            10
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Avancement et jalons chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Miro",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Récolter les obeya"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Récolter les obeya, avanceement des travaux (tunnel); pointage de l'encadrement"
+            },
+            {
+              "outil": "Word",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Récolter les obeya"
+            },
+            {
+              "outil": "Power BI",
+              "alim": "auto",
+              "ie": null,
+              "usage": "KPI"
+            },
+            {
+              "outil": "Yellow",
+              "alim": "auto",
+              "ie": "interne",
+              "usage": "KPI tunnel"
+            },
+            {
+              "outil": "MMS",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Identification des jalons , pointage"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            69,
+            70,
+            71,
+            72,
+            73,
+            74
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion de chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "visite sécurité, visite chantiers, toutes les visites"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            75
+          ],
+          "todo": null
+        }
+      ]
+    },
+    {
+      "id": "daf",
+      "nom": "DAF",
+      "kicker": "RH · Comptabilité · Gestion",
+      "vide": false,
+      "outils": [
+        "Basware",
+        "BIP/BAPS",
+        "By My Site",
+        "BYCN",
+        "DocuSign",
+        "E-Checking",
+        "Excel",
+        "H&R For You",
+        "Harmony",
+        "PABLO",
+        "PUMA",
+        "TIPS",
+        "Visioaccès"
+      ],
+      "processus": [
+        {
+          "nom": "Engagement des dépenses",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Harmony",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Engagements des dépenses à la reception des bl, suivre les commandes , envoi des avis de paiement, Pour les ST=> création d'un b.D.C=> basé sur la taille du contrat => situation mise à jour"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            39
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion de la facturation",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Chronofacture, BDD factures, rapprochement entre la proposition d'ADF envoyé par SIHEM et les factures présents dans le BDD, envoie de la PC100"
+            },
+            {
+              "outil": "DocuSign",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Notification d'un nouveau contrats"
+            },
+            {
+              "outil": "TIPS",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Pointage soletanche bachis"
+            },
+            {
+              "outil": "Basware",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Reception, harmoniser les champs des factures , contrôle,"
+            },
+            {
+              "outil": "Harmony",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Saisie des factures , extraction de litiges"
+            },
+            {
+              "outil": "PABLO",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Verification de montant de commande lors d'un différents"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            40,
+            41,
+            42,
+            47,
+            48,
+            49,
+            50,
+            76
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Onboarding RH",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "E-Checking",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Lutte contre le travail illégal , dépôt de document(visite médical…),Verification des autorisation, élaboration de badges apres test sécu ok"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            51
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion du personnel",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "PUMA",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Prime de poste , heures de travail , compagnon BYT"
+            },
+            {
+              "outil": "BIP/BAPS",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Intérim, heures , renouvellement, verification"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Formations , repertorié suvi, coûts des formations, suivi des heures d'insertion, prime jalonné"
+            },
+            {
+              "outil": "H&R For You",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Demande de CP, monaitisation, placement gérance fonds, attestation employeur"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            52,
+            53,
+            54,
+            57
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion des formations",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "PABLO",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Bon de commande => formation"
+            },
+            {
+              "outil": "By My Site",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Logiciel de fomation, centralisation de formation"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            55,
+            56
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Paye",
+          "debut": "Pointage PUMA",
+          "fin": "BIP (intérimaires) / BYCN (compagnons Bouygues)",
+          "etapes": [
+            {
+              "outil": "PUMA",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": null
+            },
+            {
+              "outil": "BIP/BAPS",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": null
+            },
+            {
+              "outil": "BYCN",
+              "alim": null,
+              "ie": "interne",
+              "usage": null
+            }
+          ],
+          "origine": "correction",
+          "ordre_atteste": true,
+          "deduit": false,
+          "lignes": [],
+          "todo": null
+        }
+      ]
+    },
+    {
+      "id": "contrat",
+      "nom": "Contrat",
+      "kicker": "Contract management",
+      "vide": false,
+      "outils": [
+        "Basware",
+        "Chorus",
+        "E-Project",
+        "Excel",
+        "NotebookLM",
+        "Power BI",
+        "SharePoint",
+        "Word"
+      ],
+      "processus": [
+        {
+          "nom": "Gestion des encaissements",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Suivi des recettes et des montants cumulés , mesnuel => situation de travaux"
+            },
+            {
+              "outil": "E-Project",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Permet d'activer la facturation , voir la situation"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            30,
+            31
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Avancement et jalons chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Word",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Avancement avec les ingé"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            32
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Facturation partenaire",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Basware",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Validé les facturations partenaires,"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            33
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion des contrats",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "NotebookLM",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Redaction de document, mémoire, reclamation"
+            },
+            {
+              "outil": "SharePoint",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Accès aux documents"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "Power BI",
+              "alim": "auto",
+              "ie": null,
+              "usage": "Suivi du pilotage/ avancement des chantiers"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            34,
+            35,
+            36,
+            37
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Facturation maître d'ouvrage",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Chorus",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            }
+          ],
+          "origine": "correction",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "début et fin non renseignés"
+        }
+      ]
+    },
+    {
+      "id": "methode-bim",
+      "nom": "Méthode & BIM",
+      "kicker": "Maquettes et plans",
+      "vide": false,
+      "outils": [
+        "Anaconda",
+        "AutoCAD",
+        "BIM Vision",
+        "Civil 3D",
+        "Inventor",
+        "Mezzoteam",
+        "QGIS",
+        "Remind",
+        "Revit",
+        "Simple BIM",
+        "Sofistik Bridge",
+        "Trimble Connect"
+      ],
+      "processus": [
+        {
+          "nom": "Gestion des maquettes",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Trimble Connect",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Déposer les maquettes (sharepoint des maquettes)"
+            },
+            {
+              "outil": "Sofistik Bridge",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Modéliser la maquettes que pour le tunnel"
+            },
+            {
+              "outil": "Inventor",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "3D => pièce mécanique"
+            },
+            {
+              "outil": "Simple BIM",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Fusionnage de maquettes"
+            },
+            {
+              "outil": "BIM Vision",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Ouvrir une maquette"
+            },
+            {
+              "outil": "QGIS",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "SIG, repère dans un plan"
+            },
+            {
+              "outil": "Anaconda",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Code"
+            },
+            {
+              "outil": "Mezzoteam",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Gestion documentaires"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            19,
+            21,
+            23,
+            25,
+            26,
+            27,
+            28,
+            29
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Production des maquettes",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Revit",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Produire les maquettes(3D)"
+            },
+            {
+              "outil": "AutoCAD",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Plan (production)=> 2D"
+            },
+            {
+              "outil": "Civil 3D",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Dessein du terrassement"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            20,
+            22,
+            24
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Chaîne documentaire des plans",
+          "debut": "AutoCAD (production du plan)",
+          "fin": "Remind (archivage 10 ans)",
+          "etapes": [
+            {
+              "outil": "AutoCAD",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "SharePoint",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "Mezzoteam",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "Remind",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": null
+            }
+          ],
+          "origine": "correction",
+          "ordre_atteste": true,
+          "deduit": false,
+          "lignes": [],
+          "todo": "l'étape « usage Travaux » entre SharePoint et Mezzoteam n'est portée par aucun outil de la BDD"
+        }
+      ]
+    },
+    {
+      "id": "travaux",
+      "nom": "Travaux",
+      "kicker": "Conduite de travaux",
+      "vide": false,
+      "outils": [
+        "E-Paraph",
+        "ERP MAT",
+        "Excel",
+        "GMAO",
+        "HA+",
+        "IDCapture",
+        "Mezzoteam",
+        "MMS",
+        "MS Project",
+        "PABLO",
+        "QuickConnect",
+        "Traktor",
+        "Trimble Connect",
+        "Word"
+      ],
+      "processus": [
+        {
+          "nom": "Circuit de validation",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "E-Paraph",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Circuit de validation en interne avant signature"
+            },
+            {
+              "outil": "PABLO",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Juste validation"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            43,
+            44
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion de chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            },
+            {
+              "outil": "Trimble Connect",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Consultation des plans"
+            },
+            {
+              "outil": "Mezzoteam",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Suivi des plans, diffusion des plans"
+            },
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Fiche bêton , fiches feraillage , journaux chantier (pour les chef de chantier)"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            45,
+            64,
+            65,
+            67
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion des imprévus chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Constat contrat contradictoire, Fuite d'eau"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            46
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Avancement et jalons chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "MS Project",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Planning travaux, Objectif et tranferts transmis en amont aux ingé, relation humaines, chance, condtion, terrain, points de vigilance, pas beaucoup de prob technique"
+            },
+            {
+              "outil": "MMS",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Adhérence planning , évaluation/ appréciation des jalons"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            58,
+            68
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Processus non renseigné",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": true,
+          "lignes": [
+            59
+          ],
+          "todo": "processus déduit de la colonne Usage — la colonne FLUX est vide sur ces lignes"
+        },
+        {
+          "nom": "Commande chantier",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "PABLO",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "commande de gros engins, nécéssite de faire des avenants,"
+            },
+            {
+              "outil": "Traktor",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Commande de gros engins"
+            },
+            {
+              "outil": "ERP MAT",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Commande de coffrage , grue au tour, sécurite"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            60,
+            62,
+            63
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Gestion des contrats",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Word",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Avenants, contrat"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            61
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Mise à disposition (MAD)",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "IDCapture",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Utiliser pour les mises à dispositions"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            66
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Commande de MO",
+          "debut": null,
+          "fin": null,
+          "etapes": [],
+          "origine": "correction",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "mission ajoutée par correction — aucun outil rattaché dans la BDD"
+        }
+      ]
+    },
+    {
+      "id": "travaux-tunnel",
+      "nom": "Travaux tunnel",
+      "kicker": "Creusement et tunnelier",
+      "vide": false,
+      "outils": [
+        "AutoCAD",
+        "Excel",
+        "GMAO",
+        "IDCapture",
+        "MS Project",
+        "Power BI",
+        "QuickConnect",
+        "Trimble Connect",
+        "Yellow"
+      ],
+      "processus": [
+        {
+          "nom": "Processus non renseigné",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "AutoCAD",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Modification des plans, faire des schéma"
+            },
+            {
+              "outil": "Trimble Connect",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Visualisation 3D"
+            },
+            {
+              "outil": "MS Project",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Planning"
+            },
+            {
+              "outil": "Yellow",
+              "alim": "auto",
+              "ie": "interne",
+              "usage": "Suivi l'avancement du tunnnelier , info en temps réel ,"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Planning, tableau de suivi,"
+            },
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Suivi béton, journaux de chantiers, réception de livraison des voussoir, rec mortier"
+            },
+            {
+              "outil": "IDCapture",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Pour les finitions, communication avec la maitrise d'œuvre"
+            },
+            {
+              "outil": "Power BI",
+              "alim": "auto",
+              "ie": null,
+              "usage": "Suivi betonnage, livraison du soir, suivi voussoir"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": true,
+          "lignes": [
+            95,
+            96,
+            97,
+            98,
+            99,
+            100,
+            101,
+            102
+          ],
+          "todo": "processus déduit de la colonne Usage — la colonne FLUX est vide sur ces lignes"
+        }
+      ]
+    },
+    {
+      "id": "topo",
+      "nom": "Topo",
+      "kicker": "Topographie et implantation",
+      "vide": false,
+      "outils": [
+        "AutoCAD",
+        "Covadis",
+        "Cyclone 3DR",
+        "Excel",
+        "La Scene",
+        "Pixis",
+        "Trimble Connect"
+      ],
+      "processus": [
+        {
+          "nom": "Processus non renseigné",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "AutoCAD",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Tracer de ligne, nettoyage des plans"
+            },
+            {
+              "outil": "Cyclone 3DR",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Générer des points topo, analyse des scans , retraitementement de nuage de point"
+            },
+            {
+              "outil": "La Scene",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Assemblage de position de scan"
+            },
+            {
+              "outil": "Covadis",
+              "alim": "manuel",
+              "ie": null,
+              "usage": "Genration des points de topo"
+            },
+            {
+              "outil": "Trimble Connect",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Récupère les plans, outils de partage des plans"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Rapport,avec des plans de cyclone 3d"
+            },
+            {
+              "outil": "Pixis",
+              "alim": "auto",
+              "ie": null,
+              "usage": "Guidage du tunnelier,"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": true,
+          "lignes": [
+            88,
+            89,
+            90,
+            91,
+            92,
+            93,
+            94
+          ],
+          "todo": "processus déduit de la colonne Usage — la colonne FLUX est vide sur ces lignes"
+        }
+      ]
+    },
+    {
+      "id": "qualite-env",
+      "nom": "Qualité & Environnement",
+      "kicker": "Contrôle et conformité",
+      "vide": false,
+      "outils": [
+        "Excel",
+        "IDCapture",
+        "Lafarge +",
+        "Live Objects (Orange)",
+        "Lucee TP",
+        "Mezzoteam",
+        "PABLO",
+        "Power BI",
+        "PowerPoint",
+        "QuickConnect",
+        "RNDTS",
+        "Sixsense Monitoring",
+        "Sogelink/DICT",
+        "Trimble Connect",
+        "Waste Marketplace (Wakio)"
+      ],
+      "processus": [
+        {
+          "nom": "Contrôle qualité",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "Workflow de contrôle qualité bétonnage, eprouvettes, accueil sécurité, formation post travail"
+            },
+            {
+              "outil": "Power BI",
+              "alim": "auto",
+              "ie": null,
+              "usage": "Pas utilisé"
+            },
+            {
+              "outil": "Excel",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "TCD"
+            },
+            {
+              "outil": "Mezzoteam",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Gestion documentaires"
+            },
+            {
+              "outil": "IDCapture",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Faire la qualité"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            13,
+            15,
+            16,
+            18,
+            80
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Commande de matériel",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "PABLO",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Acheter du matériel"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            14
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Mise à disposition (MAD)",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "IDCapture",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Lever de reserve(mis à disposition pour les prochain prestataire, code couleur, visuel plus parlant , suivi dans le temps, position dans l'espace )"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            17
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Contrôle qualité et environnement",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "QuickConnect",
+              "alim": "manuel",
+              "ie": "interne",
+              "usage": "1/4h sensibilisation, suivi des consommatio(compteurs), suivi des prélevements, contrôle ste (traitement eau)"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            78
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Contrôle environnement",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Power BI",
+              "alim": "auto",
+              "ie": null,
+              "usage": "Suivi des consommations (eau, éléctricité)"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [
+            79
+          ],
+          "todo": null
+        },
+        {
+          "nom": "Processus non renseigné",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Trimble Connect",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Première lecture, pouvoir localiser en 3d les éléments"
+            },
+            {
+              "outil": "Live Objects (Orange)",
+              "alim": "auto",
+              "ie": "externe",
+              "usage": "Renvoie de les indicateurs de consommation sur les compteurs de pompage"
+            },
+            {
+              "outil": "Sixsense Monitoring",
+              "alim": "auto",
+              "ie": "externe",
+              "usage": "Accoustique, sonomètre"
+            },
+            {
+              "outil": "Waste Marketplace (Wakio)",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Gestion des déchets"
+            },
+            {
+              "outil": "Lafarge +",
+              "alim": "auto",
+              "ie": "externe",
+              "usage": "SUIVI bl, m3 coulé"
+            },
+            {
+              "outil": "Lucee TP",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Déterminer les espèces envahissantes"
+            },
+            {
+              "outil": "PowerPoint",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": "Déclaration de HIPO"
+            }
+          ],
+          "origine": "bdd",
+          "ordre_atteste": false,
+          "deduit": true,
+          "lignes": [
+            81,
+            82,
+            83,
+            84,
+            85,
+            86,
+            87
+          ],
+          "todo": "processus déduit de la colonne Usage — la colonne FLUX est vide sur ces lignes"
+        },
+        {
+          "nom": "Déclaration préalable avant terrassement",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "Sogelink/DICT",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            }
+          ],
+          "origine": "correction",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "début et fin non renseignés"
+        },
+        {
+          "nom": "Traçabilité des déblais",
+          "debut": null,
+          "fin": null,
+          "etapes": [
+            {
+              "outil": "RNDTS",
+              "alim": "manuel",
+              "ie": "externe",
+              "usage": null
+            }
+          ],
+          "origine": "correction",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "valider avec Camille"
+        }
+      ]
+    },
+    {
+      "id": "securite",
+      "nom": "Sécurité",
+      "kicker": "À documenter",
+      "vide": true,
+      "outils": [],
+      "processus": [
+        {
+          "nom": null,
+          "debut": null,
+          "fin": null,
+          "etapes": [],
+          "origine": "vierge",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "bloc vierge à compléter"
+        },
+        {
+          "nom": null,
+          "debut": null,
+          "fin": null,
+          "etapes": [],
+          "origine": "vierge",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "bloc vierge à compléter"
+        },
+        {
+          "nom": null,
+          "debut": null,
+          "fin": null,
+          "etapes": [],
+          "origine": "vierge",
+          "ordre_atteste": false,
+          "deduit": false,
+          "lignes": [],
+          "todo": "bloc vierge à compléter"
+        }
+      ]
+    }
+  ],
+  "outils": {
+    "Anaconda": {
+      "nom": "Anaconda",
+      "id": "anaconda",
+      "fonction": "Écriture de scripts (code)",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        28
+      ],
+      "usages": [
+        "Code"
+      ],
+      "todo": []
+    },
+    "AutoCAD": {
+      "nom": "AutoCAD",
+      "id": "autocad",
+      "fonction": "Production et modification des plans 2D",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Autodesk",
+      "services": [
+        "methode-bim",
+        "topo",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        22,
+        88,
+        95
+      ],
+      "usages": [
+        "Modification des plans, faire des schéma",
+        "Plan (production)=> 2D",
+        "Tracer de ligne, nettoyage des plans"
+      ],
+      "todo": []
+    },
+    "Basware": {
+      "nom": "Basware",
+      "id": "basware",
+      "fonction": "Enregistrement et validation des factures fournisseurs",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "Soletanche",
+      "services": [
+        "contrat",
+        "direction",
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        33,
+        38,
+        47,
+        76
+      ],
+      "usages": [
+        "Outils pour enregistrements, validation, partie circuit de validation, Engagé les litiges",
+        "Reception, harmoniser les champs des factures , contrôle,",
+        "Validation",
+        "Validé les facturations partenaires,"
+      ],
+      "todo": []
+    },
+    "BATIS": {
+      "nom": "BATIS",
+      "id": "batis",
+      "fonction": "Déclaration des sous-traitants en paiement direct",
+      "nature": "socle",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Tisseo",
+      "services": [
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        4
+      ],
+      "usages": [
+        "Declaration des ST(paiement direct)"
+      ],
+      "todo": []
+    },
+    "BIM Vision": {
+      "nom": "BIM Vision",
+      "id": "bim-vision",
+      "fonction": "Ouverture et visualisation des maquettes",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Technologia BIM",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        26
+      ],
+      "usages": [
+        "Ouvrir une maquette"
+      ],
+      "todo": []
+    },
+    "BIP/BAPS": {
+      "nom": "BIP/BAPS",
+      "id": "bip-baps",
+      "fonction": "Gestion de l'intérim : heures, renouvellements, vérifications",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        53
+      ],
+      "usages": [
+        "Intérim, heures , renouvellement, verification"
+      ],
+      "todo": []
+    },
+    "By My Site": {
+      "nom": "By My Site",
+      "id": "by-my-site",
+      "fonction": "Centralisation des formations",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        56
+      ],
+      "usages": [
+        "Logiciel de fomation, centralisation de formation"
+      ],
+      "todo": []
+    },
+    "BYCN": {
+      "nom": "BYCN",
+      "id": "bycn",
+      "fonction": null,
+      "nature": "application",
+      "ie": "interne",
+      "alim": null,
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "correction",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "entité ou applicatif ? cible du pointage à préciser",
+        "mode d'alimentation non renseigné",
+        "fonction à renseigner"
+      ]
+    },
+    "CEMEX": {
+      "nom": "CEMEX",
+      "id": "cemex",
+      "fonction": null,
+      "nature": "application",
+      "ie": "externe",
+      "alim": null,
+      "editeur": null,
+      "services": [],
+      "hub": false,
+      "origine": "bdd-annexe",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "aucun service ni usage renseigné dans la BDD",
+        "mode d'alimentation non renseigné",
+        "fonction à renseigner",
+        "aucun service de rattachement"
+      ]
+    },
+    "Chorus": {
+      "nom": "Chorus",
+      "id": "chorus",
+      "fonction": "Facturation par le maître d'ouvrage",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "contrat"
+      ],
+      "hub": false,
+      "origine": "correction",
+      "lignes": [],
+      "usages": [],
+      "todo": []
+    },
+    "Civil 3D": {
+      "nom": "Civil 3D",
+      "id": "civil-3d",
+      "fonction": "Dessin des terrassements",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Autodesk",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        24
+      ],
+      "usages": [
+        "Dessein du terrassement"
+      ],
+      "todo": []
+    },
+    "Covadis": {
+      "nom": "Covadis",
+      "id": "covadis",
+      "fonction": "Génération des points topographiques",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "topo"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        91
+      ],
+      "usages": [
+        "Genration des points de topo"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "CWT": {
+      "nom": "CWT",
+      "id": "cwt",
+      "fonction": "Réservation de voyages selon la politique groupe",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "CWT EUROPE",
+      "services": [
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        7
+      ],
+      "usages": [
+        "Plateforme de voyage adapté à la politique voyage de Bouygues"
+      ],
+      "todo": []
+    },
+    "Cyclone 3DR": {
+      "nom": "Cyclone 3DR",
+      "id": "cyclone-3dr",
+      "fonction": "Traitement des nuages de points et analyse des scans",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "topo"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        89
+      ],
+      "usages": [
+        "Générer des points topo, analyse des scans , retraitementement de nuage de point"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "DocuSign": {
+      "nom": "DocuSign",
+      "id": "docusign",
+      "fonction": "Notification et signature des nouveaux contrats",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Docusign",
+      "services": [
+        "direction",
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        6,
+        41
+      ],
+      "usages": [
+        "Notification d'un nouveau contrats"
+      ],
+      "todo": []
+    },
+    "E-Checking": {
+      "nom": "E-Checking",
+      "id": "e-checking",
+      "fonction": "Lutte contre le travail illégal et vérification des autorisations",
+      "nature": "socle",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": "BYCN",
+      "services": [
+        "direction",
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        12,
+        51
+      ],
+      "usages": [
+        "Lutte contre le travail illégal , dépôt de document(visite médical…),Verification des autorisation, élaboration de badges apres test sécu ok",
+        "Pour les entreprises, Julie créer l'acces de l'entreprise(ST, prestataire )"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "E-Paraph": {
+      "nom": "E-Paraph",
+      "id": "e-paraph",
+      "fonction": "Circuit de validation interne avant signature",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "E-paraph",
+      "services": [
+        "direction",
+        "travaux"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        5,
+        43,
+        77
+      ],
+      "usages": [
+        "Circuit de validation en interne avant signature"
+      ],
+      "todo": []
+    },
+    "E-Project": {
+      "nom": "E-Project",
+      "id": "e-project",
+      "fonction": "Activation de la facturation et suivi de situation",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": "Tisseo",
+      "services": [
+        "contrat"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        31
+      ],
+      "usages": [
+        "Permet d'activer la facturation , voir la situation"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "ERP MAT": {
+      "nom": "ERP MAT",
+      "id": "erp-mat",
+      "fonction": "Commande de matériel : coffrage, grue à tour, sécurité",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "travaux"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        63
+      ],
+      "usages": [
+        "Commande de coffrage , grue au tour, sécurite"
+      ],
+      "todo": []
+    },
+    "Excel": {
+      "nom": "Excel",
+      "id": "excel",
+      "fonction": "Tableurs de suivi : factures, chronofacture, rapprochements",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Microsoft",
+      "services": [
+        "direction",
+        "qualite-env",
+        "contrat",
+        "daf",
+        "travaux",
+        "topo",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        10,
+        16,
+        30,
+        36,
+        40,
+        45,
+        49,
+        54,
+        59,
+        70,
+        93,
+        99
+      ],
+      "usages": [
+        "Chronofacture, BDD factures, rapprochement entre la proposition d'ADF envoyé par SIHEM et les factures présents dans le BDD, envoie de la PC100",
+        "Chronofactures",
+        "Contrats avenant, ordre de service, courrier",
+        "Formations , repertorié suvi, coûts des formations, suivi des heures d'insertion, prime jalonné",
+        "Planning, tableau de suivi,",
+        "Rapport,avec des plans de cyclone 3d",
+        "Récolter les obeya, avanceement des travaux (tunnel); pointage de l'encadrement",
+        "Suivi des recettes et des montants cumulés , mesnuel => situation de travaux",
+        "TCD"
+      ],
+      "todo": []
+    },
+    "GMAO": {
+      "nom": "GMAO",
+      "id": "gmao",
+      "fonction": "Gestion du stock (tunnel)",
+      "nature": "application",
+      "ie": null,
+      "alim": null,
+      "editeur": null,
+      "services": [
+        "travaux",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd-annexe",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "interne/externe non renseigné",
+        "mode d'alimentation non renseigné"
+      ]
+    },
+    "H&R For You": {
+      "nom": "H&R For You",
+      "id": "h-r-for-you",
+      "fonction": "Demandes RH : congés, attestations, épargne",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "BYCN",
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        57
+      ],
+      "usages": [
+        "Demande de CP, monaitisation, placement gérance fonds, attestation employeur"
+      ],
+      "todo": []
+    },
+    "HA+": {
+      "nom": "HA+",
+      "id": "ha",
+      "fonction": "Achats opérationnels",
+      "nature": "application",
+      "ie": null,
+      "alim": null,
+      "editeur": null,
+      "services": [
+        "travaux"
+      ],
+      "hub": false,
+      "origine": "bdd-annexe",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "service déduit de la note « achat pablo ⇒ opérationnel », à confirmer",
+        "interne/externe non renseigné",
+        "mode d'alimentation non renseigné"
+      ]
+    },
+    "Harmony": {
+      "nom": "Harmony",
+      "id": "harmony",
+      "fonction": "Engagement des dépenses et suivi des commandes",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        39,
+        48
+      ],
+      "usages": [
+        "Engagements des dépenses à la reception des bl, suivre les commandes , envoi des avis de paiement, Pour les ST=> création d'un b.D.C=> basé sur la taille du contrat => situation mise à jour",
+        "Saisie des factures , extraction de litiges"
+      ],
+      "todo": []
+    },
+    "IDCapture": {
+      "nom": "IDCapture",
+      "id": "idcapture",
+      "fonction": "Levée de réserves et contrôle qualité",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "IDCAPTURE",
+      "services": [
+        "qualite-env",
+        "travaux",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        17,
+        66,
+        80,
+        101
+      ],
+      "usages": [
+        "Faire la qualité",
+        "Lever de reserve(mis à disposition pour les prochain prestataire, code couleur, visuel plus parlant , suivi dans le temps, position dans l'espace )",
+        "Pour les finitions, communication avec la maitrise d'œuvre",
+        "Utiliser pour les mises à dispositions"
+      ],
+      "todo": []
+    },
+    "Inventor": {
+      "nom": "Inventor",
+      "id": "inventor",
+      "fonction": "Conception 3D de pièces mécaniques",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Autodesk",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        23
+      ],
+      "usages": [
+        "3D => pièce mécanique"
+      ],
+      "todo": []
+    },
+    "La Scene": {
+      "nom": "La Scene",
+      "id": "la-scene",
+      "fonction": "Assemblage des positions de scan",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": "Leica",
+      "services": [
+        "topo"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        90
+      ],
+      "usages": [
+        "Assemblage de position de scan"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "Lafarge +": {
+      "nom": "Lafarge +",
+      "id": "lafarge",
+      "fonction": "Suivi des bons de livraison et des m³ coulés",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "auto",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        85
+      ],
+      "usages": [
+        "SUIVI bl, m3 coulé"
+      ],
+      "todo": []
+    },
+    "Live Objects (Orange)": {
+      "nom": "Live Objects (Orange)",
+      "id": "live-objects-orange",
+      "fonction": "Remontée des indicateurs des compteurs de pompage",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "auto",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        82
+      ],
+      "usages": [
+        "Renvoie de les indicateurs de consommation sur les compteurs de pompage"
+      ],
+      "todo": []
+    },
+    "Lucee TP": {
+      "nom": "Lucee TP",
+      "id": "lucee-tp",
+      "fonction": "Identification des espèces envahissantes",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        86
+      ],
+      "usages": [
+        "Déterminer les espèces envahissantes"
+      ],
+      "todo": []
+    },
+    "Mezzoteam": {
+      "nom": "Mezzoteam",
+      "id": "mezzoteam",
+      "fonction": "GED : diffusion et suivi des plans",
+      "nature": "socle",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "MEZZOTEAM",
+      "services": [
+        "qualite-env",
+        "methode-bim",
+        "travaux"
+      ],
+      "hub": true,
+      "origine": "bdd",
+      "lignes": [
+        18,
+        29,
+        65
+      ],
+      "usages": [
+        "Gestion documentaires",
+        "Suivi des plans, diffusion des plans"
+      ],
+      "todo": []
+    },
+    "Miro": {
+      "nom": "Miro",
+      "id": "miro",
+      "fonction": "Animation des obeya",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        69
+      ],
+      "usages": [
+        "Récolter les obeya"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "MMS": {
+      "nom": "MMS",
+      "id": "mms",
+      "fonction": "Suivi de l'adhérence au planning et des jalons",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "travaux",
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        68,
+        74
+      ],
+      "usages": [
+        "Adhérence planning , évaluation/ appréciation des jalons",
+        "Identification des jalons , pointage"
+      ],
+      "todo": []
+    },
+    "MS Project": {
+      "nom": "MS Project",
+      "id": "ms-project",
+      "fonction": "Planification des travaux",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "travaux",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        58,
+        97
+      ],
+      "usages": [
+        "Planning",
+        "Planning travaux, Objectif et tranferts transmis en amont aux ingé, relation humaines, chance, condtion, terrain, points de vigilance, pas beaucoup de prob technique"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "NotebookLM": {
+      "nom": "NotebookLM",
+      "id": "notebooklm",
+      "fonction": "Rédaction de mémoires et de réclamations",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "GOOGLE",
+      "services": [
+        "contrat"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        34
+      ],
+      "usages": [
+        "Redaction de document, mémoire, reclamation"
+      ],
+      "todo": []
+    },
+    "Oasis": {
+      "nom": "Oasis",
+      "id": "oasis",
+      "fonction": "Déclaration des incidents",
+      "nature": "application",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "Microsoft",
+      "services": [
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        9
+      ],
+      "usages": [
+        "Déclaration d'incidents"
+      ],
+      "todo": []
+    },
+    "OneDrive": {
+      "nom": "OneDrive",
+      "id": "onedrive",
+      "fonction": null,
+      "nature": "socle",
+      "ie": null,
+      "alim": null,
+      "editeur": null,
+      "services": [],
+      "hub": true,
+      "origine": "brief",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "absent de la BDD — ajouté au titre du hub de données",
+        "interne/externe non renseigné",
+        "mode d'alimentation non renseigné",
+        "fonction à renseigner",
+        "aucun service de rattachement"
+      ]
+    },
+    "PABLO": {
+      "nom": "PABLO",
+      "id": "pablo",
+      "fonction": "Achats et bons de commande",
+      "nature": "socle",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Systra",
+      "services": [
+        "qualite-env",
+        "travaux",
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        14,
+        44,
+        50,
+        55,
+        60
+      ],
+      "usages": [
+        "Acheter du matériel",
+        "Bon de commande => formation",
+        "Juste validation",
+        "Verification de montant de commande lors d'un différents",
+        "commande de gros engins, nécéssite de faire des avenants,"
+      ],
+      "todo": []
+    },
+    "Pixis": {
+      "nom": "Pixis",
+      "id": "pixis",
+      "fonction": "Guidage du tunnelier",
+      "nature": "application",
+      "ie": null,
+      "alim": "auto",
+      "editeur": null,
+      "services": [
+        "topo"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        94
+      ],
+      "usages": [
+        "Guidage du tunnelier,"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "Power BI": {
+      "nom": "Power BI",
+      "id": "power-bi",
+      "fonction": "Tableaux de bord : KPI, consommations, avancement",
+      "nature": "application",
+      "ie": null,
+      "alim": "auto",
+      "editeur": "BYCN",
+      "services": [
+        "qualite-env",
+        "contrat",
+        "direction",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        15,
+        37,
+        72,
+        79,
+        102
+      ],
+      "usages": [
+        "KPI",
+        "Pas utilisé",
+        "Suivi betonnage, livraison du soir, suivi voussoir",
+        "Suivi des consommations (eau, éléctricité)",
+        "Suivi du pilotage/ avancement des chantiers"
+      ],
+      "todo": [
+        "interne/externe non tranché par la BDD"
+      ]
+    },
+    "PowerPoint": {
+      "nom": "PowerPoint",
+      "id": "powerpoint",
+      "fonction": "Déclaration des presqu'accidents (HIPO)",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        87
+      ],
+      "usages": [
+        "Déclaration de HIPO"
+      ],
+      "todo": []
+    },
+    "Probity": {
+      "nom": "Probity",
+      "id": "probity",
+      "fonction": null,
+      "nature": "socle",
+      "ie": null,
+      "alim": null,
+      "editeur": null,
+      "services": [],
+      "hub": true,
+      "origine": "brief",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "absent de la BDD — ajouté au titre du hub de données",
+        "interne/externe non renseigné",
+        "mode d'alimentation non renseigné",
+        "fonction à renseigner",
+        "aucun service de rattachement"
+      ]
+    },
+    "PUMA": {
+      "nom": "PUMA",
+      "id": "puma",
+      "fonction": "Pointage des compagnons : heures et primes de poste",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        52
+      ],
+      "usages": [
+        "Prime de poste , heures de travail , compagnon BYT"
+      ],
+      "todo": []
+    },
+    "QGIS": {
+      "nom": "QGIS",
+      "id": "qgis",
+      "fonction": "SIG : repérage sur plan",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "QGIS",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        27
+      ],
+      "usages": [
+        "SIG, repère dans un plan"
+      ],
+      "todo": []
+    },
+    "QuickConnect": {
+      "nom": "QuickConnect",
+      "id": "quickconnect",
+      "fonction": "Relevés terrain : sensibilisation, consommations, prélèvements",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": "Synologie",
+      "services": [
+        "qualite-env",
+        "travaux",
+        "direction",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        13,
+        46,
+        67,
+        75,
+        78,
+        100
+      ],
+      "usages": [
+        "1/4h sensibilisation, suivi des consommatio(compteurs), suivi des prélevements, contrôle ste (traitement eau)",
+        "Constat contrat contradictoire, Fuite d'eau",
+        "Fiche bêton , fiches feraillage , journaux chantier (pour les chef de chantier)",
+        "Suivi béton, journaux de chantiers, réception de livraison des voussoir, rec mortier",
+        "Workflow de contrôle qualité bétonnage, eprouvettes, accueil sécurité, formation post travail",
+        "visite sécurité, visite chantiers, toutes les visites"
+      ],
+      "todo": []
+    },
+    "Remind": {
+      "nom": "Remind",
+      "id": "remind",
+      "fonction": "Archivage des documents à 10 ans",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "correction",
+      "lignes": [],
+      "usages": [],
+      "todo": []
+    },
+    "Revit": {
+      "nom": "Revit",
+      "id": "revit",
+      "fonction": "Production des maquettes 3D",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Autodesk(coût:système token)",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        20
+      ],
+      "usages": [
+        "Produire les maquettes(3D)"
+      ],
+      "todo": []
+    },
+    "RNDTS": {
+      "nom": "RNDTS",
+      "id": "rndts",
+      "fonction": "Traçabilité des déblais",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "correction",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "valider avec Camille"
+      ]
+    },
+    "SharePoint": {
+      "nom": "SharePoint",
+      "id": "sharepoint",
+      "fonction": "Accès et partage des documents",
+      "nature": "socle",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "MICROSOFT",
+      "services": [
+        "contrat"
+      ],
+      "hub": true,
+      "origine": "bdd",
+      "lignes": [
+        35
+      ],
+      "usages": [
+        "Accès aux documents"
+      ],
+      "todo": []
+    },
+    "Simple BIM": {
+      "nom": "Simple BIM",
+      "id": "simple-bim",
+      "fonction": "Fusion des maquettes",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Licence",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        25
+      ],
+      "usages": [
+        "Fusionnage de maquettes"
+      ],
+      "todo": []
+    },
+    "Sixsense Monitoring": {
+      "nom": "Sixsense Monitoring",
+      "id": "sixsense-monitoring",
+      "fonction": "Mesures acoustiques (sonomètre)",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "auto",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        83
+      ],
+      "usages": [
+        "Accoustique, sonomètre"
+      ],
+      "todo": []
+    },
+    "Sofistik Bridge": {
+      "nom": "Sofistik Bridge",
+      "id": "sofistik-bridge",
+      "fonction": "Modélisation de la maquette tunnel",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Autodesk",
+      "services": [
+        "methode-bim"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        21
+      ],
+      "usages": [
+        "Modéliser la maquettes que pour le tunnel"
+      ],
+      "todo": []
+    },
+    "Sogelink/DICT": {
+      "nom": "Sogelink/DICT",
+      "id": "sogelink-dict",
+      "fonction": "Déclaration préalable avant terrassement",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "correction",
+      "lignes": [],
+      "usages": [],
+      "todo": []
+    },
+    "Tableau": {
+      "nom": "Tableau",
+      "id": "tableau",
+      "fonction": "Commande traiteur",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Microsoft",
+      "services": [
+        "direction"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        8
+      ],
+      "usages": [
+        "Commande traiteur"
+      ],
+      "todo": []
+    },
+    "TIPS": {
+      "nom": "TIPS",
+      "id": "tips",
+      "fonction": "Pointage Soletanche Bachy",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        42
+      ],
+      "usages": [
+        "Pointage soletanche bachis"
+      ],
+      "todo": []
+    },
+    "Traktor": {
+      "nom": "Traktor",
+      "id": "traktor",
+      "fonction": "Commande de gros engins",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "travaux"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        62
+      ],
+      "usages": [
+        "Commande de gros engins"
+      ],
+      "todo": []
+    },
+    "Trimble Connect": {
+      "nom": "Trimble Connect",
+      "id": "trimble-connect",
+      "fonction": "Dépôt et consultation des maquettes et plans",
+      "nature": "socle",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "tekla bimsight(licence)",
+      "services": [
+        "methode-bim",
+        "travaux",
+        "qualite-env",
+        "topo",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        19,
+        64,
+        81,
+        92,
+        96
+      ],
+      "usages": [
+        "Consultation des plans",
+        "Déposer les maquettes (sharepoint des maquettes)",
+        "Première lecture, pouvoir localiser en 3d les éléments",
+        "Récupère les plans, outils de partage des plans",
+        "Visualisation 3D"
+      ],
+      "todo": []
+    },
+    "Visioaccès": {
+      "nom": "Visioaccès",
+      "id": "visioacces",
+      "fonction": "Création des badges et gestion des accès",
+      "nature": "application",
+      "ie": null,
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "daf"
+      ],
+      "hub": false,
+      "origine": "bdd-annexe",
+      "lignes": [],
+      "usages": [],
+      "todo": [
+        "interne/externe non renseigné"
+      ]
+    },
+    "Waste Marketplace (Wakio)": {
+      "nom": "Waste Marketplace (Wakio)",
+      "id": "waste-marketplace-wakio",
+      "fonction": "Gestion des déchets",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": null,
+      "services": [
+        "qualite-env"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        84
+      ],
+      "usages": [
+        "Gestion des déchets"
+      ],
+      "todo": []
+    },
+    "Word": {
+      "nom": "Word",
+      "id": "word",
+      "fonction": "Rédaction : contrats, avenants, courriers",
+      "nature": "application",
+      "ie": "externe",
+      "alim": "manuel",
+      "editeur": "Microsoft",
+      "services": [
+        "direction",
+        "contrat",
+        "travaux"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        11,
+        32,
+        61,
+        71
+      ],
+      "usages": [
+        "Avancement avec les ingé",
+        "Avenants, contrat",
+        "Courrier",
+        "Récolter les obeya"
+      ],
+      "todo": []
+    },
+    "Yellow": {
+      "nom": "Yellow",
+      "id": "yellow",
+      "fonction": "Suivi temps réel de l'avancement du tunnelier",
+      "nature": "socle",
+      "ie": "interne",
+      "alim": "auto",
+      "editeur": null,
+      "services": [
+        "direction",
+        "travaux-tunnel"
+      ],
+      "hub": false,
+      "origine": "bdd",
+      "lignes": [
+        73,
+        98
+      ],
+      "usages": [
+        "KPI tunnel",
+        "Suivi l'avancement du tunnnelier , info en temps réel ,"
+      ],
+      "todo": []
+    }
+  },
+  "flux": [
+    {
+      "de": "Excel",
+      "vers": "SharePoint",
+      "mode": "manuel",
+      "objet": "Gestion des contrats",
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 10,
+      "todo": null
+    },
+    {
+      "de": "QuickConnect",
+      "vers": "SharePoint",
+      "mode": "manuel",
+      "objet": "Contrôle qualité",
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 13,
+      "todo": null
+    },
+    {
+      "de": "PABLO",
+      "vers": "Harmony",
+      "mode": "manuel",
+      "objet": "Commande de matériel",
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 14,
+      "todo": null
+    },
+    {
+      "de": "Basware",
+      "vers": "Harmony",
+      "mode": "auto",
+      "objet": "Retour de facturation",
+      "carte": true,
+      "origine": "bdd+correction",
+      "ligne": 33,
+      "todo": null
+    },
+    {
+      "de": "Harmony",
+      "vers": "Basware",
+      "mode": "auto",
+      "objet": "Engagement des dépenses",
+      "carte": true,
+      "origine": "bdd+correction",
+      "ligne": 39,
+      "todo": null
+    },
+    {
+      "de": "ERP MAT",
+      "vers": "Power BI",
+      "mode": "auto",
+      "objet": "Commande chantier",
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 63,
+      "todo": null
+    },
+    {
+      "de": "QuickConnect",
+      "vers": "Power BI",
+      "mode": "auto",
+      "objet": "Contrôle qualité et environnement",
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 78,
+      "todo": null
+    },
+    {
+      "de": "Trimble Connect",
+      "vers": "IDCapture",
+      "mode": "manuel",
+      "objet": null,
+      "carte": false,
+      "origine": "bdd",
+      "ligne": 81,
+      "todo": null
+    },
+    {
+      "de": "AutoCAD",
+      "vers": "Covadis",
+      "mode": "manuel",
+      "objet": null,
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 88,
+      "todo": null
+    },
+    {
+      "de": "La Scene",
+      "vers": "Cyclone 3DR",
+      "mode": "manuel",
+      "objet": null,
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 90,
+      "todo": null
+    },
+    {
+      "de": "Trimble Connect",
+      "vers": "Cyclone 3DR",
+      "mode": "manuel",
+      "objet": null,
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 92,
+      "todo": null
+    },
+    {
+      "de": "Trimble Connect",
+      "vers": "AutoCAD",
+      "mode": "manuel",
+      "objet": null,
+      "carte": true,
+      "origine": "bdd",
+      "ligne": 92,
+      "todo": null
+    },
+    {
+      "de": "PABLO",
+      "vers": "GMAO",
+      "mode": "manuel",
+      "objet": "Commande vers gestion de stock",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "GMAO",
+      "vers": "PABLO",
+      "mode": "manuel",
+      "objet": "Réapprovisionnement",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "PUMA",
+      "vers": "BIP/BAPS",
+      "mode": "manuel",
+      "objet": "Pointage des intérimaires",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "PUMA",
+      "vers": "BYCN",
+      "mode": "manuel",
+      "objet": "Pointage des compagnons Bouygues",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "AutoCAD",
+      "vers": "SharePoint",
+      "mode": "manuel",
+      "objet": "Dépôt des plans produits",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "SharePoint",
+      "vers": "Mezzoteam",
+      "mode": "manuel",
+      "objet": "Diffusion au client",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "Mezzoteam",
+      "vers": "Remind",
+      "mode": "manuel",
+      "objet": "Archivage 10 ans",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": null
+    },
+    {
+      "de": "Chorus",
+      "vers": "Basware",
+      "mode": "manuel",
+      "objet": "Facturation du maître d'ouvrage",
+      "carte": true,
+      "origine": "correction",
+      "ligne": null,
+      "todo": "flux à confirmer"
+    }
+  ],
+  "legende": {
+    "nature": [
+      {
+        "cle": "socle",
+        "libelle": "Socle de données",
+        "aide": "Plateforme transverse, partagée par plusieurs services"
+      },
+      {
+        "cle": "application",
+        "libelle": "Application métier",
+        "aide": "Outil au service d'un métier précis"
+      }
+    ],
+    "ie": [
+      {
+        "cle": "interne",
+        "libelle": "Interne",
+        "aide": "Développé par le groupe"
+      },
+      {
+        "cle": "externe",
+        "libelle": "Externe",
+        "aide": "Fourni par un éditeur tiers"
+      },
+      {
+        "cle": null,
+        "libelle": "TODO",
+        "aide": "Non tranché par la BDD"
+      }
+    ],
+    "alim": [
+      {
+        "cle": "auto",
+        "libelle": "Automatique",
+        "aide": "Trait plein"
+      },
+      {
+        "cle": "manuel",
+        "libelle": "Manuel",
+        "aide": "Trait pointillé"
+      }
+    ],
+    "origine": [
+      {
+        "cle": "bdd",
+        "libelle": "BDD",
+        "aide": "Table d'entretiens"
+      },
+      {
+        "cle": "bdd-annexe",
+        "libelle": "BDD annexe",
+        "aide": "Onglet Tableau de Bord"
+      },
+      {
+        "cle": "correction",
+        "libelle": "Correction",
+        "aide": "Correction métier hors BDD"
+      },
+      {
+        "cle": "brief",
+        "libelle": "Brief",
+        "aide": "Imposé par le cahier des charges"
+      }
+    ]
+  }
+}
