@@ -619,10 +619,11 @@ def page_macro(carto, indice, total, liens):
 LARGEUR_NOM = 112.0        # colonne du libellé de processus
 LARGEUR_BORNE = 82.0       # blocs début et fin
 HAUTEUR_ETAPE = 27.0
-HAUTEUR_ETAPE_MAX = 40.0
+HAUTEUR_ETAPE_MAX = 44.0
 GAP_ETAPE = 6.0
 GAP_BANDE = 6.0
-HAUTEUR_BANDE_MAX = 112.0
+PLAFOND_BANDE = 150.0   # au-delà, une bande n'est plus qu'un cadre autour du vide
+RAB_BANDE = 64.0        # blanc maximal ajouté à une bande au-delà de son contenu
 TAILLE_ETAPE = 7.2
 TAILLE_BADGE = 5.4
 
@@ -654,7 +655,7 @@ def _lignes_etapes(scene, etapes, largeur_zone):
     return lignes or [[]]
 
 
-HAUTEUR_BORNE_MAX = 56.0
+HAUTEUR_BORNE_MAX = 78.0
 
 
 def _borne(scene, x, y, w, h, contenu, role):
@@ -711,14 +712,20 @@ def page_service(carto, service, indice, total, lien_macro):
         naturelle = 14.0 + len(lignes) * HAUTEUR_ETAPE + (len(lignes) - 1) * 5.0
         bandes.append([processus, lignes, max(38.0, naturelle)])
 
+    # les bandes remplissent la hauteur disponible : un service à un seul
+    # processus mérite une affiche pleine, pas une bande perdue en haut de page
     disponible = PAGE_H - HAUT_PIED - 10.0 - y
     total_naturel = sum(b[2] for b in bandes) + GAP_BANDE * (len(bandes) - 1)
     gap = GAP_BANDE
     if total_naturel < disponible and bandes:
+        plafond = min(PLAFOND_BANDE,
+                      max(120.0,
+                          (disponible - gap * (len(bandes) - 1)) / len(bandes)))
         rab = (disponible - total_naturel) / len(bandes)
         for bande in bandes:
-            supplement = min(rab, HAUTEUR_BANDE_MAX - bande[2])
-            bande[2] += max(0.0, supplement)
+            # une bande ne s'étire pas indéfiniment autour d'une seule pastille
+            cible = min(plafond, bande[2] + RAB_BANDE)
+            bande[2] += max(0.0, min(rab, cible - bande[2]))
         reste = disponible - sum(b[2] for b in bandes)
         if len(bandes) > 1:
             gap = min(42.0, max(GAP_BANDE, reste / (len(bandes) - 1)))
@@ -726,6 +733,11 @@ def page_service(carto, service, indice, total, lien_macro):
         facteur = (disponible - gap * (len(bandes) - 1)) / sum(b[2] for b in bandes)
         for bande in bandes:
             bande[2] *= facteur
+
+    # le bloc de bandes est centré : mieux vaut du blanc réparti en haut et en
+    # bas qu'une affiche qui semble coupée
+    hauteur_bloc = sum(b[2] for b in bandes) + gap * max(0, len(bandes) - 1)
+    y += max(0.0, (disponible - hauteur_bloc) / 2.0)
 
     for processus, lignes, hauteur in bandes:
         vierge = processus["origine"] == "vierge"
@@ -759,7 +771,9 @@ def page_service(carto, service, indice, total, lien_macro):
         _fleche(scene, zone_fin_x - 12, corps_y, corps_h)
 
         if not processus["etapes"]:
-            scene.rect(zone_x, corps_y, zone_w, corps_h, fill=c["fond"],
+            vide_h = min(corps_h, HAUTEUR_BORNE_MAX)
+            scene.rect(zone_x, corps_y + (corps_h - vide_h) / 2.0, zone_w, vide_h,
+                       fill=c["fond"],
                        line=c["trait"], lw=0.6, dash="dash", radius=3,
                        texte="TODO — étapes à compléter", taille=6.4,
                        couleur=c["gris"], classe="zone-vide")
