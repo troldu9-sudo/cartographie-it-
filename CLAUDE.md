@@ -144,6 +144,14 @@ Sur l'affiche « inventaire », `.pin` et `.pout` sont à largeur fixe (152 px) 
 `flex:1 1 0` ils avalaient toute la bande dès qu'une mission ne comptait que deux
 outils.
 
+Les deux annexes portent la légende des couleurs de pôle (`svcLegendHTML()`), sans
+laquelle elles ne se lisent pas seules : elles encodent le pôle par la couleur mais
+ne le nomment nulle part. **Trois entrées par colonne au maximum** — `.masthead` a
+une hauteur figée à 84 px et `.wrap` commence à 134 px, un masthead plus haut vient
+buter sur le tableau. L'annexe 1 inclut l'entrée « Socle commun » (sa matrice a des
+extrémités `s:` rendues en `--core`), l'annexe 2 non (sa colonne `svcdots` ne montre
+que des pôles).
+
 ## Connecteurs
 
 Tracés en Bézier cubique unique (une seule courbe par flux : le générateur PPTX

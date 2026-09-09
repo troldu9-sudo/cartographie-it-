@@ -93,6 +93,10 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .key.k-int{background:color-mix(in srgb,var(--dir) 13%,transparent);border-color:color-mix(in srgb,var(--dir) 34%,transparent);color:var(--dir)}
 .key.k-todo{border-style:dashed;color:var(--muted)}
 .kdot{width:8px;height:8px;border-radius:50%;background:var(--core);flex:none;display:block}
+/* légende de pôles : neuf à dix entrées doivent tenir dans les 84 px du masthead */
+.legend.compact{gap:20px}
+.legend.compact .swatchrow{gap:6px}
+.legend.compact .item{font-size:10.5px}
 
 /* ---------- plateau ---------- */
 .board{position:absolute;left:44px;right:44px;top:140px;bottom:34px}
@@ -3004,6 +3008,19 @@ function cardHTML(pid, bid){
   `</div>`;
 }
 
+/* Les annexes encodent le pôle par la couleur sans jamais le nommer : sans cette
+   légende, elles ne se lisent pas seules. Trois entrées par colonne — au-delà, le
+   masthead dépasse ses 84 px et vient buter sur le tableau. */
+function svcLegendHTML(withCore){
+  const items = BDD.services.map(s => ({ id: s.id, name: s.name }));
+  if (withCore) items.push({ id: "core", name: "Socle commun" });
+  const cols = [];
+  for (let i = 0; i < items.length; i += 3) cols.push(items.slice(i, i + 3));
+  return cols.map(col => `<div class="swatchrow">` + col.map(s =>
+    `<span class="item"><span class="kdot" style="background:var(--${s.id})"></span>${esc(s.name)}</span>`
+  ).join("") + `</div>`).join("");
+}
+
 const CORE_SUB = { "SharePoint": "Référentiel", "Power BI": "Cabine de pilotage" };
 
 function hubHTML(bid){
@@ -3423,7 +3440,9 @@ const fluxRows = (list, xf) => list.map(f => {
 
 addSlide("slide-flux",
   masthead("Annexe 1", "Matrice des flux de données",
-           "Échanges relevés entre outils, et échanges entre missions décrits par le brief") +
+           "Échanges relevés entre outils, et échanges entre missions décrits par le brief",
+           /* avec le socle : le tableau des flux applicatifs a des extrémités « s: » */
+           `<div class="legend compact">${svcLegendHTML(true)}</div>`) +
   `<div class="wrap">
      <div class="mcol">
        <p class="secttitle">Flux applicatifs — d'outil à outil <em> · ${BDD.flows.length} relevés en entretien</em></p>
@@ -3483,11 +3502,11 @@ const half = Math.ceil(refRows.length / 2);
 addSlide("slide-ref",
   masthead("Annexe 2", "Référentiel des outils",
            "Tous les outils recensés, avec éditeur, pôles servis, nature et alimentation",
-           `<div class="legend"><div class="swatchrow">
+           `<div class="legend compact"><div class="swatchrow">
               <span class="item"><span class="badge int">INT</span>Outil interne</span>
               <span class="item"><span class="badge auto">AUTO</span>Alimentation automatique</span>
               <span class="item"><span class="nm brief">Nom</span>Hors base d'entretiens</span>
-            </div></div>`) +
+            </div>${svcLegendHTML(false)}</div>`) +
   `<div class="wrap"><div class="ref">` +
   [refRows.slice(0, half), refRows.slice(half)].map(part =>
     `<div class="mcol"><table>
