@@ -81,10 +81,12 @@ la fois** : le badge posé sur l'affiche du pôle, et le fil tracé sur la planc
 | `process{}` | par pôle en chaînes : les missions détaillées ci-dessus |
 | `socle[]` | groupes du socle commun : `{group, tools[]}` |
 | `core[]` | SharePoint, Power BI (bloc « socle de données ») |
-| `tools{}` | par outil : `{ie, alim, ed, svc[], nb, socle, todo?, brief?}` |
+| `tools{}` | par outil : `{ie, alim, ed, svc[], nb, socle, fonction, todo?, brief?}` |
 | `flows[]` | flux applicatifs d'outil à outil : `{from, to, obj, alim, map}` |
 | `xflows[]` | échanges de mission à mission, dérivés des `links` |
-| `board{}` | `{top[], bottom[], xrows[][]}` — répartition des cartes |
+| `board{}` | `{top[], bottom[]}` — répartition des cartes de la planche 1 |
+| `bornes{}` | `"pôle|libellé"` → début et finalité d'une mission d'inventaire |
+| `chantier` | nom du chantier, repris au bandeau de la planche 1 |
 
 `brief: true` marque un outil venu du brief et absent de la BDD (`HORS_BDD`) : il
 s'affiche en pointillés, porte « hors BDD · brief » et son nom est coloré dans le
@@ -107,23 +109,29 @@ endroit.
 |---|---|
 | Chaînes de flux, étapes, finalités, interconnexions | `PROCESS` dans `data/build_data.py` |
 | Missions des pôles sans processus recueilli | `MISSIONS` |
+| Phrase de fonction d'un outil (référentiel) | `FONCTIONS` |
+| Début / finalité d'une mission d'inventaire | `BORNES` |
+| Outil volontairement rattaché à aucun pôle | `HORS_POLE` |
+| Nom du chantier | `CHANTIER` |
 | Composition des pôles | `SERVICE` + `SERVICES` |
 | Outils du brief absents de la BDD | `HORS_BDD` |
 | Composition du socle | `SOCLE` + `CORE` |
 | Flux applicatifs | `FLOWS` |
 | Libellés d'outils saisis en vrac | `ALIAS` |
 | Répartition des cartes, planche 1 | `BOARD_TOP` + `BOARD_BOTTOM` |
-| Grille de la planche inter-services | `XBOARD_ROWS` |
 | Ordre des affiches | `AFFICHES` dans `index.html` |
 | Couleurs | `--met --top --tun --trv --ctr --qse --dir --daf --sec --core` en tête du CSS |
 
-## Les 13 planches
+## Les 12 planches
 
 1. Cartographie applicative — 9 pôles, socle en bandeau, flux d'outil à outil
-2. Flux inter-services — les missions en nœuds, les `xflows` en fils
-3-11. Affiches services, dans l'ordre `AFFICHES` : dir, daf, ctr, met, trv, tun, top, qse, sec
-12. Matrice des flux — les deux tableaux, applicatif et inter-services
-13. Référentiel des outils
+2-10. Affiches services, dans l'ordre `AFFICHES` : dir, daf, ctr, met, trv, tun, top, qse, sec
+11. Matrice des flux — les deux tableaux, applicatif et inter-services
+12. Référentiel des outils, avec la fonction de chaque outil
+
+La planche « Flux inter-services » a été retirée sur arbitrage métier. Les `xflows`
+restent au modèle : ils alimentent le second tableau de l'annexe 1 et les badges
+posés sur les affiches. Rien à reconstruire pour la rétablir, sinon la planche.
 
 ### Mise en page
 
@@ -146,7 +154,7 @@ outils.
 
 Les deux annexes portent la légende des couleurs de pôle (`svcLegendHTML()`), sans
 laquelle elles ne se lisent pas seules : elles encodent le pôle par la couleur mais
-ne le nomment nulle part. **Trois entrées par colonne au maximum** — `.masthead` a
+ne le nomment nulle part. La planche 1 n'en porte plus, sur arbitrage métier. **Trois entrées par colonne au maximum** — `.masthead` a
 une hauteur figée à 84 px et `.wrap` commence à 134 px, un masthead plus haut vient
 buter sur le tableau. L'annexe 1 inclut l'entrée « Socle commun » (sa matrice a des
 extrémités `s:` rendues en `--core`), l'annexe 2 non (sa colonne `svcdots` ne montre
@@ -166,17 +174,6 @@ n'émet qu'un `cubicBezTo`). Le routage choisit parmi trois cas :
 Les extrémités partagées sont réparties verticalement par `spread()`, triées selon
 la position de l'extrémité opposée : c'est ce qui évite les croisements.
 
-Sur la planche inter-services, `fan()` décale en plus le point de sortie
-horizontalement selon le **rang de la mission dans sa carte**. Sans lui, toutes les
-missions d'une carte partagent le même centre horizontal et leurs fils se
-superposent sur le bord de la carte.
-
-**`XBOARD_ROWS` n'est pas cosmétique.** Une courbe unique ne sait pas contourner :
-un fil ne reste lisible qu'entre deux cartes voisines — même rangée mitoyenne, ou
-rangées consécutives. Ajouter un `link` entre deux pôles éloignés dans la grille
-fait traverser une carte ; `build_data.py` le signale, la réponse est de réordonner
-la grille, pas d'ignorer l'avertissement.
-
 ## Pièges vérifiés — ne pas les redécouvrir
 
 **Métriques de police.** Chromium compose ici en DejaVu Sans, PowerPoint en
@@ -195,6 +192,13 @@ révèle.
   débordait de son bloc.
 - Les libellés de missions sur deux colonnes ont déjà débordé d'une colonne à
   l'autre : d'où les libellés courts et la gouttière à 26 px.
+- **Tronquer en JS, jamais par `text-overflow: ellipsis`.** `extract.js` relève le
+  texte du DOM, pas le texte visuellement coupé par le CSS : une cellule raccourcie
+  à l'écran ressort en pleine largeur dans le PPTX et chevauche la colonne suivante.
+  D'où le helper `cut()` et le budget de 46 caractères de la colonne « Fonction »,
+  relevé à la règle sur la largeur réelle puis diminué de 12 % pour Calibri. Mesurer
+  la largeur d'un texte comme le fait `extract.js` — un `Range` sur le contenu — et
+  non par `scrollWidth`, plafonné sur une cellule de tableau.
 
 **Extraction (`extract.js`).**
 - `color-mix()` est calculé par Chromium en `color(srgb r g b / a)`, pas en
@@ -234,9 +238,9 @@ accents — les identifiants DOM ne correspondent alors plus aux flux.
 
 ## Vérification avant de livrer
 
-1. `python3 data/build_data.py` — vérifier le décompte (9 pôles, 37 missions,
+1. `python3 data/build_data.py` — vérifier le décompte (9 pôles, 35 missions,
    64 outils, 14 flux applicatifs, 18 flux inter-services) et les avertissements.
-2. Capturer les **13 planches** avec Playwright et **les regarder**. Contrôler en
+2. Capturer les **12 planches** avec Playwright et **les regarder**. Contrôler en
    plus par script deux choses que l'œil rate : qu'aucun élément ne sorte de son
    conteneur (`.wrap`, `.affiche`, `.board` — pas seulement de la planche), et
    qu'aucune erreur ne remonte en console.
@@ -258,8 +262,12 @@ accents — les identifiants DOM ne correspondent alors plus aux flux.
 - **Nature des flux** : la BDD ne qualifie pas l'automatisation flux par flux. Un
   flux est dit automatisé quand son outil de **destination** est alimenté
   automatiquement. Les `xflows`, issus du brief, sont tous déclarés manuels.
-- **Missions proposées** : les missions du tunnel sont décalquées de celles des
-  Travaux et marquées `todo` — ne pas les présenter comme documentées.
+- **Marqueurs de réserve non affichés** : « ordre non attesté », « mission
+  proposée », « chaîne à valider » et les notes de bas de planche ont été retirés du
+  rendu sur arbitrage métier. Le champ `todo` reste au modèle — l'information n'est
+  pas perdue, seulement plus montrée. Conséquence assumée : rien ne distingue plus à
+  l'œil un processus recueilli en entretien d'un processus déduit, dont les missions
+  du tunnel décalquées de celles des Travaux.
 - **Répétitions assumées** : un outil apparaît dans plusieurs pôles ou missions
   quand plusieurs l'ont déclaré. C'est voulu, la carte est organisée par pôle.
 - **Enchaînements internes non tracés** : un `link` d'un pôle vers lui-même reste

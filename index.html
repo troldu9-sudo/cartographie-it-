@@ -251,6 +251,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 .ref table{height:auto}
 .ref thead th{padding:0 8px 7px;font-size:9.5px}
 .ref .nm{font-weight:750;color:var(--ink)}
+.ref td.fn{color:var(--ink-2);font-weight:600}
 .ref .nm.brief{color:color-mix(in srgb,var(--qse) 72%,var(--ink))}
 .ref .ed{font-size:9.5px;color:var(--muted);font-weight:600;margin-left:10px}
 .badge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.06em;padding:2.5px 7px;border-radius:999px;text-align:center;
@@ -269,7 +270,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
    ordonnées, finalité. Les blocs prennent chacun la même part de la largeur
    restante, si bien que les colonnes « entrée » et « finalité » s'alignent d'une
    bande à l'autre — c'est ce qui rend l'affiche scannable verticalement. */
-.affiche{position:absolute;left:44px;right:44px;top:140px;bottom:52px;
+.affiche{position:absolute;left:44px;right:44px;top:140px;bottom:38px;
          display:flex;flex-direction:column;gap:12px;justify-content:space-evenly}
 .pline{flex:1 1 0;max-height:210px;min-height:92px;position:relative;display:flex;align-items:stretch;
        background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
@@ -323,15 +324,6 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
             color:color-mix(in srgb,var(--qse) 62%,var(--ink-2));
             border-color:color-mix(in srgb,var(--qse) 45%,transparent)}
 
-/* planche « flux inter-services » : les missions deviennent les nœuds */
-.xcard .missions{gap:5px;justify-content:flex-start}
-.xmission{display:block;font-size:9.5px;font-weight:750;line-height:1.25;color:var(--ink-2);
-          background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
-          padding:5px 8px;text-align:center}
-.xmission.hot{background:color-mix(in srgb,var(--accent) 12%,transparent);
-              border-color:color-mix(in srgb,var(--accent) 38%,transparent);
-              color:var(--accent);font-weight:800}
-
 /* ---------- densité des tableaux d'annexe ---------- */
 .secttitle{margin:0 0 4px;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
            color:var(--ink-2)}
@@ -347,9 +339,6 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 .wrap .mcol .arrow{font-size:13px}
 .wrap .mcol .flux-mode{font-size:9px;padding:2px 7px}
 
-/* note de bas d'affiche, au-dessus de la pagination */
-.affnote{position:absolute;left:44px;right:44px;bottom:32px;font-size:9.5px;
-         color:var(--muted);font-weight:600}
 
 @page{size:423.33mm 238.13mm;margin:0}
 @media print{
@@ -707,17 +696,14 @@ const BDD = {
    "tools": [
     "BATIS",
     "Basware",
-    "CWT",
     "DocuSign",
     "E-Checking",
     "E-Paraph",
     "Excel",
     "MIRO",
     "MMS",
-    "Oasis",
     "Power BI",
     "Quick Connect",
-    "Tableau",
     "Word",
     "YELLOW"
    ],
@@ -751,22 +737,6 @@ const BDD = {
       "BATIS",
       "E-Checking",
       "Quick Connect"
-     ]
-    },
-    {
-     "label": "Matériels",
-     "todo": false,
-     "tools": [
-      "Oasis"
-     ]
-    },
-    {
-     "label": "Services généraux",
-     "todo": true,
-     "tools": [
-      "CWT",
-      "Tableau",
-      "Word"
      ]
     }
    ],
@@ -934,7 +904,7 @@ const BDD = {
    "tools": [
     "By My Site",
     "Cority",
-    "HRMYOU / Global HR",
+    "HR4YOU / Global HR",
     "Heures Travaillées",
     "Lotus",
     "Mezzoteam",
@@ -950,7 +920,7 @@ const BDD = {
      "tools": [
       "Quick Connect",
       "By My Site",
-      "HRMYOU / Global HR"
+      "HR4YOU / Global HR"
      ]
     },
     {
@@ -988,7 +958,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Declaration des ST(paiement direct)",
-   "socle": true
+   "socle": true,
+   "fonction": "Sous-traitants en paiement direct"
   },
   "E-Paraph": {
    "ie": "interne",
@@ -1002,7 +973,8 @@ const BDD = {
    ],
    "nb": 3,
    "usage": "Circuit de validation en interne avant signature",
-   "socle": true
+   "socle": true,
+   "fonction": "Circuit de validation interne avant signature"
   },
   "DocuSign": {
    "ie": "externe",
@@ -1015,43 +987,41 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Notification d'un  nouveau contrats",
-   "socle": true
+   "socle": true,
+   "fonction": "Signature électronique des contrats"
   },
   "CWT": {
    "ie": "externe",
    "alim": "manuel",
    "ed": "CWT EUROPE",
    "mat": "Mature",
-   "svc": [
-    "dir"
-   ],
-   "nb": 1,
+   "svc": [],
+   "nb": 0,
    "usage": "Plateforme de voyage adapté à la politique voyage de Bouygues",
-   "socle": false
+   "socle": false,
+   "fonction": "Réservation de voyages du groupe"
   },
   "Tableau": {
    "ie": "externe",
    "alim": "manuel",
    "ed": "Microsoft",
    "mat": "Mature",
-   "svc": [
-    "dir"
-   ],
-   "nb": 1,
+   "svc": [],
+   "nb": 0,
    "usage": "Commande traiteur",
-   "socle": false
+   "socle": false,
+   "fonction": "Commandes de services généraux"
   },
   "Oasis": {
    "ie": "interne",
    "alim": "manuel",
    "ed": "Microsoft",
    "mat": "Mature",
-   "svc": [
-    "dir"
-   ],
-   "nb": 1,
+   "svc": [],
+   "nb": 0,
    "usage": "Déclaration d'incidents",
-   "socle": false
+   "socle": false,
+   "fonction": "Déclaration des incidents"
   },
   "Excel": {
    "ie": "externe",
@@ -1069,7 +1039,8 @@ const BDD = {
    ],
    "nb": 7,
    "usage": "Contrats avenant, ordre de service, courrier",
-   "socle": true
+   "socle": true,
+   "fonction": "Tableurs de suivi et de ventilation"
   },
   "Word": {
    "ie": "externe",
@@ -1083,7 +1054,8 @@ const BDD = {
    ],
    "nb": 3,
    "usage": "Courrier",
-   "socle": true
+   "socle": true,
+   "fonction": "Rédaction : contrats, avenants, courriers"
   },
   "E-Checking": {
    "ie": "externe",
@@ -1096,7 +1068,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Pour les  entreprises, Julie créer l'acces de l'entreprise(ST, prestataire )",
-   "socle": true
+   "socle": true,
+   "fonction": "Contrôle du travail illégal"
   },
   "Quick Connect": {
    "ie": "interne",
@@ -1112,7 +1085,8 @@ const BDD = {
    ],
    "nb": 5,
    "usage": "Workflow de contrôle qualité bétonnage, eprouvettes, accueil sécurité, formation post travail",
-   "socle": true
+   "socle": true,
+   "fonction": "Relevés terrain : qualité, sécurité, accueil"
   },
   "Pablo": {
    "ie": "externe",
@@ -1128,7 +1102,8 @@ const BDD = {
    ],
    "nb": 5,
    "usage": "Acheter du matériel",
-   "socle": true
+   "socle": true,
+   "fonction": "Achats et bons de commande"
   },
   "Power BI": {
    "ie": "interne",
@@ -1145,7 +1120,8 @@ const BDD = {
    ],
    "nb": 6,
    "usage": "Pas utilisé",
-   "socle": true
+   "socle": true,
+   "fonction": "Tableaux de bord et indicateurs de pilotage"
   },
   "IDCapture": {
    "ie": "externe",
@@ -1159,7 +1135,8 @@ const BDD = {
    ],
    "nb": 3,
    "usage": "Lever de reserve(mis à disposition pour les prochain prestataire, code couleur, visuel plus parlant , suivi da",
-   "socle": false
+   "socle": false,
+   "fonction": "Levée de réserves et contrôle qualité"
   },
   "Mezzoteam": {
    "ie": "externe",
@@ -1174,7 +1151,8 @@ const BDD = {
    ],
    "nb": 4,
    "usage": "Gestion documentaires",
-   "socle": true
+   "socle": true,
+   "fonction": "GED : diffusion et suivi des plans"
   },
   "Trimble Connect": {
    "ie": "externe",
@@ -1190,7 +1168,8 @@ const BDD = {
    ],
    "nb": 5,
    "usage": "Déposer les maquettes (sharepoint des maquettes)",
-   "socle": true
+   "socle": true,
+   "fonction": "Dépôt et partage des maquettes"
   },
   "Revit": {
    "ie": "externe",
@@ -1202,7 +1181,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Produire les maquettes(3D)",
-   "socle": false
+   "socle": false,
+   "fonction": "Production des maquettes 3D"
   },
   "Sofistik Bridge": {
    "ie": "externe",
@@ -1214,7 +1194,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Modéliser la maquettes que pour le tunnel",
-   "socle": false
+   "socle": false,
+   "fonction": "Modélisation de la maquette du tunnel"
   },
   "AutoCAD": {
    "ie": "externe",
@@ -1227,7 +1208,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Plan (production)=> 2D",
-   "socle": false
+   "socle": false,
+   "fonction": "Production et modification des plans 2D"
   },
   "Inventor": {
    "ie": "externe",
@@ -1239,7 +1221,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "3D => pièce mécanique",
-   "socle": false
+   "socle": false,
+   "fonction": "Conception 3D de pièces mécaniques"
   },
   "Civil 3D": {
    "ie": "externe",
@@ -1251,7 +1234,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Dessein du terrassement",
-   "socle": false
+   "socle": false,
+   "fonction": "Dessin des terrassements"
   },
   "Simple BIM": {
    "ie": "externe",
@@ -1263,7 +1247,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Fusionnage de maquettes",
-   "socle": false
+   "socle": false,
+   "fonction": "Fusion de maquettes"
   },
   "BIM Vision": {
    "ie": "externe",
@@ -1275,7 +1260,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Ouvrir une maquette",
-   "socle": false
+   "socle": false,
+   "fonction": "Ouverture et visualisation des maquettes"
   },
   "QGIS": {
    "ie": "externe",
@@ -1287,7 +1273,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "SIG, repère dans un plan",
-   "socle": false
+   "socle": false,
+   "fonction": "SIG : repérage et positionnement sur plan"
   },
   "Anaconda": {
    "ie": "externe",
@@ -1299,7 +1286,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Code",
-   "socle": false
+   "socle": false,
+   "fonction": "Écriture de scripts de calcul"
   },
   "E-Project": {
    "ie": "?",
@@ -1311,7 +1299,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Permet d'activer la facturation , voir la situation",
-   "socle": false
+   "socle": false,
+   "fonction": "Activation et suivi de la facturation"
   },
   "Basware": {
    "ie": "interne",
@@ -1325,7 +1314,8 @@ const BDD = {
    ],
    "nb": 3,
    "usage": "Validé les facturations partenaires,",
-   "socle": false
+   "socle": false,
+   "fonction": "Enregistrement et validation des factures"
   },
   "NotebookLM": {
    "ie": "interne",
@@ -1337,7 +1327,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Redaction de document, mémoire, reclamation",
-   "socle": false
+   "socle": false,
+   "fonction": "Rédaction des mémoires et des réclamations"
   },
   "SharePoint": {
    "ie": "externe",
@@ -1350,7 +1341,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Accès aux documents",
-   "socle": true
+   "socle": true,
+   "fonction": "Stockage et partage des documents"
   },
   "Harmony": {
    "ie": "interne",
@@ -1362,7 +1354,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Engagements des dépenses à la reception des bl, suivre les commandes , envoi des avis de paiement, Pour les ST",
-   "socle": true
+   "socle": true,
+   "fonction": "Engagement des dépenses et suivi des commandes"
   },
   "TIPS": {
    "ie": "interne",
@@ -1374,7 +1367,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Pointage soletanche bachis",
-   "socle": true
+   "socle": true,
+   "fonction": "Pointage et mise en paiement"
   },
   "Puma": {
    "ie": "interne",
@@ -1386,7 +1380,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Prime de poste , heures de travail , compagnon BYT",
-   "socle": true
+   "socle": true,
+   "fonction": "Pointage : heures et primes de poste"
   },
   "BIP / BAPS": {
    "ie": "interne",
@@ -1398,7 +1393,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Intérim, heures , renouvellement, verification",
-   "socle": true
+   "socle": true,
+   "fonction": "Intérim : heures et renouvellements"
   },
   "By My Site": {
    "ie": "interne",
@@ -1411,7 +1407,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Logiciel de fomation, centralisation de formation",
-   "socle": false
+   "socle": false,
+   "fonction": "Centralisation et suivi des formations"
   },
   "H&R For You": {
    "ie": "interne",
@@ -1423,7 +1420,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Demande de CP, monaitisation, placement gérance fonds, attestation employeur",
-   "socle": false
+   "socle": false,
+   "fonction": "Demandes RH : congés, attestations, épargne"
   },
   "MS Project": {
    "ie": "externe",
@@ -1436,7 +1434,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Planning travaux,  Objectif et tranferts transmis en amont aux ingé, relation humaines, chance, condtion, terr",
-   "socle": false
+   "socle": false,
+   "fonction": "Planification des travaux et des transferts"
   },
   "Traktor": {
    "ie": "interne",
@@ -1448,7 +1447,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Commande de gros engins",
-   "socle": true
+   "socle": true,
+   "fonction": "Commande de gros engins de chantier"
   },
   "ERP MAT": {
    "ie": "interne",
@@ -1461,7 +1461,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Commande de coffrage , grue au tour, sécurite",
-   "socle": false
+   "socle": false,
+   "fonction": "Commande de coffrage, grue et engins"
   },
   "MMS": {
    "ie": "interne",
@@ -1474,7 +1475,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "Adhérence planning , évaluation/ appréciation des jalons",
-   "socle": false
+   "socle": false,
+   "fonction": "Adhérence au planning et jalons"
   },
   "MIRO": {
    "ie": "?",
@@ -1486,7 +1488,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Récolter les obeya",
-   "socle": false
+   "socle": false,
+   "fonction": "Animation et récolte des obeya"
   },
   "YELLOW": {
    "ie": "interne",
@@ -1499,7 +1502,8 @@ const BDD = {
    ],
    "nb": 2,
    "usage": "KPI tunnel",
-   "socle": true
+   "socle": true,
+   "fonction": "Avancement du tunnelier en temps réel"
   },
   "Live Objects (Orange)": {
    "ie": "externe",
@@ -1511,7 +1515,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Renvoie de les indicateurs de consommation sur les compteurs de pompage",
-   "socle": false
+   "socle": false,
+   "fonction": "Indicateurs des compteurs de pompage"
   },
   "Sixense Monitoring": {
    "ie": "externe",
@@ -1523,7 +1528,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Accoustique, sonomètre",
-   "socle": false
+   "socle": false,
+   "fonction": "Mesures acoustiques et sonométriques"
   },
   "Wastemarket Place": {
    "ie": "externe",
@@ -1535,7 +1541,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Gestion des déchets",
-   "socle": false
+   "socle": false,
+   "fonction": "Gestion et traçabilité des déchets"
   },
   "Lafarge+": {
    "ie": "externe",
@@ -1547,7 +1554,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "SUIVI bl, m3 coulé",
-   "socle": false
+   "socle": false,
+   "fonction": "Suivi des bons de livraison et des m³ coulés"
   },
   "Lucee TP": {
    "ie": "externe",
@@ -1559,7 +1567,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Déterminer les espèces envahissantes",
-   "socle": false
+   "socle": false,
+   "fonction": "Identification des espèces envahissantes"
   },
   "PowerPoint": {
    "ie": "externe",
@@ -1571,7 +1580,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Déclaration de HIPO",
-   "socle": false
+   "socle": false,
+   "fonction": "Déclaration des presqu'accidents (HIPO)"
   },
   "Cyclone 3DR": {
    "ie": "?",
@@ -1583,7 +1593,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Générer des points topo, analyse des scans , retraitementement de nuage de point",
-   "socle": false
+   "socle": false,
+   "fonction": "Traitement des nuages de points et des scans"
   },
   "La Scene": {
    "ie": "?",
@@ -1595,7 +1606,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Assemblage de position de scan",
-   "socle": false
+   "socle": false,
+   "fonction": "Assemblage des positions de scan"
   },
   "Covadis": {
    "ie": "?",
@@ -1607,7 +1619,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Genration des points de topo",
-   "socle": false
+   "socle": false,
+   "fonction": "Génération des points topographiques"
   },
   "Pixis": {
    "ie": "?",
@@ -1619,7 +1632,8 @@ const BDD = {
    ],
    "nb": 1,
    "usage": "Guidage du tunnelier,",
-   "socle": false
+   "socle": false,
+   "fonction": "Guidage du tunnelier en temps réel"
   },
   "GMAO": {
    "ie": "?",
@@ -1632,7 +1646,8 @@ const BDD = {
    "nb": 1,
    "usage": "Gestion du stock tunnel",
    "socle": false,
-   "todo": true
+   "todo": true,
+   "fonction": "Gestion du stock du tunnel"
   },
   "Achat +": {
    "ie": "?",
@@ -1643,7 +1658,8 @@ const BDD = {
    "nb": 0,
    "usage": "Achats opérationnels (amont Pablo)",
    "socle": false,
-   "todo": true
+   "todo": true,
+   "fonction": "Achats opérationnels, en amont de Pablo"
   },
   "Neoaccès": {
    "ie": "?",
@@ -1656,7 +1672,8 @@ const BDD = {
    "nb": 1,
    "usage": "Création des badges et gestion des accès",
    "socle": false,
-   "todo": true
+   "todo": true,
+   "fonction": "Création des badges et gestion des accès"
   },
   "CEMEX": {
    "ie": "?",
@@ -1669,7 +1686,8 @@ const BDD = {
    "nb": 1,
    "usage": "Portail fournisseur béton",
    "socle": false,
-   "todo": true
+   "todo": true,
+   "fonction": "Portail fournisseur béton"
   },
   "Outlook": {
    "ie": "externe",
@@ -1683,7 +1701,8 @@ const BDD = {
    "nb": 2,
    "usage": "Messagerie : demandes de MO et envoi des situations",
    "socle": true,
-   "brief": true
+   "brief": true,
+   "fonction": "Messagerie : demandes et envoi des situations"
   },
   "Chorus": {
    "ie": "externe",
@@ -1696,7 +1715,8 @@ const BDD = {
    "nb": 1,
    "usage": "Facturation par le maître d'ouvrage",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Facturation du maître d'ouvrage"
   },
   "Appli bancaire": {
    "ie": "externe",
@@ -1709,7 +1729,8 @@ const BDD = {
    "nb": 1,
    "usage": "Dispatch des paiements entre partenaires",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Dispatch des paiements entre partenaires"
   },
   "BYCN": {
    "ie": "interne",
@@ -1722,7 +1743,8 @@ const BDD = {
    "nb": 1,
    "usage": "Paye des compagnons Bouygues",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Paye des compagnons Bouygues Construction"
   },
   "BYMAT": {
    "ie": "interne",
@@ -1735,7 +1757,8 @@ const BDD = {
    "nb": 1,
    "usage": "Extraction des coûts matériel pour le contrôle budgétaire",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Extraction des coûts matériel du chantier"
   },
   "Cority": {
    "ie": "externe",
@@ -1748,7 +1771,8 @@ const BDD = {
    "nb": 1,
    "usage": "Reporting des événements sécurité : ATB, AT, PAT, HIPO",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Reporting des événements : ATB, AT, PAT, HIPO"
   },
   "Quick Connect Sécurité": {
    "ie": "interne",
@@ -1761,7 +1785,8 @@ const BDD = {
    "nb": 1,
    "usage": "Suivi IDV, addictions et organismes",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Suivi IDV, addictions et organismes"
   },
   "Lotus": {
    "ie": "?",
@@ -1774,7 +1799,8 @@ const BDD = {
    "nb": 1,
    "usage": "Comptage des personnes présentes en tunnel",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Comptage des personnes présentes en tunnel"
   },
   "Heures Travaillées": {
    "ie": "interne",
@@ -1787,9 +1813,10 @@ const BDD = {
    "nb": 1,
    "usage": "Volume d'heures exposées, dénominateur des taux sécurité",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Volume d'heures exposées au risque"
   },
-  "HRMYOU / Global HR": {
+  "HR4YOU / Global HR": {
    "ie": "interne",
    "alim": "manuel",
    "ed": "Bouygues Construction",
@@ -1800,7 +1827,8 @@ const BDD = {
    "nb": 1,
    "usage": "Outils RH groupe : dossier collaborateur",
    "socle": false,
-   "brief": true
+   "brief": true,
+   "fonction": "Outils RH groupe : dossier collaborateur"
   }
  },
  "flows": [
@@ -2662,7 +2690,7 @@ const BDD = {
      },
      {
       "act": "Dossier collaborateur",
-      "tool": "HRMYOU / Global HR"
+      "tool": "HR4YOU / Global HR"
      }
     ],
     "out": {
@@ -2886,23 +2914,21 @@ const BDD = {
    "daf",
    "qse",
    "sec"
+  ]
+ },
+ "chantier": "M3L4 Toulouse",
+ "bornes": {
+  "dir|Récolte des KPI": [
+   "OBEYA",
+   "KPI'S A JOUR"
   ],
-  "xrows": [
-   [
-    "met",
-    "top",
-    "tun"
-   ],
-   [
-    "dir",
-    "ctr",
-    "daf"
-   ],
-   [
-    "qse",
-    "trv",
-    "sec"
-   ]
+  "met|Production de maquettes": [
+   "AutoCAD",
+   null
+  ],
+  "met|Gestion des maquettes": [
+   "AutoCAD",
+   null
   ]
  }
 };
@@ -2920,6 +2946,10 @@ const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "
 const SVC = Object.fromEntries(BDD.services.map(s => [s.id, s]));
 const isAuto = d => d && (d.alim === "auto" || d.alim === "mixte");
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
+/* Couper le texte ici et pas par « text-overflow:ellipsis » : build.py exporte le
+   texte du DOM, pas le texte visuellement coupé — une cellule raccourcie par le CSS
+   ressortirait en pleine largeur dans le PPTX et chevaucherait la colonne suivante. */
+const cut = (s, n) => { s = String(s || ""); return s.length <= n ? s : s.slice(0, n - 1).trimEnd() + "…"; };
 
 /* « s:Excel » ou « daf:Basware » → identifiant d'élément */
 const idOf = (ref, bid) => {
@@ -2947,8 +2977,7 @@ function addSlide(id, inner){
   const stage = document.createElement("div");
   stage.className = "stage";
   stage.innerHTML = `<div class="slide" id="${id}"><div class="slide-inner">${inner}
-    <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
-      <span data-page></span></div></div></div>`;
+    <div class="footnote"><span></span><span data-page></span></div></div></div>`;
   deck.appendChild(stage);
   PLANCHES.push(id);
   return stage;
@@ -2958,26 +2987,6 @@ const masthead = (eyebrow, title, sub, right = "") => `
   <div class="masthead">
     <div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p class="sub">${sub}</p></div>
     ${right}
-  </div>`;
-
-const LEGEND_HTML = `
-  <div class="legend">
-    <div class="swatchrow">
-      <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
-      <span class="item"><span class="key">Externe</span>Éditeur du marché</span>
-      <span class="item"><span class="key k-todo">Hors BDD</span>Apporté par le brief métier</span>
-    </div>
-    <div class="swatchrow">
-      <span class="item"><span class="kdot"></span>Alimentation automatique</span>
-      <span class="item">
-        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
-        Flux automatisé
-      </span>
-      <span class="item">
-        <svg width="32" height="10" aria-hidden="true" data-pptx="arrow" data-dash="1"><line x1="1" y1="5" x2="22" y2="5" stroke="currentColor" stroke-width="2" stroke-dasharray="5 4" stroke-linecap="round"/><path d="M23 1.5 31 5l-8 3.5z" fill="currentColor"/></svg>
-        Flux manuel (ressaisie)
-      </span>
-    </div>
   </div>`;
 
 /* ============================================================
@@ -3043,10 +3052,9 @@ function hubHTML(bid){
 }
 
 addSlide("slide-b1",
-  masthead("Système d'information chantier · vue d'ensemble",
+  masthead(`Système d'information chantier ${BDD.chantier} · vue d'ensemble`,
            "Cartographie des outils IT",
-           `Neuf pôles, ${Object.keys(BDD.tools).length} outils et le socle applicatif commun`,
-           LEGEND_HTML) +
+           `Neuf pôles, ${Object.keys(BDD.tools).length} outils et le socle applicatif commun`) +
   `<div class="board" id="board-b1" data-board="b1">
       <svg class="wires" aria-hidden="true"></svg>
       <div class="prow">${BOARD.top.map(p => cardHTML(p, "b1")).join("")}</div>
@@ -3100,8 +3108,7 @@ function chainLine(pid, m){
 
   return `<div class="pline${m.todo ? " todo" : ""}" style="--accent:var(--${pid})">
       <span class="prail"></span>
-      <div class="plabel"><b>${esc(m.label)}</b>${m.note || m.todo
-        ? `<span>${esc(m.note || "chaîne à valider")}</span>` : ""}</div>
+      <div class="plabel"><b>${esc(m.label)}</b>${m.note ? `<span>${esc(m.note)}</span>` : ""}</div>
       <div class="pchain">${[entree, ...steps, sortie].join(ARROW)}</div>
     </div>`;
 }
@@ -3115,13 +3122,15 @@ function inventoryLine(pid, m, bid, seen){
       `id="${k === 1 ? base : base + "-" + k}">` +
       `<span class="ptool">${esc(n)}</span><span class="pmeta ${mt.cls}">${mt.txt}</span></div>`;
   }).join("");
+  /* Début et finalité viennent de BORNES quand le métier les a tranchés. */
+  const [deb, fin] = BDD.bornes[pid + "|" + m.label] || [null, null];
   return `<div class="pline inv${m.todo ? " todo" : ""}" style="--accent:var(--${pid})">
       <span class="prail"></span>
-      <div class="plabel"><b>${esc(m.label)}</b><span>${m.todo ? "mission proposée" : "ordre non attesté"}</span></div>
+      <div class="plabel"><b>${esc(m.label)}</b></div>
       <div class="pchain">
-        <div class="pin"><span class="pk">Début</span><span class="pact">à documenter</span></div>
+        <div class="pin"><span class="pk">Début</span><span class="pact">${esc(deb || "à documenter")}</span></div>
         ${ARROW}<div class="pinv">${chips}</div>${ARROW}
-        <div class="pout"><span class="pk">Finalité</span><span class="pact">à documenter</span></div>
+        <div class="pout"><span class="pk">Finalité</span><span class="pact">${esc(fin || "à documenter")}</span></div>
       </div>
     </div>`;
 }
@@ -3136,62 +3145,18 @@ AFFICHES.forEach(pid => {
   const body = proc
     ? proc.map(m => chainLine(pid, m)).join("")
     : s.missions.map(m => inventoryLine(pid, m, bid, seen)).join("");
-  const sub = proc
-    ? "Flux de la donnée par mission — de son entrée à sa finalité"
-    : "Missions et outils rattachés — processus non recueilli en entretien";
-  const note = proc
-    ? `Chaînes issues du brief métier ; nature et alimentation reprises de la BDD. ${xn} échange${xn > 1 ? "s" : ""} avec les autres pôles.`
-    : "Alimentation et nature reprises de la BDD. Le processus reste à documenter.";
+  const sub = proc ? "Flux de la donnée par mission" : "Missions et outils rattachés";
   addSlide("slide-" + bid,
     masthead(`Affiche service · ${esc(s.name)}`, esc(s.name), sub,
       `<div class="legend"><div class="swatchrow">
-         <span class="item"><span class="key k-int">${s.missions.length} missions</span>${s.tools.length} outils rattachés</span>
-         <span class="item"><span class="key k-todo">${xn} échanges</span>avec les autres pôles</span>
+         <span class="item"><span class="key k-int">${s.missions.length} mission${s.missions.length > 1 ? "s" : ""}</span>${s.tools.length} outils rattachés</span>
+         <span class="item"><span class="key k-todo">${xn} échange${xn > 1 ? "s" : ""}</span>avec les autres pôles</span>
        </div></div>`) +
-    `<div class="affiche" id="aff-${pid}" style="--accent:var(--${pid})">${body}</div>
-     <div class="affnote">${note}</div>`);
+    `<div class="affiche" id="aff-${pid}" style="--accent:var(--${pid})">${body}</div>`);
 });
 
 /* ============================================================
-   4. PLANCHE 2 — FLUX INTER-SERVICES
-   ------------------------------------------------------------
-   Les nœuds ne sont plus les outils mais les missions : c'est le niveau auquel les
-   pôles s'alimentent. Chaque fil reprend un lien saisi dans PROCESS — la planche et
-   les badges des affiches sortent de la même donnée.
-   ============================================================ */
-const XROWS = BDD.board.xrows;
-const XB = { id: "x", top: XROWS.flat(), bottom: [], flows: BDD.xflows };
-
-const xHot = new Set(BDD.xflows.flatMap(f => [f.from, f.to]));
-
-function xcardHTML(pid){
-  const s = SVC[pid];
-  return `<div class="card xcard" id="x-card-${pid}" data-svc="${pid}" data-board="x" style="--accent:var(--${pid})">` +
-    `<div class="card-head"><span class="dot"></span><h2>${esc(s.name)}</h2></div>` +
-    `<p class="kicker">${esc(s.kicker)}</p>` +
-    `<div class="missions">` + s.missions.map(m => {
-      const ref = pid + ":" + m.label;
-      return `<span class="xmission${xHot.has(ref) ? " hot" : ""}" id="${idOf(ref, "x")}">${esc(m.label)}</span>`;
-    }).join("") + `</div></div>`;
-}
-
-addSlide("slide-x",
-  masthead("Système d'information chantier · échanges entre pôles",
-           "Flux inter-services",
-           `${BDD.xflows.filter(f => f.map).length} échanges entre pôles ; ` +
-           `${BDD.xflows.filter(f => !f.map).length} enchaînements internes détaillés en annexe`,
-           LEGEND_HTML) +
-  `<div class="board" id="board-x" data-board="x">
-      <svg class="wires" aria-hidden="true"></svg>
-      ${XROWS.map(r => `<div class="prow">${r.map(xcardHTML).join("")}</div>`).join("")}
-   </div>`);
-
-/* La planche inter-services se place juste après la cartographie. */
-deck.insertBefore(deck.lastElementChild, deck.children[1]);
-PLANCHES.splice(1, 0, PLANCHES.pop());
-
-/* ============================================================
-   5. CONNECTEURS
+   4. CONNECTEURS
    ------------------------------------------------------------
    Une seule courbe de Bézier cubique par flux : c'est le format qu'attend
    extract.js, et build.py n'émet qu'un cubicBezTo.
@@ -3199,7 +3164,7 @@ PLANCHES.splice(1, 0, PLANCHES.pop());
 const SVGNS = "http://www.w3.org/2000/svg";
 const css   = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
-const BOARDS = [BOARD, XB];
+const BOARDS = [BOARD];
 
 /* Flux à tracer sur une planche. La cartographie prend les flux applicatifs ;
    la planche inter-services porte les siens via b.flows. */
@@ -3301,12 +3266,6 @@ function drawBoard(b){
     let p1 = anchor(c, board, !aFirst, scale, off[i].to,   useCard);
 
     let d;
-    const fan = el => {
-      const host = el.closest(".missions");
-      if (!host || !el.classList.contains("xmission")) return 0;
-      const rows = [...host.children], k = rows.indexOf(el);
-      return (k - (rows.length - 1) / 2) * 34;
-    };
     const zone = el => el.closest(".hub-band") ? "band" : (el.closest(".prow") ? "row" : "");
     const rowOf = el => [...board.querySelectorAll(".prow")].indexOf(el.closest(".prow"));
     const acrossZones = (zone(a) && zone(c) && zone(a) !== zone(c)) ||
@@ -3316,8 +3275,8 @@ function drawBoard(b){
       const down = ra.cy <= rb.cy;
       const eA = useCard && cardA ? localRect(cardA, board, scale) : ra;
       const eB = useCard && cardB ? localRect(cardB, board, scale) : rb;
-      p0 = { x: ra.cx + off[i].from + fan(a), y: down ? eA.y + eA.h : eA.y };
-      p1 = { x: rb.cx + off[i].to   + fan(c), y: down ? eB.y : eB.y + eB.h };
+      p0 = { x: ra.cx + off[i].from, y: down ? eA.y + eA.h : eA.y };
+      p1 = { x: rb.cx + off[i].to,   y: down ? eB.y : eB.y + eB.h };
       const dy = (p1.y - p0.y) * .5;
       d = `M ${p0.x} ${p0.y} C ${p0.x} ${p0.y + dy}, ${p1.x} ${p1.y - dy}, ${p1.x} ${p1.y}`;
     } else if (Math.abs(ra.cx - rb.cx) < 30){
@@ -3361,7 +3320,7 @@ function drawBoard(b){
 const draw = () => BOARDS.forEach(drawBoard);
 
 /* ============================================================
-   6. SURBRILLANCE
+   5. SURBRILLANCE
    ============================================================ */
 function clearFocus(board){
   board.classList.remove("focusing");
@@ -3397,7 +3356,7 @@ BOARDS.forEach(b => {
     });
     card.addEventListener("mouseleave", () => clearFocus(board));
   });
-  board.querySelectorAll(".app, .core-app, .tool, .xmission").forEach(el => {
+  board.querySelectorAll(".app, .core-app, .tool").forEach(el => {
     el.addEventListener("mouseenter", () => focusIdx(board, b,
       items.filter(({ f }) => idOf(f.from, b.id) === el.id || idOf(f.to, b.id) === el.id)
            .map(({ i }) => i)));
@@ -3406,7 +3365,7 @@ BOARDS.forEach(b => {
 });
 
 /* ============================================================
-   7. ANNEXE 1 — MATRICE DES FLUX
+   6. ANNEXE 1 — MATRICE DES FLUX
    ------------------------------------------------------------
    Deux natures de flux, deux tableaux : les échanges d'outil à outil relevés en
    entretien, et les échanges de mission à mission décrits par le brief — ces
@@ -3495,7 +3454,7 @@ document.getElementById("warnings").innerHTML = [
 ].map((t, i) => `<li><span class="idx">${"ABCD"[i]}</span><span>${t}</span></li>`).join("");
 
 /* ============================================================
-   8. ANNEXE 2 — RÉFÉRENTIEL DES OUTILS
+   7. ANNEXE 2 — RÉFÉRENTIEL DES OUTILS
    ============================================================ */
 const refRows = ALL.slice().sort((a, b) => a[0].localeCompare(b[0], "fr"));
 const half = Math.ceil(refRows.length / 2);
@@ -3510,10 +3469,11 @@ addSlide("slide-ref",
   `<div class="wrap"><div class="ref">` +
   [refRows.slice(0, half), refRows.slice(half)].map(part =>
     `<div class="mcol"><table>
-       <colgroup><col style="width:46%"><col style="width:18%"><col style="width:18%"><col style="width:18%"></colgroup>
-       <thead><tr><th>Outil</th><th>Pôles</th><th>Nature</th><th>Alimentation</th></tr></thead>
+       <colgroup><col style="width:27%"><col style="width:40%"><col style="width:11%"><col style="width:11%"><col style="width:11%"></colgroup>
+       <thead><tr><th>Outil</th><th>Fonction</th><th>Pôles</th><th>Nature</th><th>Alim.</th></tr></thead>
        <tbody>` + part.map(([n, d]) =>
-         `<tr><td><span class="nm${d.brief ? " brief" : ""}">${esc(n)}</span>${d.ed ? `<span class="ed">${esc(d.ed)}</span>` : ""}</td>` +
+         `<tr><td><span class="nm${d.brief ? " brief" : ""}">${esc(n)}</span>${d.ed && n.length <= 16 ? `<span class="ed">${esc(cut(d.ed, 14))}</span>` : ""}</td>` +
+         `<td class="fn">${esc(cut(d.fonction, 46))}</td>` +
          `<td><span class="svcdots">${d.svc.map(s => `<i style="background:var(--${s})" title="${SVC[s] ? esc(SVC[s].name) : s}"></i>`).join("")}</span></td>` +
          `<td><span class="badge ${d.brief ? "todo" : (d.ie === "interne" ? "int" : (d.ie === "?" ? "todo" : ""))}">` +
          `${d.ie === "interne" ? "Interne" : (d.ie === "?" ? "?" : "Externe")}</span></td>` +
@@ -3523,7 +3483,7 @@ addSlide("slide-ref",
   `</div></div>`);
 
 /* ============================================================
-   9. NUMÉROTATION, MISE À L'ÉCHELLE, THÈME
+   8. NUMÉROTATION, MISE À L'ÉCHELLE, THÈME
    ============================================================ */
 document.querySelectorAll(".slide [data-page]").forEach((el, i, all) => {
   el.textContent = `Planche ${i + 1} / ${all.length}`;

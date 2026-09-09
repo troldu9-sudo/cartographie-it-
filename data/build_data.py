@@ -32,6 +32,8 @@ import openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
+CHANTIER = "M3L4 Toulouse"
+
 SHEET = "📋 Collecte Entretiens"
 MARK_A = "/* ==== DONNÉES BDD — début (généré par data/build_data.py) ==== */"
 MARK_B = "/* ==== DONNÉES BDD — fin ==== */"
@@ -81,16 +83,6 @@ SERVICES = [
 BOARD_TOP = ["met", "top", "tun", "trv", "ctr"]
 BOARD_BOTTOM = ["dir", "daf", "qse", "sec"]
 
-# Grille de la planche « Flux inter-services ». L'ordre n'est pas cosmétique :
-# un fil ne sait tracer qu'une courbe de Bézier, sans contournement. Il ne reste
-# lisible qu'entre deux cartes voisines — même rangée mitoyenne, ou rangées
-# consécutives. build_model() refuse silencieusement le reste : il le signale.
-XBOARD_ROWS = [
-    ["met", "top", "tun"],
-    ["dir", "ctr", "daf"],
-    ["qse", "trv", "sec"],
-]
-
 # --------------------------------------------------------------------------- #
 #  Modèle « inventaire » — pôles dont le processus n'a pas été recueilli       #
 # --------------------------------------------------------------------------- #
@@ -104,8 +96,6 @@ MISSIONS = {
         ("Récolte des KPI",                  ["AVANCEMENTS JALON CHANTIER"], []),
         ("Validation contrats et dépenses",  ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
         ("Gestion des ST",                   ["GESTION DES ST", "GESTION TRAVAUX"], []),
-        ("Matériels",                        ["GESTION DES MATÉRIELS"], []),
-        ("Services généraux",                [], ["CWT", "Tableau", "Word"], True),
     ],
     "qse": [
         ("Contrôle qualité",                 ["CONTRÔLE QUALITÉ",
@@ -350,7 +340,7 @@ PROCESS = {
          "steps": [{"act": "Accueil de site et formation au poste", "tool": "Quick Connect"},
                    {"act": "Habilitations élec. et autorisation de conduite", "tool": "Quick Connect"},
                    {"act": "Suivi des formations", "tool": "By My Site"},
-                   {"act": "Dossier collaborateur", "tool": "HRMYOU / Global HR"}],
+                   {"act": "Dossier collaborateur", "tool": "HR4YOU / Global HR"}],
          "out": {"lab": "Collaborateur habilité au poste"},
          "links": [{"at": "in", "to": "daf", "mission": "Onboarding RH et formations",
                     "obj": "Nouvel arrivant à accueillir sur site"}]},
@@ -374,6 +364,20 @@ PROCESS = {
                     "obj": "Indicateurs sécurité du chantier"}]},
     ],
 }
+
+# Début et finalité renseignés en atelier sur trois missions d'inventaire. Écrit
+# en dur : ce n'est pas un mécanisme, seulement ce que le métier a tranché. Les
+# autres missions gardent « à documenter ».
+BORNES = {
+    ("dir", "Récolte des KPI"):         ("OBEYA", "KPI'S A JOUR"),
+    ("met", "Production de maquettes"): ("AutoCAD", None),
+    ("met", "Gestion des maquettes"):   ("AutoCAD", None),
+}
+
+# Outils volontairement rattachés à aucun pôle : ils restent au référentiel, sans
+# pastille de pôle, mais ne figurent plus sur les affiches. Leur absence de
+# rattachement n'est donc pas un oubli à signaler.
+HORS_POLE = {"Oasis", "CWT", "Tableau", "Achat +"}
 
 # --------------------------------------------------------------------------- #
 #  Socle commun et outils hors BDD                                            #
@@ -422,8 +426,81 @@ HORS_BDD = {
                                 "Comptage des personnes présentes en tunnel"),
     "Heures Travaillées":      ("interne", "manuel", "",
                                 "Volume d'heures exposées, dénominateur des taux sécurité"),
-    "HRMYOU / Global HR":      ("interne", "manuel", "Bouygues Construction",
+    "HR4YOU / Global HR":      ("interne", "manuel", "Bouygues Construction",
                                 "Outils RH groupe : dossier collaborateur"),
+}
+
+# Fonction de chaque outil, en une phrase de 46 caractères au plus — largeur relevée
+# sur la colonne du
+# référentiel, marge prise pour Calibri. Rédigées depuis les verbatims « Usage » de
+# la BDD et le rôle tenu dans les chaînes : la colonne brute est inexploitable telle
+# quelle (fautes, troncatures à 110 caractères, « Pas utilisé » pour Power BI alors
+# que quatre chaînes s'appuient dessus).
+FONCTIONS = {
+    "Achat +":                "Achats opérationnels, en amont de Pablo",
+    "Anaconda":               "Écriture de scripts de calcul",
+    "Appli bancaire":         "Dispatch des paiements entre partenaires",
+    "AutoCAD":                "Production et modification des plans 2D",
+    "BATIS":                  "Sous-traitants en paiement direct",
+    "BIM Vision":             "Ouverture et visualisation des maquettes",
+    "BIP / BAPS":             "Intérim : heures et renouvellements",
+    "BYCN":                   "Paye des compagnons Bouygues Construction",
+    "BYMAT":                  "Extraction des coûts matériel du chantier",
+    "Basware":                "Enregistrement et validation des factures",
+    "By My Site":             "Centralisation et suivi des formations",
+    "CEMEX":                  "Portail fournisseur béton",
+    "CWT":                    "Réservation de voyages du groupe",
+    "Chorus":                 "Facturation du maître d'ouvrage",
+    "Civil 3D":               "Dessin des terrassements",
+    "Cority":                 "Reporting des événements : ATB, AT, PAT, HIPO",
+    "Covadis":                "Génération des points topographiques",
+    "Cyclone 3DR":            "Traitement des nuages de points et des scans",
+    "DocuSign":               "Signature électronique des contrats",
+    "E-Checking":             "Contrôle du travail illégal",
+    "E-Paraph":               "Circuit de validation interne avant signature",
+    "E-Project":              "Activation et suivi de la facturation",
+    "ERP MAT":                "Commande de coffrage, grue et engins",
+    "Excel":                  "Tableurs de suivi et de ventilation",
+    "GMAO":                   "Gestion du stock du tunnel",
+    "H&R For You":            "Demandes RH : congés, attestations, épargne",
+    "HR4YOU / Global HR":     "Outils RH groupe : dossier collaborateur",
+    "Harmony":                "Engagement des dépenses et suivi des commandes",
+    "Heures Travaillées":     "Volume d'heures exposées au risque",
+    "IDCapture":              "Levée de réserves et contrôle qualité",
+    "Inventor":               "Conception 3D de pièces mécaniques",
+    "La Scene":               "Assemblage des positions de scan",
+    "Lafarge+":               "Suivi des bons de livraison et des m³ coulés",
+    "Live Objects (Orange)":  "Indicateurs des compteurs de pompage",
+    "Lotus":                  "Comptage des personnes présentes en tunnel",
+    "Lucee TP":               "Identification des espèces envahissantes",
+    "MIRO":                   "Animation et récolte des obeya",
+    "MMS":                    "Adhérence au planning et jalons",
+    "MS Project":             "Planification des travaux et des transferts",
+    "Mezzoteam":              "GED : diffusion et suivi des plans",
+    "Neoaccès":               "Création des badges et gestion des accès",
+    "NotebookLM":             "Rédaction des mémoires et des réclamations",
+    "Oasis":                  "Déclaration des incidents",
+    "Outlook":                "Messagerie : demandes et envoi des situations",
+    "Pablo":                  "Achats et bons de commande",
+    "Pixis":                  "Guidage du tunnelier en temps réel",
+    "Power BI":               "Tableaux de bord et indicateurs de pilotage",
+    "PowerPoint":             "Déclaration des presqu'accidents (HIPO)",
+    "Puma":                   "Pointage : heures et primes de poste",
+    "QGIS":                   "SIG : repérage et positionnement sur plan",
+    "Quick Connect":          "Relevés terrain : qualité, sécurité, accueil",
+    "Quick Connect Sécurité": "Suivi IDV, addictions et organismes",
+    "Revit":                  "Production des maquettes 3D",
+    "SharePoint":             "Stockage et partage des documents",
+    "Simple BIM":             "Fusion de maquettes",
+    "Sixense Monitoring":     "Mesures acoustiques et sonométriques",
+    "Sofistik Bridge":        "Modélisation de la maquette du tunnel",
+    "TIPS":                   "Pointage et mise en paiement",
+    "Tableau":                "Commandes de services généraux",
+    "Traktor":                "Commande de gros engins de chantier",
+    "Trimble Connect":        "Dépôt et partage des maquettes",
+    "Wastemarket Place":      "Gestion et traçabilité des déchets",
+    "Word":                   "Rédaction : contrats, avenants, courriers",
+    "YELLOW":                 "Avancement du tunnelier en temps réel",
 }
 
 # Flux reconstruits depuis « Alimente quel outil » / « Alimenté par qui ».
@@ -575,8 +652,17 @@ def build_model(T):
             svc = set(d["svc"])
             svc.add(pid) if name in cited else svc.discard(pid)
             d["svc"] = sorted(svc)
-    for d in tools.values():
+    for name in HORS_POLE:
+        if name in tools:
+            tools[name]["svc"] = []
+    for name, d in tools.items():
         d["nb"] = len(d["svc"])
+        d["fonction"] = FONCTIONS.get(name, "")
+        if not d["fonction"]:
+            print(f"ATTENTION — {name} : aucune fonction rédigée", file=sys.stderr)
+        elif len(d["fonction"]) > 46:
+            print(f"ATTENTION — {name} : fonction de {len(d['fonction'])} caractères, "
+                  f"la colonne du référentiel en tient 46 — elle sera coupée", file=sys.stderr)
 
     services = []
     for s in SERVICES:
@@ -644,20 +730,12 @@ def build_model(T):
                 xflows.append({"from": src, "to": dst, "obj": lk.get("obj", ""),
                                "map": pid != lk["to"], "alim": "manuel"})
 
-    pos = {p: (r, c) for r, row in enumerate(XBOARD_ROWS) for c, p in enumerate(row)}
-    for f in xflows:
-        a, b = f["from"].split(":", 1)[0], f["to"].split(":", 1)[0]
-        if a == b or a not in pos or b not in pos:
-            continue
-        (ra, ca), (rb, cb) = pos[a], pos[b]
-        if abs(ra - rb) > 1 or (ra == rb and abs(ca - cb) > 1):
-            print(f"ATTENTION — planche inter-services : {a} et {b} ne sont pas voisins "
-                  f"dans XBOARD_ROWS, le fil traversera une carte", file=sys.stderr)
-
     return {"socle": [{"group": g, "tools": ts} for g, ts in SOCLE],
             "core": CORE, "services": services, "tools": tools, "flows": flows,
             "process": PROCESS, "xflows": xflows,
-            "board": {"top": BOARD_TOP, "bottom": BOARD_BOTTOM, "xrows": XBOARD_ROWS}}
+            "board": {"top": BOARD_TOP, "bottom": BOARD_BOTTOM},
+            "chantier": CHANTIER, "bornes": {f"{p}|{lab}": list(v)
+                                             for (p, lab), v in BORNES.items()}}
 
 
 def inject(model, html_path):
@@ -687,7 +765,7 @@ def main():
                 print(f"  ! {s['name']} : outils sans mission — "
                       f"{', '.join(m['tools'])}", file=sys.stderr)
     for n, d in sorted(model["tools"].items()):
-        if not d["svc"]:
+        if not d["svc"] and n not in HORS_POLE:
             print(f"  ! {n} : outil rattaché à aucun pôle", file=sys.stderr)
 
     n_brief = sum(1 for d in model["tools"].values() if d.get("brief"))
