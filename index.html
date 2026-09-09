@@ -27,6 +27,8 @@
   --qse:#C2456A;  /* Qualité & Environnement */
   --dir:#5B57D6;  /* Direction               */
   --daf:#8257E6;  /* DAF                     */
+  --ctr:#A9761A;  /* Contrat                 */
+  --sec:#D93025;  /* Sécurité                */
   --core:#4CC9E8; /* socle / automatique     */
 
   --shadow:0 1px 2px rgba(13,21,38,.05), 0 12px 28px -14px rgba(13,21,38,.22);
@@ -101,7 +103,9 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 
 /* mise en page « une page » : pôles en haut, socle en bandeau, pôles en bas */
 .board{display:flex;flex-direction:column;gap:14px}
-.prow{display:flex;gap:12px;flex:1 1 auto;z-index:2;min-height:0}
+.board{justify-content:space-between}
+#board-x{gap:26px}
+.prow{display:flex;gap:12px;flex:0 0 auto;z-index:2;min-height:0}
 .prow .card{flex:1 1 0;min-width:0}
 .hub-band{flex:0 0 auto;z-index:2;position:relative;
   background:linear-gradient(168deg,var(--hub-bg-2) 0%,var(--hub-bg) 68%);
@@ -193,7 +197,7 @@ body{background:var(--canvas);color:var(--ink);font-family:var(--font);
 .card:hover{border-color:color-mix(in srgb,var(--accent) 40%,var(--line))}
 
 /* ---------- planches 2 et 3 ---------- */
-.wrap{position:absolute;left:44px;right:44px;top:148px;bottom:40px;display:flex;gap:24px}
+.wrap{position:absolute;left:44px;right:44px;top:134px;bottom:34px;display:flex;gap:24px}
 .mcol{flex:1 1 auto;display:flex;flex-direction:column;gap:18px;min-width:0}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 thead th{text-align:left;font-size:10.5px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;
@@ -239,10 +243,11 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 /* référentiel */
 .ref{display:flex;gap:24px;flex:1;min-height:0}
 .ref table{table-layout:fixed}
-.ref tbody td{padding:3.5px 8px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref tbody td{padding:1.5px 8px;font-size:10.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ref table{height:auto}
 .ref thead th{padding:0 8px 7px;font-size:9.5px}
 .ref .nm{font-weight:750;color:var(--ink)}
+.ref .nm.brief{color:color-mix(in srgb,var(--qse) 72%,var(--ink))}
 .ref .ed{font-size:9.5px;color:var(--muted);font-weight:600;margin-left:10px}
 .badge{display:inline-block;font-size:9px;font-weight:800;letter-spacing:.06em;padding:2.5px 7px;border-radius:999px;text-align:center;
        border:1px solid var(--line);background:var(--surface-2);color:var(--muted)}
@@ -254,6 +259,93 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
 
 .footnote{position:absolute;left:44px;right:44px;bottom:14px;font-size:10px;color:var(--muted);font-weight:600;
           display:flex;justify-content:space-between}
+
+/* ---------- affiche service : chaîne de flux ---------- */
+/* Une bande par mission, lue de gauche à droite : entrée de la donnée, étapes
+   ordonnées, finalité. Les blocs prennent chacun la même part de la largeur
+   restante, si bien que les colonnes « entrée » et « finalité » s'alignent d'une
+   bande à l'autre — c'est ce qui rend l'affiche scannable verticalement. */
+.affiche{position:absolute;left:44px;right:44px;top:140px;bottom:52px;
+         display:flex;flex-direction:column;gap:12px;justify-content:space-evenly}
+.pline{flex:1 1 0;max-height:210px;min-height:92px;position:relative;display:flex;align-items:stretch;
+       background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.prail{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--accent);display:block;
+       border-radius:14px 0 0 14px}
+.plabel{flex:0 0 194px;padding:12px 14px 12px 20px;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.plabel b{display:block;font-size:12.5px;font-weight:800;line-height:1.18;color:var(--ink);letter-spacing:-.01em}
+.plabel span{display:block;font-size:8px;font-weight:750;letter-spacing:.1em;text-transform:uppercase;
+             color:var(--muted);line-height:1.3}
+.pline.todo .plabel b{color:var(--ink-2)}
+.pchain{flex:1 1 auto;display:flex;align-items:stretch;padding:11px 14px 11px 0;min-width:0}
+
+.pstep,.pin,.pout{flex:1 1 0;min-width:0;border-radius:10px;padding:7px 6px;text-align:center;
+                  display:flex;flex-direction:column;justify-content:center;gap:2px}
+.pstep{background:var(--surface-2);border:1px solid var(--line)}
+.pin{background:color-mix(in srgb,var(--accent) 8%,transparent);
+     border:1px solid color-mix(in srgb,var(--accent) 30%,transparent)}
+.pout{background:color-mix(in srgb,var(--accent) 15%,transparent);
+      border:1px solid color-mix(in srgb,var(--accent) 46%,transparent)}
+.parrow{flex:0 0 20px;display:flex;align-items:center;justify-content:center;
+        font-size:13px;font-weight:800;color:var(--muted);line-height:1}
+
+.pk{display:block;font-size:7px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--muted);line-height:1.2}
+.pin .pk,.pout .pk{color:var(--accent)}
+.pact{display:block;font-size:8.8px;font-weight:650;color:var(--ink-2);line-height:1.3}
+.pact b{font-weight:800;color:var(--ink)}
+.ptool{display:block;font-size:11px;font-weight:800;color:var(--ink);line-height:1.2}
+.pmeta{display:block;font-size:7.2px;font-weight:700;color:var(--muted);line-height:1.2;letter-spacing:.02em}
+.pmeta.brief{color:color-mix(in srgb,var(--qse) 70%,var(--muted))}
+.xbadge{display:block;margin-top:3px;font-size:6.8px;font-weight:800;letter-spacing:.03em;line-height:1.25;
+        border-radius:999px;padding:2px 4px;text-align:center;
+        background:color-mix(in srgb,var(--xc) 14%,transparent);
+        border:1px solid color-mix(in srgb,var(--xc) 44%,transparent);color:var(--xc)}
+
+/* affiche « inventaire » — pôles dont le processus n'est pas recueilli */
+.pline.inv .pin,.pline.inv .pout{flex:0 0 152px}
+.pinv{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center;
+      padding:0 12px;min-width:0}
+.pchip{border-radius:10px;background:var(--surface-2);border:1px solid var(--line);padding:6px 9px;
+       text-align:center;display:flex;flex-direction:column;gap:2px;min-width:82px}
+.pchip.int{background:color-mix(in srgb,var(--accent) 10%,transparent);
+           border-color:color-mix(in srgb,var(--accent) 34%,transparent)}
+.pchip.brief{border-style:dashed}
+
+/* carte de pôle en mode « liste d'outils » — planche 1 */
+.card .count{margin:0 0 7px 17px;font-size:8.5px;font-weight:800;letter-spacing:.1em;
+             text-transform:uppercase;color:var(--accent)}
+.card .toolwrap{display:flex;flex-wrap:wrap;gap:4px;align-content:flex-start;flex:1 1 auto}
+.tool.brief{border-style:dashed;background:transparent;
+            color:color-mix(in srgb,var(--qse) 62%,var(--ink-2));
+            border-color:color-mix(in srgb,var(--qse) 45%,transparent)}
+
+/* planche « flux inter-services » : les missions deviennent les nœuds */
+.xcard .missions{gap:5px;justify-content:flex-start}
+.xmission{display:block;font-size:9.5px;font-weight:750;line-height:1.25;color:var(--ink-2);
+          background:var(--surface-2);border:1px solid var(--line);border-radius:8px;
+          padding:5px 8px;text-align:center}
+.xmission.hot{background:color-mix(in srgb,var(--accent) 12%,transparent);
+              border-color:color-mix(in srgb,var(--accent) 38%,transparent);
+              color:var(--accent);font-weight:800}
+
+/* ---------- densité des tableaux d'annexe ---------- */
+.secttitle{margin:0 0 4px;font-size:10.5px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+           color:var(--ink-2)}
+.secttitle em{font-style:normal;font-size:9.5px;letter-spacing:.04em;text-transform:none;
+              color:var(--muted);font-weight:650}
+.mcol .secttitle + table + .secttitle{margin-top:7px}
+.wrap .mcol table tbody td{padding:1.1px 8px;font-size:10.2px;white-space:nowrap;
+                           overflow:hidden;text-overflow:ellipsis}
+.wrap .mcol table thead th{padding:0 8px 4px;font-size:9.5px}
+.wrap .mcol table td.obj{color:var(--muted);font-weight:600}
+/* nom d'outil ou de mission : la casse d'origine, pas la capitale des libellés de pôle */
+.wrap .mcol .tag-svc{font-size:10.2px;text-transform:none;letter-spacing:0;color:var(--ink)}
+.wrap .mcol .arrow{font-size:13px}
+.wrap .mcol .flux-mode{font-size:9px;padding:2px 7px}
+
+/* note de bas d'affiche, au-dessus de la pagination */
+.affnote{position:absolute;left:44px;right:44px;bottom:32px;font-size:9.5px;
+         color:var(--muted);font-weight:600}
 
 @page{size:423.33mm 238.13mm;margin:0}
 @media print{
@@ -275,61 +367,7 @@ td.src,td.dst{font-weight:750;color:var(--ink)}
   <button class="btn" onclick="window.print()" type="button">Exporter en PDF 16:9</button>
 </div>
 
-<div class="deck">
-
-<!-- Les deux planches de cartographie sont générées par le script (voir BOARDS). -->
-
-<!-- ══════════════ PLANCHE 3 — FLUX & ALIMENTATION ══════════════ -->
-<div class="stage"><div class="slide" id="slide2"><div class="slide-inner">
-  <div class="masthead">
-    <div>
-      <p class="eyebrow">Annexe 1</p>
-      <h1>Flux de données et modes d'alimentation</h1>
-      <p class="sub">Échanges entre outils relevés en entretien, et nature de l'alimentation</p>
-    </div>
-  </div>
-
-  <div class="wrap">
-    <div class="mcol">
-      <table>
-        <colgroup><col style="width:23%"><col style="width:5%"><col style="width:21%"><col style="width:15%"><col style="width:36%"></colgroup>
-        <thead><tr><th>Outil source</th><th style="text-align:center">Sens</th><th>Outil destinataire</th><th>Alimentation</th><th>Objet du flux</th></tr></thead>
-        <tbody id="fluxBody"></tbody>
-      </table>
-    </div>
-    <aside class="aside">
-      <div class="stat-row" id="statRow"></div>
-      <div class="panel">
-        <h3>Répartition du parc</h3>
-        <div class="bars" id="bars"></div>
-      </div>
-      <div class="panel dark">
-        <h3>Points d'attention</h3>
-        <ul id="warnings"></ul>
-      </div>
-    </aside>
-  </div>
-
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 2/3</span></div>
-</div></div></div>
-
-<!-- ══════════════ PLANCHE 4 — RÉFÉRENTIEL ══════════════ -->
-<div class="stage"><div class="slide" id="slide3"><div class="slide-inner">
-  <div class="masthead">
-    <div>
-      <p class="eyebrow">Annexe 2</p>
-      <h1>Référentiel des outils</h1>
-      <p class="sub">Tous les outils recensés, avec éditeur, nature et mode d'alimentation</p>
-    </div>
-    <div class="legend"><div class="swatchrow" id="refLegend"></div></div>
-  </div>
-
-  <div class="wrap"><div class="ref" id="refWrap"></div></div>
-
-  <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span><span>Planche 3/3</span></div>
-</div></div></div>
-
-</div>
+<div class="deck"></div>
 
 <script>
 /* ==== DONNÉES BDD — début (généré par data/build_data.py) ==== */
@@ -378,7 +416,8 @@ const BDD = {
    "group": "Bureautique",
    "tools": [
     "Excel",
-    "Word"
+    "Word",
+    "Outlook"
    ]
   }
  ],
@@ -390,8 +429,7 @@ const BDD = {
   {
    "id": "met",
    "name": "Méthodes & BIM",
-   "kicker": "Ingénierie · BIM",
-   "col": "left",
+   "kicker": "Maquettes et plans",
    "tools": [
     "Anaconda",
     "AutoCAD",
@@ -429,61 +467,64 @@ const BDD = {
       "Trimble Connect"
      ]
     }
-   ]
+   ],
+   "mode": "inventory"
   },
   {
    "id": "top",
    "name": "Topographie",
    "kicker": "Relevés · Implantation",
-   "col": "left",
    "tools": [
-    "AutoCAD",
     "Covadis",
     "Cyclone 3DR",
     "Excel",
     "La Scene",
     "Pixis",
+    "SharePoint",
     "Trimble Connect"
    ],
    "missions": [
     {
-     "label": "Relevés et nuages de points",
-     "todo": true,
+     "label": "Acquisition et traitement des nuages de points",
+     "todo": false,
      "tools": [
-      "Cyclone 3DR",
+      "SharePoint",
+      "Trimble Connect",
       "La Scene",
-      "Trimble Connect"
-     ]
-    },
-    {
-     "label": "Plans et calculs",
-     "todo": true,
-     "tools": [
-      "AutoCAD",
       "Covadis"
      ]
     },
     {
-     "label": "Suivi des levers",
-     "todo": true,
+     "label": "Reporting et diffusion des plans",
+     "todo": false,
      "tools": [
-      "Pixis",
+      "Trimble Connect",
+      "Cyclone 3DR",
       "Excel"
      ]
+    },
+    {
+     "label": "Guidage du tunnelier",
+     "todo": false,
+     "tools": [
+      "Pixis"
+     ]
     }
-   ]
+   ],
+   "mode": "process"
   },
   {
    "id": "tun",
-   "name": "Tunnel",
-   "kicker": "Ouvrage souterrain",
-   "col": "left",
+   "name": "Travaux tunnel",
+   "kicker": "Creusement et tunnelier",
    "tools": [
     "AutoCAD",
+    "ERP MAT",
     "Excel",
     "GMAO",
     "IDCapture",
     "MS Project",
+    "Pablo",
     "Power BI",
     "Quick Connect",
     "Trimble Connect",
@@ -491,45 +532,41 @@ const BDD = {
    ],
    "missions": [
     {
-     "label": "Planification et avancement",
+     "label": "Gestion de chantier",
      "todo": true,
      "tools": [
-      "MS Project",
-      "Power BI",
-      "YELLOW"
-     ]
-    },
-    {
-     "label": "Plans et maquettes",
-     "todo": true,
-     "tools": [
-      "AutoCAD",
-      "Trimble Connect"
-     ]
-    },
-    {
-     "label": "Réserves et contrôles",
-     "todo": true,
-     "tools": [
+      "Quick Connect",
       "IDCapture",
-      "Excel",
-      "Quick Connect"
+      "AutoCAD",
+      "Trimble Connect",
+      "Excel"
      ]
     },
     {
-     "label": "Gestion du stock",
+     "label": "Avancement et jalons chantier",
      "todo": true,
      "tools": [
-      "GMAO"
+      "YELLOW",
+      "MS Project",
+      "Power BI"
+     ]
+    },
+    {
+     "label": "Commande chantier",
+     "todo": true,
+     "tools": [
+      "GMAO",
+      "Pablo",
+      "ERP MAT"
      ]
     }
-   ]
+   ],
+   "mode": "process"
   },
   {
    "id": "trv",
    "name": "Travaux",
-   "kicker": "Exécution chantier",
-   "col": "left",
+   "kicker": "Conduite de travaux",
    "tools": [
     "E-Paraph",
     "ERP MAT",
@@ -538,7 +575,9 @@ const BDD = {
     "MMS",
     "MS Project",
     "Mezzoteam",
+    "Outlook",
     "Pablo",
+    "Power BI",
     "Quick Connect",
     "Traktor",
     "Trimble Connect",
@@ -546,55 +585,271 @@ const BDD = {
    ],
    "missions": [
     {
-     "label": "Jalons de chantier",
+     "label": "Gestion de chantier et imprévus",
      "todo": false,
      "tools": [
+      "Quick Connect",
+      "IDCapture",
+      "Trimble Connect",
+      "Mezzoteam",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Avancement et jalons chantier",
+     "todo": false,
+     "tools": [
+      "MS Project",
       "MMS",
-      "MS Project"
+      "Power BI"
      ]
     },
     {
-     "label": "Engins et matériels",
+     "label": "Commande matériel chantier",
      "todo": false,
      "tools": [
+      "Traktor",
       "ERP MAT",
-      "Pablo",
-      "Traktor"
+      "Pablo"
      ]
     },
     {
-     "label": "Réserves et MaD",
+     "label": "Commande de main-d'œuvre",
      "todo": false,
      "tools": [
-      "IDCapture"
+      "Outlook"
      ]
     },
     {
-     "label": "Conduite de chantier",
+     "label": "Contrôle budgétaire",
+     "todo": false,
+     "tools": [
+      "Excel"
+     ]
+    },
+    {
+     "label": "Gestion des contrats et avenants",
+     "todo": false,
+     "tools": [
+      "Word",
+      "E-Paraph"
+     ]
+    }
+   ],
+   "mode": "process"
+  },
+  {
+   "id": "ctr",
+   "name": "Contrat",
+   "kicker": "Contract management",
+   "tools": [
+    "Appli bancaire",
+    "Basware",
+    "Chorus",
+    "E-Project",
+    "Excel",
+    "NotebookLM",
+    "Outlook",
+    "Power BI",
+    "SharePoint",
+    "Word"
+   ],
+   "missions": [
+    {
+     "label": "Gestion des contrats",
+     "todo": false,
+     "tools": [
+      "SharePoint",
+      "NotebookLM",
+      "Word",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Avancement et jalons chantier",
      "todo": false,
      "tools": [
       "Excel",
-      "Mezzoteam",
-      "Quick Connect",
-      "Trimble Connect"
+      "Word",
+      "Power BI"
      ]
     },
     {
-     "label": "Validation et contrats",
+     "label": "Gestion des encaissements",
      "todo": false,
      "tools": [
+      "Excel",
+      "Outlook",
+      "E-Project",
+      "Chorus",
+      "Appli bancaire"
+     ]
+    },
+    {
+     "label": "Facturation partenaire",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "E-Project"
+     ]
+    }
+   ],
+   "mode": "process"
+  },
+  {
+   "id": "dir",
+   "name": "Direction",
+   "kicker": "Pilotage du chantier",
+   "tools": [
+    "BATIS",
+    "Basware",
+    "CWT",
+    "DocuSign",
+    "E-Checking",
+    "E-Paraph",
+    "Excel",
+    "MIRO",
+    "MMS",
+    "Oasis",
+    "Power BI",
+    "Quick Connect",
+    "Tableau",
+    "Word",
+    "YELLOW"
+   ],
+   "missions": [
+    {
+     "label": "Récolte des KPI",
+     "todo": false,
+     "tools": [
+      "MIRO",
+      "MMS",
+      "Excel",
+      "Power BI",
+      "Word",
+      "YELLOW"
+     ]
+    },
+    {
+     "label": "Validation contrats et dépenses",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "DocuSign",
       "E-Paraph",
-      "Pablo",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Gestion des ST",
+     "todo": false,
+     "tools": [
+      "BATIS",
+      "E-Checking",
+      "Quick Connect"
+     ]
+    },
+    {
+     "label": "Matériels",
+     "todo": false,
+     "tools": [
+      "Oasis"
+     ]
+    },
+    {
+     "label": "Services généraux",
+     "todo": true,
+     "tools": [
+      "CWT",
+      "Tableau",
       "Word"
      ]
     }
-   ]
+   ],
+   "mode": "inventory"
+  },
+  {
+   "id": "daf",
+   "name": "DAF",
+   "kicker": "RH · Comptabilité · Gestion",
+   "tools": [
+    "BIP / BAPS",
+    "BYCN",
+    "BYMAT",
+    "Basware",
+    "By My Site",
+    "DocuSign",
+    "E-Checking",
+    "E-Paraph",
+    "Excel",
+    "H&R For You",
+    "Harmony",
+    "Neoaccès",
+    "Pablo",
+    "Puma",
+    "TIPS"
+   ],
+   "missions": [
+    {
+     "label": "Contrôle budgétaire",
+     "todo": false,
+     "tools": [
+      "BYMAT",
+      "Basware",
+      "Excel"
+     ]
+    },
+    {
+     "label": "Préfacturation partenaire",
+     "todo": false,
+     "tools": [
+      "Basware",
+      "Puma",
+      "BIP / BAPS",
+      "Excel",
+      "E-Paraph"
+     ]
+    },
+    {
+     "label": "Engagement des dépenses et facturation",
+     "todo": false,
+     "tools": [
+      "Pablo",
+      "Harmony",
+      "Basware",
+      "E-Paraph",
+      "DocuSign",
+      "TIPS"
+     ]
+    },
+    {
+     "label": "Onboarding RH et formations",
+     "todo": false,
+     "tools": [
+      "E-Checking",
+      "Neoaccès",
+      "By My Site",
+      "Pablo"
+     ]
+    },
+    {
+     "label": "Gestion du personnel et paye",
+     "todo": false,
+     "tools": [
+      "Puma",
+      "BIP / BAPS",
+      "BYCN",
+      "H&R For You",
+      "Excel"
+     ]
+    }
+   ],
+   "mode": "process"
   },
   {
    "id": "qse",
    "name": "Qualité & Environnement",
-   "kicker": "Contrôle · Réserves · Nuisances",
-   "col": "right",
+   "kicker": "Contrôle et conformité",
    "tools": [
     "CEMEX",
     "Excel",
@@ -665,167 +920,57 @@ const BDD = {
       "Pablo"
      ]
     }
-   ]
-  },
-  {
-   "id": "dir",
-   "name": "Direction",
-   "kicker": "Pilotage · Sous-traitance",
-   "col": "right",
-   "tools": [
-    "BATIS",
-    "Basware",
-    "CWT",
-    "DocuSign",
-    "E-Checking",
-    "E-Paraph",
-    "Excel",
-    "MIRO",
-    "MMS",
-    "Oasis",
-    "Power BI",
-    "Quick Connect",
-    "Tableau",
-    "Word",
-    "YELLOW"
    ],
-   "missions": [
-    {
-     "label": "Récolte des KPI",
-     "todo": false,
-     "tools": [
-      "MIRO",
-      "MMS",
-      "Excel",
-      "Power BI",
-      "Word",
-      "YELLOW"
-     ]
-    },
-    {
-     "label": "Validation contrats et dépenses",
-     "todo": false,
-     "tools": [
-      "Basware",
-      "DocuSign",
-      "E-Paraph",
-      "Excel"
-     ]
-    },
-    {
-     "label": "Gestion des ST",
-     "todo": false,
-     "tools": [
-      "BATIS",
-      "E-Checking",
-      "Quick Connect"
-     ]
-    },
-    {
-     "label": "Matériels",
-     "todo": false,
-     "tools": [
-      "Oasis"
-     ]
-    },
-    {
-     "label": "Services généraux",
-     "todo": true,
-     "tools": [
-      "CWT",
-      "Tableau",
-      "Word"
-     ]
-    }
-   ]
+   "mode": "inventory"
   },
   {
-   "id": "daf",
-   "name": "DAF",
-   "kicker": "Contrats · Compta · Achats · RH",
-   "col": "right",
+   "id": "sec",
+   "name": "Sécurité",
+   "kicker": "Prévention · Habilitations",
    "tools": [
-    "Achat +",
-    "BIP / BAPS",
-    "Basware",
     "By My Site",
-    "DocuSign",
-    "E-Checking",
-    "E-Project",
-    "Excel",
-    "H&R For You",
-    "Harmony",
-    "Neoaccès",
-    "NotebookLM",
+    "Cority",
+    "HRMYOU / Global HR",
+    "Heures Travaillées",
+    "Lotus",
+    "Mezzoteam",
     "Pablo",
     "Power BI",
-    "Puma",
-    "SharePoint",
-    "TIPS",
-    "Word"
+    "Quick Connect",
+    "Quick Connect Sécurité"
    ],
    "missions": [
     {
-     "label": "Engagement des dépenses",
+     "label": "Accueil, formation et habilitations",
      "todo": false,
      "tools": [
-      "Harmony"
+      "Quick Connect",
+      "By My Site",
+      "HRMYOU / Global HR"
      ]
     },
     {
-     "label": "Facturation",
+     "label": "Prévention et suivi terrain",
      "todo": false,
      "tools": [
-      "Basware",
-      "DocuSign",
-      "Excel",
-      "Harmony",
-      "Pablo",
-      "TIPS"
-     ]
-    },
-    {
-     "label": "Encaissements",
-     "todo": false,
-     "tools": [
-      "E-Project",
-      "Excel"
-     ]
-    },
-    {
-     "label": "Commandes et achats",
-     "todo": true,
-     "tools": [
-      "Achat +",
+      "Quick Connect",
+      "Quick Connect Sécurité",
+      "Lotus",
+      "Mezzoteam",
       "Pablo"
      ]
     },
     {
-     "label": "Gestion contractuelle",
+     "label": "Événements et indicateurs sécurité",
      "todo": false,
      "tools": [
-      "NotebookLM",
-      "Excel",
-      "Power BI",
-      "SharePoint",
-      "Word"
-     ]
-    },
-    {
-     "label": "Personnel et formations",
-     "todo": false,
-     "tools": [
-      "By My Site",
-      "H&R For You",
-      "Neoaccès",
-      "BIP / BAPS",
-      "E-Checking",
-      "Excel",
-      "Pablo",
-      "Puma"
+      "Cority",
+      "Heures Travaillées",
+      "Power BI"
      ]
     }
-   ]
+   ],
+   "mode": "process"
   }
  ],
  "tools": {
@@ -847,10 +992,11 @@ const BDD = {
    "ed": "E-paraph",
    "mat": "Mature",
    "svc": [
+    "daf",
     "dir",
     "trv"
    ],
-   "nb": 2,
+   "nb": 3,
    "usage": "Circuit de validation en interne avant signature",
    "socle": true
   },
@@ -909,6 +1055,7 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
+    "ctr",
     "daf",
     "dir",
     "qse",
@@ -916,7 +1063,7 @@ const BDD = {
     "trv",
     "tun"
    ],
-   "nb": 6,
+   "nb": 7,
    "usage": "Contrats avenant, ordre de service, courrier",
    "socle": true
   },
@@ -926,7 +1073,7 @@ const BDD = {
    "ed": "Microsoft",
    "mat": "Mature",
    "svc": [
-    "daf",
+    "ctr",
     "dir",
     "trv"
    ],
@@ -955,10 +1102,11 @@ const BDD = {
    "svc": [
     "dir",
     "qse",
+    "sec",
     "trv",
     "tun"
    ],
-   "nb": 4,
+   "nb": 5,
    "usage": "Workflow de contrôle qualité bétonnage, eprouvettes, accueil sécurité, formation post travail",
    "socle": true
   },
@@ -970,9 +1118,11 @@ const BDD = {
    "svc": [
     "daf",
     "qse",
-    "trv"
+    "sec",
+    "trv",
+    "tun"
    ],
-   "nb": 3,
+   "nb": 5,
    "usage": "Acheter du matériel",
    "socle": true
   },
@@ -982,12 +1132,14 @@ const BDD = {
    "ed": "BYCN",
    "mat": "Mature",
    "svc": [
-    "daf",
+    "ctr",
     "dir",
     "qse",
+    "sec",
+    "trv",
     "tun"
    ],
-   "nb": 4,
+   "nb": 6,
    "usage": "Pas utilisé",
    "socle": true
   },
@@ -1013,9 +1165,10 @@ const BDD = {
    "svc": [
     "met",
     "qse",
+    "sec",
     "trv"
    ],
-   "nb": 3,
+   "nb": 4,
    "usage": "Gestion documentaires",
    "socle": true
   },
@@ -1066,10 +1219,9 @@ const BDD = {
    "mat": "Mature",
    "svc": [
     "met",
-    "top",
     "tun"
    ],
-   "nb": 3,
+   "nb": 2,
    "usage": "Plan (production)=> 2D",
    "socle": false
   },
@@ -1151,7 +1303,7 @@ const BDD = {
    "ed": "Tisseo",
    "mat": "En developpement",
    "svc": [
-    "daf"
+    "ctr"
    ],
    "nb": 1,
    "usage": "Permet d'activer la facturation , voir la situation",
@@ -1163,10 +1315,11 @@ const BDD = {
    "ed": "Soletanche",
    "mat": "Mature",
    "svc": [
+    "ctr",
     "daf",
     "dir"
    ],
-   "nb": 2,
+   "nb": 3,
    "usage": "Validé les facturations partenaires,",
    "socle": false
   },
@@ -1176,7 +1329,7 @@ const BDD = {
    "ed": "GOOGLE",
    "mat": "Mature",
    "svc": [
-    "daf"
+    "ctr"
    ],
    "nb": 1,
    "usage": "Redaction de document, mémoire, reclamation",
@@ -1188,9 +1341,10 @@ const BDD = {
    "ed": "MICROSOFT",
    "mat": "",
    "svc": [
-    "daf"
+    "ctr",
+    "top"
    ],
-   "nb": 1,
+   "nb": 2,
    "usage": "Accès aux documents",
    "socle": true
   },
@@ -1248,9 +1402,10 @@ const BDD = {
    "ed": "",
    "mat": "",
    "svc": [
-    "daf"
+    "daf",
+    "sec"
    ],
-   "nb": 1,
+   "nb": 2,
    "usage": "Logiciel de fomation, centralisation de formation",
    "socle": false
   },
@@ -1297,9 +1452,10 @@ const BDD = {
    "ed": "",
    "mat": "En developpement (bug ,pas intuitif, )",
    "svc": [
-    "trv"
+    "trv",
+    "tun"
    ],
-   "nb": 1,
+   "nb": 2,
    "usage": "Commande de coffrage , grue au tour, sécurite",
    "socle": false
   },
@@ -1479,10 +1635,8 @@ const BDD = {
    "alim": "?",
    "ed": "",
    "mat": "",
-   "svc": [
-    "daf"
-   ],
-   "nb": 1,
+   "svc": [],
+   "nb": 0,
    "usage": "Achats opérationnels (amont Pablo)",
    "socle": false,
    "todo": true
@@ -1512,6 +1666,137 @@ const BDD = {
    "usage": "Portail fournisseur béton",
    "socle": false,
    "todo": true
+  },
+  "Outlook": {
+   "ie": "externe",
+   "alim": "manuel",
+   "ed": "Microsoft",
+   "mat": "",
+   "svc": [
+    "ctr",
+    "trv"
+   ],
+   "nb": 2,
+   "usage": "Messagerie : demandes de MO et envoi des situations",
+   "socle": true,
+   "brief": true
+  },
+  "Chorus": {
+   "ie": "externe",
+   "alim": "manuel",
+   "ed": "AIFE",
+   "mat": "",
+   "svc": [
+    "ctr"
+   ],
+   "nb": 1,
+   "usage": "Facturation par le maître d'ouvrage",
+   "socle": false,
+   "brief": true
+  },
+  "Appli bancaire": {
+   "ie": "externe",
+   "alim": "manuel",
+   "ed": "",
+   "mat": "",
+   "svc": [
+    "ctr"
+   ],
+   "nb": 1,
+   "usage": "Dispatch des paiements entre partenaires",
+   "socle": false,
+   "brief": true
+  },
+  "BYCN": {
+   "ie": "interne",
+   "alim": "?",
+   "ed": "Bouygues Construction",
+   "mat": "",
+   "svc": [
+    "daf"
+   ],
+   "nb": 1,
+   "usage": "Paye des compagnons Bouygues",
+   "socle": false,
+   "brief": true
+  },
+  "BYMAT": {
+   "ie": "interne",
+   "alim": "auto",
+   "ed": "Bouygues Construction",
+   "mat": "",
+   "svc": [
+    "daf"
+   ],
+   "nb": 1,
+   "usage": "Extraction des coûts matériel pour le contrôle budgétaire",
+   "socle": false,
+   "brief": true
+  },
+  "Cority": {
+   "ie": "externe",
+   "alim": "manuel",
+   "ed": "Cority",
+   "mat": "",
+   "svc": [
+    "sec"
+   ],
+   "nb": 1,
+   "usage": "Reporting des événements sécurité : ATB, AT, PAT, HIPO",
+   "socle": false,
+   "brief": true
+  },
+  "Quick Connect Sécurité": {
+   "ie": "interne",
+   "alim": "manuel",
+   "ed": "Bouygues Construction",
+   "mat": "",
+   "svc": [
+    "sec"
+   ],
+   "nb": 1,
+   "usage": "Suivi IDV, addictions et organismes",
+   "socle": false,
+   "brief": true
+  },
+  "Lotus": {
+   "ie": "?",
+   "alim": "manuel",
+   "ed": "",
+   "mat": "",
+   "svc": [
+    "sec"
+   ],
+   "nb": 1,
+   "usage": "Comptage des personnes présentes en tunnel",
+   "socle": false,
+   "brief": true
+  },
+  "Heures Travaillées": {
+   "ie": "interne",
+   "alim": "manuel",
+   "ed": "",
+   "mat": "",
+   "svc": [
+    "sec"
+   ],
+   "nb": 1,
+   "usage": "Volume d'heures exposées, dénominateur des taux sécurité",
+   "socle": false,
+   "brief": true
+  },
+  "HRMYOU / Global HR": {
+   "ie": "interne",
+   "alim": "manuel",
+   "ed": "Bouygues Construction",
+   "mat": "",
+   "svc": [
+    "sec"
+   ],
+   "nb": 1,
+   "usage": "Outils RH groupe : dossier collaborateur",
+   "socle": false,
+   "brief": true
   }
  },
  "flows": [
@@ -1587,15 +1872,15 @@ const BDD = {
   },
   {
    "from": "s:Trimble Connect",
-   "to": "top:AutoCAD",
-   "obj": "Maquettes vers le dessin 2D",
+   "to": "top:La Scene",
+   "obj": "Plans vers l'assemblage des scans",
    "map": true,
    "alim": "manuel"
   },
   {
    "from": "s:Trimble Connect",
    "to": "top:Cyclone 3DR",
-   "obj": "Maquettes vers le nuage de points",
+   "obj": "Maquettes vers le contrôle de conformité",
    "map": true,
    "alim": "mixte"
   },
@@ -1608,80 +1893,1075 @@ const BDD = {
   },
   {
    "from": "top:La Scene",
-   "to": "top:Cyclone 3DR",
-   "obj": "Scans vers le retraitement",
-   "map": true,
-   "alim": "mixte"
-  },
-  {
-   "from": "top:AutoCAD",
    "to": "top:Covadis",
-   "obj": "Plans vers les calculs topo",
+   "obj": "Scans assemblés vers les nuages de points",
    "map": true,
    "alim": "manuel"
   }
- ]
+ ],
+ "process": {
+  "daf": [
+   {
+    "label": "Contrôle budgétaire",
+    "note": "conjoint avec les Travaux",
+    "in": [
+     {
+      "lab": "VALO main-d'œuvre"
+     },
+     {
+      "lab": "Extraction matériel",
+      "tool": "BYMAT"
+     },
+     {
+      "lab": "Dépenses diverses",
+      "tool": "Basware"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Constitution de la PC100",
+      "tool": "Excel"
+     },
+     {
+      "act": "Ventilation par centre d'imputation",
+      "tool": "Excel"
+     },
+     {
+      "act": "Ventilation par atelier",
+      "tool": "Excel"
+     },
+     {
+      "act": "Contrôle des écarts au budget",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Budget par atelier arbitré"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "trv",
+      "mission": "Commande matériel chantier",
+      "obj": "Extraction BYMAT — matériel mobilisé"
+     },
+     {
+      "at": "out",
+      "to": "trv",
+      "mission": "Contrôle budgétaire",
+      "obj": "PC100 — dépenses ventilées par atelier"
+     }
+    ]
+   },
+   {
+    "label": "Préfacturation partenaire",
+    "in": [
+     {
+      "lab": "Factures partenaires",
+      "tool": "Basware"
+     },
+     {
+      "lab": "Pointage main-d'œuvre",
+      "tool": "Puma"
+     },
+     {
+      "lab": "Heures intérim",
+      "tool": "BIP / BAPS"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Extraction du pointage",
+      "tool": "Excel"
+     },
+     {
+      "act": "Préfacturation mensuelle",
+      "tool": "Excel"
+     },
+     {
+      "act": "Circuit de validation",
+      "tool": "E-Paraph"
+     }
+    ],
+    "out": {
+     "lab": "Valorisation de la main-d'œuvre (VALO MO)"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "ctr",
+      "mission": "Facturation partenaire",
+      "obj": "Valorisation MO à refacturer"
+     },
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Contrôle budgétaire",
+      "obj": "VALO MO — coût de la main-d'œuvre"
+     }
+    ]
+   },
+   {
+    "label": "Engagement des dépenses et facturation",
+    "in": [
+     {
+      "lab": "Besoin chantier"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Bon de commande",
+      "tool": "Pablo"
+     },
+     {
+      "act": "Engagement de la dépense",
+      "tool": "Harmony"
+     },
+     {
+      "act": "Facture fournisseur",
+      "tool": "Basware"
+     },
+     {
+      "act": "Validation interne",
+      "tool": "E-Paraph"
+     },
+     {
+      "act": "Signature",
+      "tool": "DocuSign"
+     },
+     {
+      "act": "Mise en paiement",
+      "tool": "TIPS"
+     }
+    ],
+    "out": {
+     "lab": "Dépense engagée et réglée"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Contrôle budgétaire",
+      "obj": "Dépenses diverses — factures et commandes"
+     }
+    ]
+   },
+   {
+    "label": "Onboarding RH et formations",
+    "in": [
+     {
+      "lab": "Nouvel arrivant"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Vérification travail illégal",
+      "tool": "E-Checking"
+     },
+     {
+      "act": "Badge et accès site",
+      "tool": "Neoaccès"
+     },
+     {
+      "act": "Plan de formation",
+      "tool": "By My Site"
+     },
+     {
+      "act": "Commande de formation",
+      "tool": "Pablo"
+     }
+    ],
+    "out": {
+     "lab": "Collaborateur habilité et sur site"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "sec",
+      "mission": "Accueil, formation et habilitations",
+      "obj": "Nouvel arrivant à accueillir sur site"
+     }
+    ]
+   },
+   {
+    "label": "Gestion du personnel et paye",
+    "note": "BYCN et intérim",
+    "in": [
+     {
+      "lab": "Pointage chantier",
+      "tool": "Puma"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Heures intérim",
+      "tool": "BIP / BAPS"
+     },
+     {
+      "act": "Compagnons Bouygues",
+      "tool": "BYCN"
+     },
+     {
+      "act": "Congés et attestations",
+      "tool": "H&R For You"
+     },
+     {
+      "act": "Contrôle des heures",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Paye émise, heures valorisées"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "trv",
+      "mission": "Commande de main-d'œuvre",
+      "obj": "Besoin en personnel intérimaire"
+     },
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Préfacturation partenaire",
+      "obj": "Heures pointées à valoriser"
+     }
+    ]
+   }
+  ],
+  "ctr": [
+   {
+    "label": "Gestion des contrats",
+    "in": [
+     {
+      "lab": "Marché et avenants"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Dépôt documentaire",
+      "tool": "SharePoint"
+     },
+     {
+      "act": "Mémoires et réclamations",
+      "tool": "NotebookLM"
+     },
+     {
+      "act": "Rédaction",
+      "tool": "Word"
+     },
+     {
+      "act": "Suivi contractuel",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Dossier contractuel à jour"
+    }
+   },
+   {
+    "label": "Avancement et jalons chantier",
+    "in": [
+     {
+      "lab": "Avancement chantier"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Consolidation",
+      "tool": "Excel"
+     },
+     {
+      "act": "Note de situation",
+      "tool": "Word"
+     },
+     {
+      "act": "Tableau de bord",
+      "tool": "Power BI"
+     }
+    ],
+    "out": {
+     "lab": "Situation mensuelle établie"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "trv",
+      "mission": "Avancement et jalons chantier",
+      "obj": "Avancement et jalons relevés au chantier"
+     },
+     {
+      "at": "out",
+      "to": "ctr",
+      "mission": "Gestion des encaissements",
+      "obj": "Situation mensuelle à encaisser"
+     }
+    ]
+   },
+   {
+    "label": "Gestion des encaissements",
+    "in": [
+     {
+      "lab": "Suivi des avancements et jalons",
+      "tool": "Excel"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Situation envoyée au maître d'œuvre",
+      "tool": "Outlook"
+     },
+     {
+      "act": "Circuit de validation",
+      "tool": "E-Project"
+     },
+     {
+      "act": "Validation et paiement du maître d'ouvrage"
+     },
+     {
+      "act": "Facture maître d'ouvrage",
+      "tool": "Chorus"
+     },
+     {
+      "act": "Envoi par mail",
+      "tool": "Outlook"
+     }
+    ],
+    "out": {
+     "lab": "Dispatch entre partenaires",
+     "tool": "Appli bancaire"
+    }
+   },
+   {
+    "label": "Facturation partenaire",
+    "in": [
+     {
+      "lab": "Valorisation de la main-d'œuvre"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Facture partenaire",
+      "tool": "Basware"
+     },
+     {
+      "act": "Activation de la facturation",
+      "tool": "E-Project"
+     }
+    ],
+    "out": {
+     "lab": "Partenaire facturé"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "daf",
+      "mission": "Préfacturation partenaire",
+      "obj": "Valorisation MO à refacturer"
+     }
+    ]
+   }
+  ],
+  "trv": [
+   {
+    "label": "Gestion de chantier et imprévus",
+    "in": [
+     {
+      "lab": "Relevé terrain",
+      "tool": "Quick Connect"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Constats et réserves",
+      "tool": "IDCapture"
+     },
+     {
+      "act": "Plans et maquettes",
+      "tool": "Trimble Connect"
+     },
+     {
+      "act": "Diffusion documentaire",
+      "tool": "Mezzoteam"
+     },
+     {
+      "act": "Suivi d'exécution",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Chantier piloté, imprévus tracés"
+    }
+   },
+   {
+    "label": "Avancement et jalons chantier",
+    "in": [
+     {
+      "lab": "Avancement terrain"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Planification",
+      "tool": "MS Project"
+     },
+     {
+      "act": "Adhérence au planning",
+      "tool": "MMS"
+     },
+     {
+      "act": "Tableau de bord",
+      "tool": "Power BI"
+     }
+    ],
+    "out": {
+     "lab": "Jalons tenus"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "ctr",
+      "mission": "Avancement et jalons chantier",
+      "obj": "Avancement et jalons relevés au chantier"
+     },
+     {
+      "at": "out",
+      "to": "dir",
+      "mission": "Récolte des KPI",
+      "obj": "Avancement consolidé pour le pilotage"
+     }
+    ]
+   },
+   {
+    "label": "Commande matériel chantier",
+    "in": [
+     {
+      "lab": "Besoin matériel"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Demande de matériel",
+      "tool": "Traktor"
+     },
+     {
+      "act": "Coffrage, grue, engins",
+      "tool": "ERP MAT"
+     },
+     {
+      "act": "Bon de commande",
+      "tool": "Pablo"
+     }
+    ],
+    "out": {
+     "lab": "Matériel mobilisé sur site"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Contrôle budgétaire",
+      "obj": "Extraction BYMAT — matériel mobilisé"
+     }
+    ]
+   },
+   {
+    "label": "Commande de main-d'œuvre",
+    "in": [
+     {
+      "lab": "Besoin en main-d'œuvre"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Demande par mail",
+      "tool": "Outlook"
+     },
+     {
+      "act": "Contact de la boîte d'intérim"
+     }
+    ],
+    "out": {
+     "lab": "Personnel affecté au chantier"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Gestion du personnel et paye",
+      "obj": "Besoin en personnel intérimaire"
+     }
+    ]
+   },
+   {
+    "label": "Contrôle budgétaire",
+    "note": "conjoint avec la DAF",
+    "in": [
+     {
+      "lab": "Dépenses chantier (PC100)"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Ventilation par atelier",
+      "tool": "Excel"
+     },
+     {
+      "act": "Analyse des écarts",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Arbitrage budgétaire chantier"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "daf",
+      "mission": "Contrôle budgétaire",
+      "obj": "PC100 — dépenses ventilées par atelier"
+     }
+    ]
+   },
+   {
+    "label": "Gestion des contrats et avenants",
+    "in": [
+     {
+      "lab": "Avenant"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Rédaction",
+      "tool": "Word"
+     },
+     {
+      "act": "Validation interne",
+      "tool": "E-Paraph"
+     }
+    ],
+    "out": {
+     "lab": "Avenant signé"
+    }
+   }
+  ],
+  "tun": [
+   {
+    "label": "Gestion de chantier",
+    "todo": true,
+    "in": [
+     {
+      "lab": "Relevé terrain tunnel",
+      "tool": "Quick Connect"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Réserves et contrôles",
+      "tool": "IDCapture"
+     },
+     {
+      "act": "Plans d'exécution",
+      "tool": "AutoCAD"
+     },
+     {
+      "act": "Maquettes",
+      "tool": "Trimble Connect"
+     },
+     {
+      "act": "Suivi d'exécution",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Creusement piloté"
+    }
+   },
+   {
+    "label": "Avancement et jalons chantier",
+    "todo": true,
+    "in": [
+     {
+      "lab": "Avancement tunnelier",
+      "tool": "YELLOW"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Planification",
+      "tool": "MS Project"
+     },
+     {
+      "act": "Tableau de bord",
+      "tool": "Power BI"
+     }
+    ],
+    "out": {
+     "lab": "Jalons tunnel tenus"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "dir",
+      "mission": "Récolte des KPI",
+      "obj": "Avancement du creusement"
+     },
+     {
+      "at": "out",
+      "to": "ctr",
+      "mission": "Avancement et jalons chantier",
+      "obj": "Jalons tunnel pour la situation"
+     }
+    ]
+   },
+   {
+    "label": "Commande chantier",
+    "todo": true,
+    "in": [
+     {
+      "lab": "Besoin — stock tunnel",
+      "tool": "GMAO"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Bon de commande",
+      "tool": "Pablo"
+     },
+     {
+      "act": "Matériel et coffrage",
+      "tool": "ERP MAT"
+     }
+    ],
+    "out": {
+     "lab": "Consommables et matériel livrés"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "daf",
+      "mission": "Contrôle budgétaire",
+      "obj": "Dépenses matériel tunnel"
+     }
+    ]
+   }
+  ],
+  "top": [
+   {
+    "label": "Acquisition et traitement des nuages de points",
+    "in": [
+     {
+      "lab": "Acquisition des plans",
+      "tool": "SharePoint"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Exploitation des plans",
+      "tool": "Trimble Connect"
+     },
+     {
+      "act": "Assemblage des scans chantier",
+      "tool": "La Scene"
+     },
+     {
+      "act": "Création des nuages de points",
+      "tool": "Covadis"
+     }
+    ],
+    "out": {
+     "lab": "Nuage de points exploitable"
+    }
+   },
+   {
+    "label": "Reporting et diffusion des plans",
+    "in": [
+     {
+      "lab": "Ouverture des plans",
+      "tool": "Trimble Connect"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Assemblage et vérification de conformité",
+      "tool": "Cyclone 3DR"
+     },
+     {
+      "act": "Rapport de contrôle",
+      "tool": "Excel"
+     }
+    ],
+    "out": {
+     "lab": "Rapport de conformité diffusé"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "met",
+      "mission": "Gestion des maquettes",
+      "obj": "Plans contrôlés et nuages de points"
+     },
+     {
+      "at": "out",
+      "to": "tun",
+      "mission": "Gestion de chantier",
+      "obj": "Plans d'implantation du tunnel"
+     }
+    ]
+   },
+   {
+    "label": "Guidage du tunnelier",
+    "in": [
+     {
+      "lab": "Position du tunnelier"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Guidage temps réel",
+      "tool": "Pixis"
+     }
+    ],
+    "out": {
+     "lab": "Tracé guidé en temps réel"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "tun",
+      "mission": "Avancement et jalons chantier",
+      "obj": "Position et tracé du tunnelier"
+     }
+    ]
+   }
+  ],
+  "sec": [
+   {
+    "label": "Accueil, formation et habilitations",
+    "in": [
+     {
+      "lab": "Nouvel arrivant"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Accueil de site et formation au poste",
+      "tool": "Quick Connect"
+     },
+     {
+      "act": "Habilitations élec. et autorisation de conduite",
+      "tool": "Quick Connect"
+     },
+     {
+      "act": "Suivi des formations",
+      "tool": "By My Site"
+     },
+     {
+      "act": "Dossier collaborateur",
+      "tool": "HRMYOU / Global HR"
+     }
+    ],
+    "out": {
+     "lab": "Collaborateur habilité au poste"
+    },
+    "links": [
+     {
+      "at": "in",
+      "to": "daf",
+      "mission": "Onboarding RH et formations",
+      "obj": "Nouvel arrivant à accueillir sur site"
+     }
+    ]
+   },
+   {
+    "label": "Prévention et suivi terrain",
+    "in": [
+     {
+      "lab": "Terrain · ¼ heure sécurité"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Visite sécurité et ¼ h sécurité",
+      "tool": "Quick Connect"
+     },
+     {
+      "act": "Suivi IDV, addictions, organismes",
+      "tool": "Quick Connect Sécurité"
+     },
+     {
+      "act": "Comptage tunnel",
+      "tool": "Lotus"
+     },
+     {
+      "act": "Diffusion documentaire",
+      "tool": "Mezzoteam"
+     },
+     {
+      "act": "Commande EPI et prestations",
+      "tool": "Pablo"
+     }
+    ],
+    "out": {
+     "lab": "Risques maîtrisés sur site"
+    }
+   },
+   {
+    "label": "Événements et indicateurs sécurité",
+    "in": [
+     {
+      "lab": "Événement ATB, AT, PAT, HIPO"
+     }
+    ],
+    "steps": [
+     {
+      "act": "Reporting événement",
+      "tool": "Cority"
+     },
+     {
+      "act": "Volume d'heures exposées",
+      "tool": "Heures Travaillées"
+     },
+     {
+      "act": "Indicateurs sécurité",
+      "tool": "Power BI"
+     }
+    ],
+    "out": {
+     "lab": "Taux de fréquence et de gravité publiés"
+    },
+    "links": [
+     {
+      "at": "out",
+      "to": "dir",
+      "mission": "Récolte des KPI",
+      "obj": "Indicateurs sécurité du chantier"
+     }
+    ]
+   }
+  ]
+ },
+ "xflows": [
+  {
+   "from": "trv:Commande matériel chantier",
+   "to": "daf:Contrôle budgétaire",
+   "obj": "Extraction BYMAT — matériel mobilisé",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Contrôle budgétaire",
+   "to": "trv:Contrôle budgétaire",
+   "obj": "PC100 — dépenses ventilées par atelier",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Préfacturation partenaire",
+   "to": "ctr:Facturation partenaire",
+   "obj": "Valorisation MO à refacturer",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Préfacturation partenaire",
+   "to": "daf:Contrôle budgétaire",
+   "obj": "VALO MO — coût de la main-d'œuvre",
+   "map": false,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Engagement des dépenses et facturation",
+   "to": "daf:Contrôle budgétaire",
+   "obj": "Dépenses diverses — factures et commandes",
+   "map": false,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Onboarding RH et formations",
+   "to": "sec:Accueil, formation et habilitations",
+   "obj": "Nouvel arrivant à accueillir sur site",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "trv:Commande de main-d'œuvre",
+   "to": "daf:Gestion du personnel et paye",
+   "obj": "Besoin en personnel intérimaire",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "daf:Gestion du personnel et paye",
+   "to": "daf:Préfacturation partenaire",
+   "obj": "Heures pointées à valoriser",
+   "map": false,
+   "alim": "manuel"
+  },
+  {
+   "from": "trv:Avancement et jalons chantier",
+   "to": "ctr:Avancement et jalons chantier",
+   "obj": "Avancement et jalons relevés au chantier",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "ctr:Avancement et jalons chantier",
+   "to": "ctr:Gestion des encaissements",
+   "obj": "Situation mensuelle à encaisser",
+   "map": false,
+   "alim": "manuel"
+  },
+  {
+   "from": "trv:Avancement et jalons chantier",
+   "to": "dir:Récolte des KPI",
+   "obj": "Avancement consolidé pour le pilotage",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "tun:Avancement et jalons chantier",
+   "to": "dir:Récolte des KPI",
+   "obj": "Avancement du creusement",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "tun:Avancement et jalons chantier",
+   "to": "ctr:Avancement et jalons chantier",
+   "obj": "Jalons tunnel pour la situation",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "tun:Commande chantier",
+   "to": "daf:Contrôle budgétaire",
+   "obj": "Dépenses matériel tunnel",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "top:Reporting et diffusion des plans",
+   "to": "met:Gestion des maquettes",
+   "obj": "Plans contrôlés et nuages de points",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "top:Reporting et diffusion des plans",
+   "to": "tun:Gestion de chantier",
+   "obj": "Plans d'implantation du tunnel",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "top:Guidage du tunnelier",
+   "to": "tun:Avancement et jalons chantier",
+   "obj": "Position et tracé du tunnelier",
+   "map": true,
+   "alim": "manuel"
+  },
+  {
+   "from": "sec:Événements et indicateurs sécurité",
+   "to": "dir:Récolte des KPI",
+   "obj": "Indicateurs sécurité du chantier",
+   "map": true,
+   "alim": "manuel"
+  }
+ ],
+ "board": {
+  "top": [
+   "met",
+   "top",
+   "tun",
+   "trv",
+   "ctr"
+  ],
+  "bottom": [
+   "dir",
+   "daf",
+   "qse",
+   "sec"
+  ],
+  "xrows": [
+   [
+    "met",
+    "top",
+    "tun"
+   ],
+   [
+    "dir",
+    "ctr",
+    "daf"
+   ],
+   [
+    "qse",
+    "trv",
+    "sec"
+   ]
+  ]
+ }
 };
 /* ==== DONNÉES BDD — fin ==== */
-
 /* ============================================================
-   1. LES DEUX PLANCHES DE CARTOGRAPHIE
+   1. OUTILLAGE COMMUN
    ------------------------------------------------------------
-   31 missions ne tiennent pas sur un seul plateau : les pôles sont
-   répartis sur deux planches, le socle commun étant repris au centre
-   de chacune. Chaque planche ne trace que les flux qui la concernent.
+   Le deck compte 13 planches : la cartographie applicative, la planche des flux
+   inter-services, une affiche par pôle, puis deux annexes tabulaires. Toutes sont
+   générées ici, dans l'ordre où elles sont poussées dans le deck — c'est cet ordre
+   que pptx/build.py reprend, une diapo par « .slide ».
    ============================================================ */
-const BOARD = { id: "b1", top: ["met", "top", "tun", "trv"], bottom: ["dir", "daf", "qse"] };
-const BOARDS = [BOARD];
-
 const slug = s => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
                    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const SVC = Object.fromEntries(BDD.services.map(s => [s.id, s]));
 const isAuto = d => d && (d.alim === "auto" || d.alim === "mixte");
+const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 
 /* « s:Excel » ou « daf:Basware » → identifiant d'élément */
 const idOf = (ref, bid) => {
-  const [scope, name] = ref.split(":");
+  const i = ref.indexOf(":");
+  const scope = ref.slice(0, i), name = ref.slice(i + 1);
   return scope === "s" ? `${bid}-s-${slug(name)}` : `${bid}-t-${scope}-${slug(name)}`;
 };
 
-/* Un même outil peut servir à plusieurs missions d'un pôle : la première
-   occurrence garde l'identifiant canonique visé par les flux, les suivantes
-   sont suffixées pour rester uniques. */
-function toolChip(name, bid, svcId, seen){
+/* Nature d'un outil, en une ligne : « manuel · externe », « auto · interne ».
+   Un outil venu du brief et non de la BDD le dit, plutôt que d'afficher « ? ». */
+function meta(name){
   const d = BDD.tools[name] || {};
-  const cls = [d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext")];
-  const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-  const base = `${bid}-t-${svcId}-${slug(name)}`;
-  const n = (seen[base] = (seen[base] || 0) + 1);
-  return `<span class="tool ${cls.join(" ")}" id="${n === 1 ? base : base + "-" + n}">${auto}${name}</span>`;
+  if (d.brief) return { txt: "hors BDD · brief", cls: "brief" };
+  const al = d.alim === "?" ? "alim. TODO" : (isAuto(d) ? "auto" : "manuel");
+  const ie = d.ie === "?" ? "int/ext TODO" : d.ie;
+  return { txt: `${al} · ${ie}`, cls: "" };
 }
 
-/* Les outils du socle mobilisés par une mission sont cités en ligne plutôt qu'en
-   pastilles : ils figurent déjà dans le bandeau central, et la planche tient. */
-function cardHTML(pid, bid, wide){
-  const s = SVC[pid];
-  const seen = {};
-  return `<div class="card${wide ? " wide" : ""}" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
-    `<div class="card-head"><span class="dot"></span><h2>${s.name}</h2></div>` +
-    `<p class="kicker">${s.kicker}</p>` +
-    `<div class="missions">` + s.missions.map(m => {
-      const metier = m.tools.filter(t => !(BDD.tools[t] || {}).socle);
-      const socle  = m.tools.filter(t =>  (BDD.tools[t] || {}).socle);
-      return `<div class="mission${m.todo ? " todo" : ""}">` +
-        `<span class="mlab">${m.label}<i></i></span>` +
-        (metier.length ? `<div class="tools">${metier.map(t => toolChip(t, bid, pid, seen)).join("")}</div>` : "") +
-        (socle.length ? `<span class="via">via <em>${socle.join(" · ")}</em></span>` : "") +
-      `</div>`;
-    }).join("") + `</div></div>`;
+const deck = document.querySelector(".deck");
+const PLANCHES = [];
+
+/* Une planche = un « .slide » de 1600 × 900 poussé dans le deck. Le numéro de
+   planche est renseigné après coup : on ne connaît le total qu'à la fin. */
+function addSlide(id, inner){
+  const stage = document.createElement("div");
+  stage.className = "stage";
+  stage.innerHTML = `<div class="slide" id="${id}"><div class="slide-inner">${inner}
+    <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
+      <span data-page></span></div></div></div>`;
+  deck.appendChild(stage);
+  PLANCHES.push(id);
+  return stage;
 }
+
+const masthead = (eyebrow, title, sub, right = "") => `
+  <div class="masthead">
+    <div><p class="eyebrow">${eyebrow}</p><h1>${title}</h1><p class="sub">${sub}</p></div>
+    ${right}
+  </div>`;
 
 const LEGEND_HTML = `
   <div class="legend">
     <div class="swatchrow">
       <span class="item"><span class="key k-int">Interne</span>Développé / porté en interne</span>
       <span class="item"><span class="key">Externe</span>Éditeur du marché</span>
-      <span class="item"><span class="key k-todo">À valider</span>Outil ou mission à confirmer</span>
+      <span class="item"><span class="key k-todo">Hors BDD</span>Apporté par le brief métier</span>
     </div>
     <div class="swatchrow">
       <span class="item"><span class="kdot"></span>Alimentation automatique</span>
@@ -1696,62 +2976,223 @@ const LEGEND_HTML = `
     </div>
   </div>`;
 
+/* ============================================================
+   2. PLANCHE 1 — CARTOGRAPHIE APPLICATIVE
+   ------------------------------------------------------------
+   Neuf pôles ne tiennent pas avec leurs missions détaillées : la carte liste les
+   outils de chaque pôle, le détail des missions vit sur les affiches. Cinq pôles
+   techniques en haut, socle en bandeau, quatre pôles support en bas.
+   ============================================================ */
+const BOARD = { id: "b1", top: BDD.board.top, bottom: BDD.board.bottom };
+
+function toolChip(name, bid, svcId, seen){
+  const d = BDD.tools[name] || {};
+  const cls = d.brief ? "brief" : (d.todo ? "todo" : (d.ie === "interne" ? "int" : "ext"));
+  const auto = isAuto(d) ? '<i class="auto"></i>' : "";
+  const base = `${bid}-t-${svcId}-${slug(name)}`;
+  const n = (seen[base] = (seen[base] || 0) + 1);
+  return `<span class="tool ${cls}" id="${n === 1 ? base : base + "-" + n}">${auto}${esc(name)}</span>`;
+}
+
+function cardHTML(pid, bid){
+  const s = SVC[pid], seen = {};
+  return `<div class="card" id="${bid}-card-${pid}" data-svc="${pid}" data-board="${bid}" style="--accent:var(--${pid})">` +
+    `<div class="card-head"><span class="dot"></span><h2>${esc(s.name)}</h2></div>` +
+    `<p class="kicker">${esc(s.kicker)}</p>` +
+    `<p class="count">${s.tools.length} outils</p>` +
+    `<div class="toolwrap">${s.tools.map(t => toolChip(t, bid, pid, seen)).join("")}</div>` +
+  `</div>`;
+}
+
 const CORE_SUB = { "SharePoint": "Référentiel", "Power BI": "Cabine de pilotage" };
 
 function hubHTML(bid){
   const groups = BDD.socle.map(g => {
     const many = g.tools.length > 3;          /* groupe dense : deux colonnes de pastilles */
     return `<div class="hub-group${many ? " two" : ""}" style="flex-grow:${many ? 2 : 1}">` +
-      `<span>${g.group}</span><div class="chips">` +
+      `<span>${esc(g.group)}</span><div class="chips">` +
       g.tools.map(n => {
         const d = BDD.tools[n] || {};
         const auto = isAuto(d) ? '<i class="auto"></i>' : "";
-        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}" id="${bid}-s-${slug(n)}">${auto}${n}</div>`;
+        return `<div class="app ${d.ie === "interne" ? "int" : "ext"}" id="${bid}-s-${slug(n)}">${auto}${esc(n)}</div>`;
       }).join("") + `</div></div>`;
   }).join("");
   const core = BDD.core.map(n =>
-    `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${n}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
+    `<div class="core-app" id="${bid}-s-${slug(n)}"><b>${esc(n)}</b><small>${CORE_SUB[n] || ""}</small></div>`).join("");
   return `<div class="hub-band">
       <div class="btitle"><span>Socle applicatif</span><b>Logiciels communs</b></div>
       ${groups}<div class="core">${core}</div>
     </div>`;
 }
 
-const deck = document.querySelector(".deck");
-const stage = document.createElement("div");
-stage.className = "stage";
-stage.innerHTML = `<div class="slide" id="slide-${BOARD.id}"><div class="slide-inner">
-    <div class="masthead">
-      <div><p class="eyebrow">Système d'information chantier · vue d'ensemble</p>
-           <h1>Cartographie des outils IT</h1>
-           <p class="sub">Sept pôles, leurs missions et leurs outils, autour du socle applicatif commun</p></div>
-      ${LEGEND_HTML}
-    </div>
-    <div class="board" id="board-${BOARD.id}" data-board="${BOARD.id}">
+addSlide("slide-b1",
+  masthead("Système d'information chantier · vue d'ensemble",
+           "Cartographie des outils IT",
+           `Neuf pôles, ${Object.keys(BDD.tools).length} outils et le socle applicatif commun`,
+           LEGEND_HTML) +
+  `<div class="board" id="board-b1" data-board="b1">
       <svg class="wires" aria-hidden="true"></svg>
-      <div class="prow">${BOARD.top.map(p => cardHTML(p, BOARD.id)).join("")}</div>
-      ${hubHTML(BOARD.id)}
-      <div class="prow">${BOARD.bottom.map(p => cardHTML(p, BOARD.id, true)).join("")}</div>
-    </div>
-    <div class="footnote"><span>Source : BDD Cartographie Outils IT — 16 entretiens</span>
-      <span>Planche 1/3</span></div>
-  </div></div>`;
-deck.insertBefore(stage, deck.firstChild);
+      <div class="prow">${BOARD.top.map(p => cardHTML(p, "b1")).join("")}</div>
+      ${hubHTML("b1")}
+      <div class="prow">${BOARD.bottom.map(p => cardHTML(p, "b1")).join("")}</div>
+   </div>`);
 
 /* ============================================================
-   2. CONNECTEURS
+   3. AFFICHES SERVICE
+   ------------------------------------------------------------
+   Deux rendus, selon ce que la BDD et le brief permettent de dire :
+     · « chaîne »     — entrée de la donnée, étapes ordonnées, finalité. Les blocs
+                        se partagent la largeur restante, si bien que les colonnes
+                        entrée et finalité s'alignent d'une bande à l'autre.
+     · « inventaire » — les outils de la mission entre deux blocs à documenter,
+                        pour les pôles dont le processus n'a pas été recueilli.
+   Les interconnexions sont posées en badge sur le bloc concerné ; les fils tracés
+   sont réservés à la planche inter-services, où ils ne traversent aucune carte.
+   ============================================================ */
+const ARROW = '<span class="parrow">▸</span>';
+
+/* Badge d'interconnexion : « → DAF · contrôle budgétaire ». Le sens suit l'ancre —
+   « out » sort du pôle, « in » vient de l'autre pôle. */
+function badge(link){
+  const t = SVC[link.to];
+  if (!t) return "";
+  const dir = link.at === "in" ? "←" : "→";
+  /* deux lignes : « → DAF » puis la mission. Sur une seule, le libellé le plus
+     long débordait du bloc à l'export — Calibri est plus large que le mesuré. */
+  return `<span class="xbadge" style="--xc:var(--${link.to})">${dir} ${esc(t.name)}<br>${esc(link.mission)}</span>`;
+}
+const badgesAt = (m, at) => (m.links || []).filter(l => l.at === at).map(badge).join("");
+
+function blockTool(name){
+  if (!name) return "";
+  const mt = meta(name);
+  return `<span class="ptool">${esc(name)}</span><span class="pmeta ${mt.cls}">${mt.txt}</span>`;
+}
+
+function chainLine(pid, m){
+  const inner = m.in.map(e => e.tool
+      ? `<span class="pact">${esc(e.lab)} · <b>${esc(e.tool)}</b></span>`
+      : `<span class="pact">${esc(e.lab)}</span>`).join("");
+  const entree = `<div class="pin"><span class="pk">Entrée</span>${inner}${badgesAt(m, "in")}</div>`;
+
+  const steps = m.steps.map((s, i) =>
+    `<div class="pstep"><span class="pact">${esc(s.act)}</span>${blockTool(s.tool)}${badgesAt(m, i)}</div>`);
+
+  const sortie = `<div class="pout"><span class="pk">Finalité</span>` +
+    `<span class="pact">${esc(m.out.lab)}</span>${blockTool(m.out.tool)}${badgesAt(m, "out")}</div>`;
+
+  return `<div class="pline${m.todo ? " todo" : ""}" style="--accent:var(--${pid})">
+      <span class="prail"></span>
+      <div class="plabel"><b>${esc(m.label)}</b>${m.note || m.todo
+        ? `<span>${esc(m.note || "chaîne à valider")}</span>` : ""}</div>
+      <div class="pchain">${[entree, ...steps, sortie].join(ARROW)}</div>
+    </div>`;
+}
+
+function inventoryLine(pid, m, bid, seen){
+  const chips = m.tools.map(n => {
+    const d = BDD.tools[n] || {}, mt = meta(n);
+    const base = `${bid}-t-${pid}-${slug(n)}`;
+    const k = (seen[base] = (seen[base] || 0) + 1);
+    return `<div class="pchip ${d.brief ? "brief" : (d.ie === "interne" ? "int" : "ext")}" ` +
+      `id="${k === 1 ? base : base + "-" + k}">` +
+      `<span class="ptool">${esc(n)}</span><span class="pmeta ${mt.cls}">${mt.txt}</span></div>`;
+  }).join("");
+  return `<div class="pline inv${m.todo ? " todo" : ""}" style="--accent:var(--${pid})">
+      <span class="prail"></span>
+      <div class="plabel"><b>${esc(m.label)}</b><span>${m.todo ? "mission proposée" : "ordre non attesté"}</span></div>
+      <div class="pchain">
+        <div class="pin"><span class="pk">Début</span><span class="pact">à documenter</span></div>
+        ${ARROW}<div class="pinv">${chips}</div>${ARROW}
+        <div class="pout"><span class="pk">Finalité</span><span class="pact">à documenter</span></div>
+      </div>
+    </div>`;
+}
+
+/* Ordre des affiches : celui du deck d'origine, pour que la relecture suive. */
+const AFFICHES = ["dir", "daf", "ctr", "met", "trv", "tun", "top", "qse", "sec"];
+
+AFFICHES.forEach(pid => {
+  const s = SVC[pid], bid = "f-" + pid, seen = {};
+  const proc = BDD.process[pid];
+  const xn = BDD.xflows.filter(f => f.from.startsWith(pid + ":") || f.to.startsWith(pid + ":")).length;
+  const body = proc
+    ? proc.map(m => chainLine(pid, m)).join("")
+    : s.missions.map(m => inventoryLine(pid, m, bid, seen)).join("");
+  const sub = proc
+    ? "Flux de la donnée par mission — de son entrée à sa finalité"
+    : "Missions et outils rattachés — processus non recueilli en entretien";
+  const note = proc
+    ? `Chaînes issues du brief métier ; nature et alimentation reprises de la BDD. ${xn} échange${xn > 1 ? "s" : ""} avec les autres pôles.`
+    : "Alimentation et nature reprises de la BDD. Le processus reste à documenter.";
+  addSlide("slide-" + bid,
+    masthead(`Affiche service · ${esc(s.name)}`, esc(s.name), sub,
+      `<div class="legend"><div class="swatchrow">
+         <span class="item"><span class="key k-int">${s.missions.length} missions</span>${s.tools.length} outils rattachés</span>
+         <span class="item"><span class="key k-todo">${xn} échanges</span>avec les autres pôles</span>
+       </div></div>`) +
+    `<div class="affiche" id="aff-${pid}" style="--accent:var(--${pid})">${body}</div>
+     <div class="affnote">${note}</div>`);
+});
+
+/* ============================================================
+   4. PLANCHE 2 — FLUX INTER-SERVICES
+   ------------------------------------------------------------
+   Les nœuds ne sont plus les outils mais les missions : c'est le niveau auquel les
+   pôles s'alimentent. Chaque fil reprend un lien saisi dans PROCESS — la planche et
+   les badges des affiches sortent de la même donnée.
+   ============================================================ */
+const XROWS = BDD.board.xrows;
+const XB = { id: "x", top: XROWS.flat(), bottom: [], flows: BDD.xflows };
+
+const xHot = new Set(BDD.xflows.flatMap(f => [f.from, f.to]));
+
+function xcardHTML(pid){
+  const s = SVC[pid];
+  return `<div class="card xcard" id="x-card-${pid}" data-svc="${pid}" data-board="x" style="--accent:var(--${pid})">` +
+    `<div class="card-head"><span class="dot"></span><h2>${esc(s.name)}</h2></div>` +
+    `<p class="kicker">${esc(s.kicker)}</p>` +
+    `<div class="missions">` + s.missions.map(m => {
+      const ref = pid + ":" + m.label;
+      return `<span class="xmission${xHot.has(ref) ? " hot" : ""}" id="${idOf(ref, "x")}">${esc(m.label)}</span>`;
+    }).join("") + `</div></div>`;
+}
+
+addSlide("slide-x",
+  masthead("Système d'information chantier · échanges entre pôles",
+           "Flux inter-services",
+           `${BDD.xflows.filter(f => f.map).length} échanges entre pôles ; ` +
+           `${BDD.xflows.filter(f => !f.map).length} enchaînements internes détaillés en annexe`,
+           LEGEND_HTML) +
+  `<div class="board" id="board-x" data-board="x">
+      <svg class="wires" aria-hidden="true"></svg>
+      ${XROWS.map(r => `<div class="prow">${r.map(xcardHTML).join("")}</div>`).join("")}
+   </div>`);
+
+/* La planche inter-services se place juste après la cartographie. */
+deck.insertBefore(deck.lastElementChild, deck.children[1]);
+PLANCHES.splice(1, 0, PLANCHES.pop());
+
+/* ============================================================
+   5. CONNECTEURS
+   ------------------------------------------------------------
+   Une seule courbe de Bézier cubique par flux : c'est le format qu'attend
+   extract.js, et build.py n'émet qu'un cubicBezTo.
    ============================================================ */
 const SVGNS = "http://www.w3.org/2000/svg";
 const css   = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
-/* Flux à tracer sur une planche : ceux internes au socle, et ceux dont
-   l'extrémité métier appartient à un pôle présent sur la planche. */
+const BOARDS = [BOARD, XB];
+
+/* Flux à tracer sur une planche. La cartographie prend les flux applicatifs ;
+   la planche inter-services porte les siens via b.flows. */
 function boardFlows(b){
-  const poles = new Set([...(b.top || b.left || []), ...(b.bottom || b.right || [])]);
-  return BDD.flows.map((f, i) => ({ f, i })).filter(({ f }) => {
+  const src = b.flows || BDD.flows;
+  const poles = new Set([...(b.top || []), ...(b.bottom || [])]);
+  return src.map((f, i) => ({ f, i })).filter(({ f }) => {
     if (f.map === false) return false;
     return [f.from, f.to].every(r => {
-      const sc = r.split(":")[0];
+      const sc = r.slice(0, r.indexOf(":"));
       return sc === "s" || poles.has(sc);
     });
   });
@@ -1796,9 +3237,9 @@ function spread(items, b, board, scale){
 }
 
 function wireColor(f){
-  const s = f.from.split(":")[0], t = f.to.split(":")[0];
+  const s = f.from.slice(0, f.from.indexOf(":")), t = f.to.slice(0, f.to.indexOf(":"));
   if (s === "s" && t === "s") return css("--core");        /* plomberie interne au socle */
-  return css("--" + (s !== "s" ? s : t));                  /* couleur du pôle concerné */
+  return css("--" + (s !== "s" ? s : t));                  /* couleur du pôle émetteur */
 }
 
 function drawBoard(b){
@@ -1843,15 +3284,23 @@ function drawBoard(b){
     let p1 = anchor(c, board, !aFirst, scale, off[i].to,   useCard);
 
     let d;
+    const fan = el => {
+      const host = el.closest(".missions");
+      if (!host || !el.classList.contains("xmission")) return 0;
+      const rows = [...host.children], k = rows.indexOf(el);
+      return (k - (rows.length - 1) / 2) * 34;
+    };
     const zone = el => el.closest(".hub-band") ? "band" : (el.closest(".prow") ? "row" : "");
-    const acrossZones = zone(a) && zone(c) && zone(a) !== zone(c);
+    const rowOf = el => [...board.querySelectorAll(".prow")].indexOf(el.closest(".prow"));
+    const acrossZones = (zone(a) && zone(c) && zone(a) !== zone(c)) ||
+                        (useCard && rowOf(a) >= 0 && rowOf(a) !== rowOf(c));
     if (acrossZones || Math.abs(ra.cy - rb.cy) > Math.abs(ra.cx - rb.cx) * 1.2){
       /* Éléments empilés : on sort par le bord horizontal le plus proche de la cible. */
       const down = ra.cy <= rb.cy;
       const eA = useCard && cardA ? localRect(cardA, board, scale) : ra;
       const eB = useCard && cardB ? localRect(cardB, board, scale) : rb;
-      p0 = { x: ra.cx + off[i].from, y: down ? eA.y + eA.h : eA.y };
-      p1 = { x: rb.cx + off[i].to,   y: down ? eB.y : eB.y + eB.h };
+      p0 = { x: ra.cx + off[i].from + fan(a), y: down ? eA.y + eA.h : eA.y };
+      p1 = { x: rb.cx + off[i].to   + fan(c), y: down ? eB.y : eB.y + eB.h };
       const dy = (p1.y - p0.y) * .5;
       d = `M ${p0.x} ${p0.y} C ${p0.x} ${p0.y + dy}, ${p1.x} ${p1.y - dy}, ${p1.x} ${p1.y}`;
     } else if (Math.abs(ra.cx - rb.cx) < 30){
@@ -1895,19 +3344,20 @@ function drawBoard(b){
 const draw = () => BOARDS.forEach(drawBoard);
 
 /* ============================================================
-   3. SURBRILLANCE
+   6. SURBRILLANCE
    ============================================================ */
 function clearFocus(board){
   board.classList.remove("focusing");
   board.querySelectorAll(".is-active").forEach(e => e.classList.remove("is-active"));
 }
-function focusIdx(board, bid, indexes){
+function focusIdx(board, b, indexes){
   clearFocus(board);
   if (!indexes.length) return;
   board.classList.add("focusing");
+  const src = b.flows || BDD.flows;
   indexes.forEach(i => {
-    const f = BDD.flows[i];
-    [idOf(f.from, bid), idOf(f.to, bid)].forEach(id => {
+    const f = src[i];
+    [idOf(f.from, b.id), idOf(f.to, b.id)].forEach(id => {
       const el = document.getElementById(id); if (!el) return;
       el.classList.add("is-active");
       const card = el.closest(".card"); if (card) card.classList.add("is-active");
@@ -1925,13 +3375,13 @@ BOARDS.forEach(b => {
       const idx = items.filter(({ f }) =>
         f.from.startsWith(card.dataset.svc + ":") || f.to.startsWith(card.dataset.svc + ":"))
         .map(({ i }) => i);
-      if (idx.length) focusIdx(board, b.id, idx);
+      if (idx.length) focusIdx(board, b, idx);
       else { clearFocus(board); board.classList.add("focusing"); card.classList.add("is-active"); }
     });
     card.addEventListener("mouseleave", () => clearFocus(board));
   });
-  board.querySelectorAll(".app, .core-app, .tool").forEach(el => {
-    el.addEventListener("mouseenter", () => focusIdx(board, b.id,
+  board.querySelectorAll(".app, .core-app, .tool, .xmission").forEach(el => {
+    el.addEventListener("mouseenter", () => focusIdx(board, b,
       items.filter(({ f }) => idOf(f.from, b.id) === el.id || idOf(f.to, b.id) === el.id)
            .map(({ i }) => i)));
     el.addEventListener("mouseleave", () => clearFocus(board));
@@ -1939,43 +3389,74 @@ BOARDS.forEach(b => {
 });
 
 /* ============================================================
-   4. PLANCHE 3 — FLUX, STATISTIQUES, POINTS D'ATTENTION
+   7. ANNEXE 1 — MATRICE DES FLUX
+   ------------------------------------------------------------
+   Deux natures de flux, deux tableaux : les échanges d'outil à outil relevés en
+   entretien, et les échanges de mission à mission décrits par le brief — ces
+   derniers étant ceux que trace la planche inter-services.
    ============================================================ */
-const label = ref => {
-  const [scope, name] = ref.split(":");
-  return { name, scope, svc: scope === "s" ? null : SVC[scope] };
-};
-document.getElementById("fluxBody").innerHTML = BDD.flows.map(f => {
-  const a = label(f.from), b = label(f.to);
-  const cell = x => x.svc
-    ? `<span class="tag-svc" style="--accent:var(--${x.svc.id})"><i></i>${x.svc.name}</span><br>${x.name}`
-    : `<span class="tag-svc" style="--accent:var(--core)"><i></i>Socle commun</span><br>${x.name}`;
-  const auto = f.alim === "auto" || f.alim === "mixte";
-  const mode = f.map === false ? "Indirect" : (auto ? "Automatique" : "Manuel");
-  return `<tr><td class="src">${cell(a)}</td>` +
-         `<td><span class="arrow">${f.map === false ? "⇢" : "→"}</span></td>` +
-         `<td class="dst">${cell(b)}</td>` +
-         `<td><span class="flux-mode ${auto && f.map !== false ? "auto" : ""}">${mode}</span></td>` +
-         `<td>${f.obj}</td></tr>`;
-}).join("");
-
 const ALL = Object.entries(BDD.tools);
 const count = fn => ALL.filter(([, d]) => fn(d)).length;
 const nSocle = count(d => d.socle);
 const nInt = count(d => d.ie === "interne"), nExt = count(d => d.ie === "externe");
 const nAuto = count(d => isAuto(d)), nMan = count(d => d.alim === "manuel");
+const nBrief = count(d => d.brief);
+
+/* « daf:Basware » → pastille de pôle + nom, sur une seule ligne : deux fragments
+   empilés déborderaient à l'export (métriques Calibri ≠ DejaVu Sans). */
+function endpoint(ref){
+  const i = ref.indexOf(":"), scope = ref.slice(0, i), name = ref.slice(i + 1);
+  const s = scope === "s" ? null : SVC[scope];
+  const color = s ? `var(--${s.id})` : "var(--core)";
+  return `<span class="tag-svc" style="--accent:${color}"><i></i>${esc(name)}</span>`;
+}
+
+const fluxRows = (list, xf) => list.map(f => {
+  const auto = f.alim === "auto" || f.alim === "mixte";
+  const mode = f.map === false ? "Indirect" : (auto ? "Automatique" : "Manuel");
+  return `<tr><td>${endpoint(f.from)}</td>` +
+         `<td><span class="arrow">${f.map === false ? "⇢" : "→"}</span></td>` +
+         `<td>${endpoint(f.to)}</td>` +
+         (xf ? "" : `<td><span class="flux-mode ${auto && f.map !== false ? "auto" : ""}">${mode}</span></td>`) +
+         `<td class="obj">${esc(f.obj)}</td></tr>`;
+}).join("");
+
+addSlide("slide-flux",
+  masthead("Annexe 1", "Matrice des flux de données",
+           "Échanges relevés entre outils, et échanges entre missions décrits par le brief") +
+  `<div class="wrap">
+     <div class="mcol">
+       <p class="secttitle">Flux applicatifs — d'outil à outil <em> · ${BDD.flows.length} relevés en entretien</em></p>
+       <table>
+         <colgroup><col style="width:24%"><col style="width:4%"><col style="width:24%"><col style="width:13%"><col style="width:35%"></colgroup>
+         <thead><tr><th>Source</th><th></th><th>Destinataire</th><th>Alimentation</th><th>Objet du flux</th></tr></thead>
+         <tbody>${fluxRows(BDD.flows, false)}</tbody>
+       </table>
+       <p class="secttitle">Échanges inter-services — de mission à mission <em> · ${BDD.xflows.length} issus du brief · ⇢ enchaînement interne à un pôle</em></p>
+       <table>
+         <colgroup><col style="width:26%"><col style="width:4%"><col style="width:26%"><col style="width:44%"></colgroup>
+         <thead><tr><th>Mission émettrice</th><th></th><th>Mission destinataire</th><th>Objet de l'échange</th></tr></thead>
+         <tbody>${fluxRows(BDD.xflows, true)}</tbody>
+       </table>
+     </div>
+     <aside class="aside">
+       <div class="stat-row" id="statRow"></div>
+       <div class="panel"><h3>Répartition du parc</h3><div class="bars" id="bars"></div></div>
+       <div class="panel dark"><h3>Points d'attention</h3><ul id="warnings"></ul></div>
+     </aside>
+   </div>`);
 
 document.getElementById("statRow").innerHTML = [
   [BDD.services.length, "Pôles"], [ALL.length, "Outils recensés"],
-  [nSocle, "Socle commun"], [BDD.flows.length, "Flux identifiés"]
+  [BDD.flows.length + BDD.xflows.length, "Flux cartographiés"], [nBrief, "Outils hors BDD"]
 ].map(([v, l]) => `<div class="stat"><b>${v}</b><small>${l}</small></div>`).join("");
 
 const N = ALL.length;
 document.getElementById("bars").innerHTML = [
   { t:"Nature",       seg:[["Externes", nExt, "var(--muted)"], ["Internes", nInt, "var(--dir)"],
-                                   ["Non renseigné", N - nExt - nInt, "var(--line)"]] },
+                           ["Non renseigné", N - nExt - nInt, "var(--line)"]] },
   { t:"Alimentation", seg:[["Manuel", nMan, "var(--muted)"], ["Automatique", nAuto, "var(--core)"],
-                                   ["Non renseigné", N - nMan - nAuto, "var(--line)"]] },
+                           ["Non renseigné", N - nMan - nAuto, "var(--line)"]] },
   { t:"Position",     seg:[["Applications métier", N - nSocle, "var(--muted)"], ["Socle commun", nSocle, "var(--met)"]] }
 ].map(r => {
   const seg = r.seg.filter(x => x[1] > 0);
@@ -1986,39 +3467,49 @@ document.getElementById("bars").innerHTML = [
 }).join("");
 
 const shared = ALL.filter(([, d]) => d.nb >= 3).sort((a, b) => b[1].nb - a[1].nb);
+const nProc = BDD.services.filter(s => s.mode === "process").length;
 document.getElementById("warnings").innerHTML = [
-  `<b>${nMan} outils sur ${ALL.length}</b> sont alimentés manuellement : la ressaisie est le principal point de fragilité du dispositif.`,
-  `<b>${shared.length ? shared[0][0] : "Excel"}</b> est présent dans ${shared.length ? shared[0][1].nb : 0} services et concentre les échanges sans interface formalisée.`,
-  `Seuls <b>${nAuto} outils</b> disposent d'une alimentation automatique, dont Power BI qui dépend d'exports manuels en amont.`,
-  `<b>${count(d => d.todo)} outils</b> restent à qualifier : aucun entretien ne documente leur nature ni leur alimentation.`
+  `<b>${nMan} outils sur ${N}</b> sont alimentés manuellement : la ressaisie reste le principal point de fragilité du dispositif.`,
+  `<b>${shared.length ? shared[0][0] : "Excel"}</b> est présent dans ${shared.length ? shared[0][1].nb : 0} pôles et concentre les échanges sans interface formalisée.`,
+  `<b>${nProc} pôles sur ${BDD.services.length}</b> ont un processus recueilli ; les autres n'ont qu'un inventaire d'outils, sans ordre attesté.`,
+  `<b>${nBrief} outils</b> viennent du brief métier et non de la base d'entretiens : leur nature et leur alimentation restent à confirmer.`
 ].map((t, i) => `<li><span class="idx">${"ABCD"[i]}</span><span>${t}</span></li>`).join("");
 
 /* ============================================================
-   5. PLANCHE 4 — RÉFÉRENTIEL
+   8. ANNEXE 2 — RÉFÉRENTIEL DES OUTILS
    ============================================================ */
-document.getElementById("refLegend").innerHTML =
-  `<span class="item"><span class="badge int">INT</span>Outil interne</span>` +
-  `<span class="item"><span class="badge auto">AUTO</span>Alimentation automatique</span>` +
-  `<span class="item"><span class="badge todo">?</span>À qualifier</span>`;
-
-const refRows = ALL.sort((a, b) => a[0].localeCompare(b[0], "fr"));
+const refRows = ALL.slice().sort((a, b) => a[0].localeCompare(b[0], "fr"));
 const half = Math.ceil(refRows.length / 2);
-document.getElementById("refWrap").innerHTML = [refRows.slice(0, half), refRows.slice(half)].map(part =>
-  `<div class="mcol"><table>
-     <colgroup><col style="width:46%"><col style="width:18%"><col style="width:18%"><col style="width:18%"></colgroup>
-     <thead><tr><th>Outil</th><th>Services</th><th>Nature</th><th>Alimentation</th></tr></thead>
-     <tbody>` + part.map(([n, d]) =>
-       `<tr><td><span class="nm">${n}</span>${d.ed ? `<span class="ed">${d.ed}</span>` : ""}</td>` +
-       `<td><span class="svcdots">${d.svc.map(s => `<i style="background:var(--${s})" title="${SVC[s] ? SVC[s].name : s}"></i>`).join("")}</span></td>` +
-       `<td><span class="badge ${d.ie === "interne" ? "int" : (d.ie === "?" ? "todo" : "")}">` +
-       `${d.ie === "interne" ? "Interne" : (d.ie === "?" ? "?" : "Externe")}</span></td>` +
-       `<td><span class="badge ${isAuto(d) ? "auto" : (d.alim === "?" ? "todo" : "")}">` +
-       `${isAuto(d) ? (d.alim === "mixte" ? "Mixte" : "Auto") : (d.alim === "?" ? "?" : "Manuel")}</span></td></tr>`
-     ).join("") + `</tbody></table></div>`).join("");
+addSlide("slide-ref",
+  masthead("Annexe 2", "Référentiel des outils",
+           "Tous les outils recensés, avec éditeur, pôles servis, nature et alimentation",
+           `<div class="legend"><div class="swatchrow">
+              <span class="item"><span class="badge int">INT</span>Outil interne</span>
+              <span class="item"><span class="badge auto">AUTO</span>Alimentation automatique</span>
+              <span class="item"><span class="nm brief">Nom</span>Hors base d'entretiens</span>
+            </div></div>`) +
+  `<div class="wrap"><div class="ref">` +
+  [refRows.slice(0, half), refRows.slice(half)].map(part =>
+    `<div class="mcol"><table>
+       <colgroup><col style="width:46%"><col style="width:18%"><col style="width:18%"><col style="width:18%"></colgroup>
+       <thead><tr><th>Outil</th><th>Pôles</th><th>Nature</th><th>Alimentation</th></tr></thead>
+       <tbody>` + part.map(([n, d]) =>
+         `<tr><td><span class="nm${d.brief ? " brief" : ""}">${esc(n)}</span>${d.ed ? `<span class="ed">${esc(d.ed)}</span>` : ""}</td>` +
+         `<td><span class="svcdots">${d.svc.map(s => `<i style="background:var(--${s})" title="${SVC[s] ? esc(SVC[s].name) : s}"></i>`).join("")}</span></td>` +
+         `<td><span class="badge ${d.brief ? "todo" : (d.ie === "interne" ? "int" : (d.ie === "?" ? "todo" : ""))}">` +
+         `${d.ie === "interne" ? "Interne" : (d.ie === "?" ? "?" : "Externe")}</span></td>` +
+         `<td><span class="badge ${isAuto(d) ? "auto" : (d.alim === "?" ? "todo" : "")}">` +
+         `${isAuto(d) ? (d.alim === "mixte" ? "Mixte" : "Auto") : (d.alim === "?" ? "?" : "Manuel")}</span></td></tr>`
+       ).join("") + `</tbody></table></div>`).join("") +
+  `</div></div>`);
 
 /* ============================================================
-   6. MISE À L'ÉCHELLE + THÈME
+   9. NUMÉROTATION, MISE À L'ÉCHELLE, THÈME
    ============================================================ */
+document.querySelectorAll(".slide [data-page]").forEach((el, i, all) => {
+  el.textContent = `Planche ${i + 1} / ${all.length}`;
+});
+
 function fit(){
   document.querySelectorAll(".stage").forEach(stage => {
     const slide = stage.querySelector(".slide");

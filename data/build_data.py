@@ -10,6 +10,15 @@ Trois axes sont repris de la BDD :
   · Interne/Ext : colonne « Interne / Externe »
   · Alimentation: colonne « Alimentation (Manuel/Auto) »
 Les flux sont reconstruits depuis « Alimente quel outil » et « Alimenté par qui ».
+
+Deux modèles de mission coexistent, et c'est voulu :
+  · MISSIONS — l'inventaire : un libellé, les outils qui le servent. Utilisé par les
+    pôles dont le processus n'a pas été recueilli (Direction, Méthodes & BIM,
+    Qualité & Environnement).
+  · PROCESS  — la chaîne : entrée de la donnée, étapes ordonnées, finalité, et les
+    points où la mission alimente un autre pôle. Saisi depuis le brief métier — la
+    BDD ne porte pas l'ordre des étapes. Un pôle présent dans PROCESS ignore
+    MISSIONS et ne retient que les outils cités dans ses chaînes.
 """
 
 import argparse
@@ -22,6 +31,7 @@ import sys
 import openpyxl
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
+
 SHEET = "📋 Collecte Entretiens"
 MARK_A = "/* ==== DONNÉES BDD — début (généré par data/build_data.py) ==== */"
 MARK_B = "/* ==== DONNÉES BDD — fin ==== */"
@@ -44,97 +54,341 @@ ALIAS = {
     "docusign": "DocuSign", "notebooklm": "NotebookLM", "puma": "Puma", "covadis": "Covadis",
 }
 
+# Le contrat management était rattaché à la DAF ; il devient un pôle à part entière,
+# la chaîne de facturation partenaire circulant désormais explicitement entre les deux.
 SERVICE = {
     "Direction": "dir", "Méthode/BIM": "met",
     "Qualité": "qse", "Environnement": "qse",
-    "Contrat Manager": "daf", "Comptabilité/gestion": "daf", "Assistant RH": "daf",
+    "Contrat Manager": "ctr", "Comptabilité/gestion": "daf", "Assistant RH": "daf",
     "Reponsable Travaux": "trv", "Ingé travaux": "trv",
     "TOPO": "top", "TUNNEL": "tun",
 }
 
 SERVICES = [
-    {"id": "met", "name": "Méthodes & BIM",          "kicker": "Ingénierie · BIM",                 "col": "left"},
-    {"id": "top", "name": "Topographie",             "kicker": "Relevés · Implantation",           "col": "left"},
-    {"id": "tun", "name": "Tunnel",                  "kicker": "Ouvrage souterrain",               "col": "left"},
-    {"id": "trv", "name": "Travaux",                 "kicker": "Exécution chantier",               "col": "left"},
-    {"id": "qse", "name": "Qualité & Environnement", "kicker": "Contrôle · Réserves · Nuisances",  "col": "right"},
-    {"id": "dir", "name": "Direction",               "kicker": "Pilotage · Sous-traitance",        "col": "right"},
-    {"id": "daf", "name": "DAF",                     "kicker": "Contrats · Compta · Achats · RH",  "col": "right"},
+    {"id": "met", "name": "Méthodes & BIM",          "kicker": "Maquettes et plans"},
+    {"id": "top", "name": "Topographie",             "kicker": "Relevés · Implantation"},
+    {"id": "tun", "name": "Travaux tunnel",          "kicker": "Creusement et tunnelier"},
+    {"id": "trv", "name": "Travaux",                 "kicker": "Conduite de travaux"},
+    {"id": "ctr", "name": "Contrat",                 "kicker": "Contract management"},
+    {"id": "dir", "name": "Direction",               "kicker": "Pilotage du chantier"},
+    {"id": "daf", "name": "DAF",                     "kicker": "RH · Comptabilité · Gestion"},
+    {"id": "qse", "name": "Qualité & Environnement", "kicker": "Contrôle et conformité"},
+    {"id": "sec", "name": "Sécurité",                "kicker": "Prévention · Habilitations"},
 ]
 
-# Missions par pôle : (libellé, valeurs FLUX absorbées, outils rattachés à la main, proposée)
-#
-# La colonne FLUX de la BDD n'est pas exploitable telle quelle : libellés fragmentés
-# (« GESTION CHANTIER » / « GESTION DES CHANTIER »), et vide pour Topographie, Tunnel et
-# les outils Environnement. Les libellés retenus sont ceux de la note de cadrage ; ceux
-# marqués « proposée » ne s'appuient sur aucune ligne d'entretien et restent à valider.
+# Répartition sur la planche 1 : cinq pôles techniques en haut, quatre pôles
+# support en bas, socle en bandeau au centre.
+BOARD_TOP = ["met", "top", "tun", "trv", "ctr"]
+BOARD_BOTTOM = ["dir", "daf", "qse", "sec"]
+
+# Grille de la planche « Flux inter-services ». L'ordre n'est pas cosmétique :
+# un fil ne sait tracer qu'une courbe de Bézier, sans contournement. Il ne reste
+# lisible qu'entre deux cartes voisines — même rangée mitoyenne, ou rangées
+# consécutives. build_model() refuse silencieusement le reste : il le signale.
+XBOARD_ROWS = [
+    ["met", "top", "tun"],
+    ["dir", "ctr", "daf"],
+    ["qse", "trv", "sec"],
+]
+
+# --------------------------------------------------------------------------- #
+#  Modèle « inventaire » — pôles dont le processus n'a pas été recueilli       #
+# --------------------------------------------------------------------------- #
+# (libellé, valeurs FLUX absorbées, outils rattachés à la main, proposée ?)
 MISSIONS = {
     "met": [
-        ("Production de maquettes",              ["PRODUCTION DE MAQUETTES"], []),
-        ("Gestion des maquettes",                ["GESTION DE MAQUETTES"], []),
-    ],
-    "top": [
-        ("Relevés et nuages de points",          [], ["La Scene", "Cyclone 3DR", "Trimble Connect"], True),
-        ("Plans et calculs",                     [], ["AutoCAD", "Covadis"], True),
-        ("Suivi des levers",                     [], ["Pixis", "Excel"], True),
-    ],
-    "tun": [
-        ("Planification et avancement",          [], ["MS Project", "YELLOW", "Power BI"], True),
-        ("Plans et maquettes",                   [], ["AutoCAD", "Trimble Connect"], True),
-        ("Réserves et contrôles",                [], ["IDCapture", "Quick Connect", "Excel"], True),
-        ("Gestion du stock",                     [], ["GMAO"], True),
-    ],
-    "trv": [
-        ("Jalons de chantier",                   ["AVANCEMENTS JALON CHANTIER"], []),
-        ("Engins et matériels",                  ["COMMANDE CHANTIER"], []),
-        ("Réserves et MaD",                      ["MAD"], []),
-        ("Conduite de chantier",                 ["GESTION CHANTIER", "GESTION DES CHANTIER",
-                                                  "GESTION IMPRÉVU CHANTIER"], []),
-        ("Validation et contrats",               ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
-    ],
-    "qse": [
-        ("Contrôle qualité",                     ["CONTRÔLE QUALITÉ",
-                                                  "CONTRÔLE QUALITÉ (VISUALISATION)"], ["CEMEX"]),
-        ("MaD et levées de réserve",             ["MAD"], ["Trimble Connect"]),
-        ("Suivi environnemental",                ["CONTRÔLE ENVIRONNEMENT",
-                                                  "CONTRÔLE QUALITÉ /ENVIRONNEMENT"], ["PowerPoint"]),
-        ("Suivi des consommations",              [], ["Live Objects (Orange)", "Sixense Monitoring",
-                                                      "Lucee TP", "Lafarge+"], True),
-        ("Gestion des déchets",                  [], ["Wastemarket Place"], True),
-        ("Commande de matériel",                 ["COMMANDE DE MATÉRIEL"], []),
+        ("Production de maquettes",          ["PRODUCTION DE MAQUETTES"], []),
+        ("Gestion des maquettes",            ["GESTION DE MAQUETTES"], []),
     ],
     "dir": [
-        ("Récolte des KPI",                      ["AVANCEMENTS JALON CHANTIER"], []),
-        ("Validation contrats et dépenses",      ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
-        ("Gestion des ST",                       ["GESTION DES ST", "GESTION TRAVAUX"], []),
-        ("Matériels",                            ["GESTION DES MATÉRIELS"], []),
-        ("Services généraux",                    [], ["CWT", "Tableau", "Word"], True),
+        ("Récolte des KPI",                  ["AVANCEMENTS JALON CHANTIER"], []),
+        ("Validation contrats et dépenses",  ["CIRCUIT DE VALIDATION", "GESTION DES CONTRATS"], []),
+        ("Gestion des ST",                   ["GESTION DES ST", "GESTION TRAVAUX"], []),
+        ("Matériels",                        ["GESTION DES MATÉRIELS"], []),
+        ("Services généraux",                [], ["CWT", "Tableau", "Word"], True),
     ],
-    "daf": [
-        ("Engagement des dépenses",               ["ENGAGEMENT DES DÉPENSES"], []),
-        ("Facturation",                           ["GESTION DE FACTURATION", "FACTURATION PARTENAIRE"], []),
-        ("Encaissements",                         ["GESTION DES ENCAISSEMENTS"], []),
-        ("Commandes et achats",                   [], ["Achat +", "Pablo"], True),
-        ("Gestion contractuelle",                 ["GESTION DE CONTRATS", "AVANCEMENTS JALON CHANTIER"], []),
-        ("Personnel et formations",                ["GESTION DU PERSONNEL", "ON BOARDING RH",
-                                                    "GESTION DES FORMATIONS"], ["Neoaccès"]),
+    "qse": [
+        ("Contrôle qualité",                 ["CONTRÔLE QUALITÉ",
+                                              "CONTRÔLE QUALITÉ (VISUALISATION)"], ["CEMEX"]),
+        ("MaD et levées de réserve",         ["MAD"], ["Trimble Connect"]),
+        ("Suivi environnemental",            ["CONTRÔLE ENVIRONNEMENT",
+                                              "CONTRÔLE QUALITÉ /ENVIRONNEMENT"], ["PowerPoint"]),
+        ("Suivi des consommations",          [], ["Live Objects (Orange)", "Sixense Monitoring",
+                                                  "Lucee TP", "Lafarge+"], True),
+        ("Gestion des déchets",              [], ["Wastemarket Place"], True),
+        ("Commande de matériel",             ["COMMANDE DE MATÉRIEL"], []),
     ],
 }
 
+# --------------------------------------------------------------------------- #
+#  Modèle « chaîne » — entrée de la donnée, étapes ordonnées, finalité         #
+# --------------------------------------------------------------------------- #
+# Chaque mission : {label, note?, todo?, in[], steps[], out, links[]}
+#   in    : sources de la donnée      — {lab, tool?}
+#   steps : étapes ordonnées          — {act, tool?}
+#   out   : finalité                  — {lab, tool?}
+#   links : points d'interconnexion   — {at, to, mission, obj?}
+#           at = "in" (la mission est alimentée par le pôle cible)
+#              | "out" (la mission alimente le pôle cible)
+#              | index d'étape (l'échange se fait à cette étape)
+# Ces liens produisent à la fois le badge posé sur l'affiche et les fils tracés
+# sur la planche « Flux inter-services » : une seule saisie, deux rendus.
+PROCESS = {
+    "daf": [
+        {"label": "Contrôle budgétaire",
+         "note": "conjoint avec les Travaux",
+         "in": [{"lab": "VALO main-d'œuvre"},
+                {"lab": "Extraction matériel", "tool": "BYMAT"},
+                {"lab": "Dépenses diverses", "tool": "Basware"}],
+         "steps": [{"act": "Constitution de la PC100", "tool": "Excel"},
+                   {"act": "Ventilation par centre d'imputation", "tool": "Excel"},
+                   {"act": "Ventilation par atelier", "tool": "Excel"},
+                   {"act": "Contrôle des écarts au budget", "tool": "Excel"}],
+         "out": {"lab": "Budget par atelier arbitré"},
+         "links": [{"at": "in", "to": "trv", "mission": "Commande matériel chantier",
+                    "obj": "Extraction BYMAT — matériel mobilisé"},
+                   {"at": "out", "to": "trv", "mission": "Contrôle budgétaire",
+                    "obj": "PC100 — dépenses ventilées par atelier"}]},
+
+        {"label": "Préfacturation partenaire",
+         "in": [{"lab": "Factures partenaires", "tool": "Basware"},
+                {"lab": "Pointage main-d'œuvre", "tool": "Puma"},
+                {"lab": "Heures intérim", "tool": "BIP / BAPS"}],
+         "steps": [{"act": "Extraction du pointage", "tool": "Excel"},
+                   {"act": "Préfacturation mensuelle", "tool": "Excel"},
+                   {"act": "Circuit de validation", "tool": "E-Paraph"}],
+         "out": {"lab": "Valorisation de la main-d'œuvre (VALO MO)"},
+         "links": [{"at": "out", "to": "ctr", "mission": "Facturation partenaire",
+                    "obj": "Valorisation MO à refacturer"},
+                   {"at": "out", "to": "daf", "mission": "Contrôle budgétaire",
+                    "obj": "VALO MO — coût de la main-d'œuvre"}]},
+
+        {"label": "Engagement des dépenses et facturation",
+         "in": [{"lab": "Besoin chantier"}],
+         "steps": [{"act": "Bon de commande", "tool": "Pablo"},
+                   {"act": "Engagement de la dépense", "tool": "Harmony"},
+                   {"act": "Facture fournisseur", "tool": "Basware"},
+                   {"act": "Validation interne", "tool": "E-Paraph"},
+                   {"act": "Signature", "tool": "DocuSign"},
+                   {"act": "Mise en paiement", "tool": "TIPS"}],
+         "out": {"lab": "Dépense engagée et réglée"},
+         "links": [{"at": "out", "to": "daf", "mission": "Contrôle budgétaire",
+                    "obj": "Dépenses diverses — factures et commandes"}]},
+
+        {"label": "Onboarding RH et formations",
+         "in": [{"lab": "Nouvel arrivant"}],
+         "steps": [{"act": "Vérification travail illégal", "tool": "E-Checking"},
+                   {"act": "Badge et accès site", "tool": "Neoaccès"},
+                   {"act": "Plan de formation", "tool": "By My Site"},
+                   {"act": "Commande de formation", "tool": "Pablo"}],
+         "out": {"lab": "Collaborateur habilité et sur site"},
+         "links": [{"at": "out", "to": "sec", "mission": "Accueil, formation et habilitations",
+                    "obj": "Nouvel arrivant à accueillir sur site"}]},
+
+        {"label": "Gestion du personnel et paye",
+         "note": "BYCN et intérim",
+         "in": [{"lab": "Pointage chantier", "tool": "Puma"}],
+         "steps": [{"act": "Heures intérim", "tool": "BIP / BAPS"},
+                   {"act": "Compagnons Bouygues", "tool": "BYCN"},
+                   {"act": "Congés et attestations", "tool": "H&R For You"},
+                   {"act": "Contrôle des heures", "tool": "Excel"}],
+         "out": {"lab": "Paye émise, heures valorisées"},
+         "links": [{"at": "in", "to": "trv", "mission": "Commande de main-d'œuvre",
+                    "obj": "Besoin en personnel intérimaire"},
+                   {"at": "out", "to": "daf", "mission": "Préfacturation partenaire",
+                    "obj": "Heures pointées à valoriser"}]},
+    ],
+
+    "ctr": [
+        {"label": "Gestion des contrats",
+         "in": [{"lab": "Marché et avenants"}],
+         "steps": [{"act": "Dépôt documentaire", "tool": "SharePoint"},
+                   {"act": "Mémoires et réclamations", "tool": "NotebookLM"},
+                   {"act": "Rédaction", "tool": "Word"},
+                   {"act": "Suivi contractuel", "tool": "Excel"}],
+         "out": {"lab": "Dossier contractuel à jour"}},
+
+        {"label": "Avancement et jalons chantier",
+         "in": [{"lab": "Avancement chantier"}],
+         "steps": [{"act": "Consolidation", "tool": "Excel"},
+                   {"act": "Note de situation", "tool": "Word"},
+                   {"act": "Tableau de bord", "tool": "Power BI"}],
+         "out": {"lab": "Situation mensuelle établie"},
+         "links": [{"at": "in", "to": "trv", "mission": "Avancement et jalons chantier",
+                    "obj": "Avancement et jalons relevés au chantier"},
+                   {"at": "out", "to": "ctr", "mission": "Gestion des encaissements",
+                    "obj": "Situation mensuelle à encaisser"}]},
+
+        {"label": "Gestion des encaissements",
+         "in": [{"lab": "Suivi des avancements et jalons", "tool": "Excel"}],
+         "steps": [{"act": "Situation envoyée au maître d'œuvre", "tool": "Outlook"},
+                   {"act": "Circuit de validation", "tool": "E-Project"},
+                   {"act": "Validation et paiement du maître d'ouvrage"},
+                   {"act": "Facture maître d'ouvrage", "tool": "Chorus"},
+                   {"act": "Envoi par mail", "tool": "Outlook"}],
+         "out": {"lab": "Dispatch entre partenaires", "tool": "Appli bancaire"}},
+
+        {"label": "Facturation partenaire",
+         "in": [{"lab": "Valorisation de la main-d'œuvre"}],
+         "steps": [{"act": "Facture partenaire", "tool": "Basware"},
+                   {"act": "Activation de la facturation", "tool": "E-Project"}],
+         "out": {"lab": "Partenaire facturé"},
+         "links": [{"at": "in", "to": "daf", "mission": "Préfacturation partenaire",
+                    "obj": "Valorisation MO à refacturer"}]},
+    ],
+
+    "trv": [
+        {"label": "Gestion de chantier et imprévus",
+         "in": [{"lab": "Relevé terrain", "tool": "Quick Connect"}],
+         "steps": [{"act": "Constats et réserves", "tool": "IDCapture"},
+                   {"act": "Plans et maquettes", "tool": "Trimble Connect"},
+                   {"act": "Diffusion documentaire", "tool": "Mezzoteam"},
+                   {"act": "Suivi d'exécution", "tool": "Excel"}],
+         "out": {"lab": "Chantier piloté, imprévus tracés"}},
+
+        {"label": "Avancement et jalons chantier",
+         "in": [{"lab": "Avancement terrain"}],
+         "steps": [{"act": "Planification", "tool": "MS Project"},
+                   {"act": "Adhérence au planning", "tool": "MMS"},
+                   {"act": "Tableau de bord", "tool": "Power BI"}],
+         "out": {"lab": "Jalons tenus"},
+         "links": [{"at": "out", "to": "ctr", "mission": "Avancement et jalons chantier",
+                    "obj": "Avancement et jalons relevés au chantier"},
+                   {"at": "out", "to": "dir", "mission": "Récolte des KPI",
+                    "obj": "Avancement consolidé pour le pilotage"}]},
+
+        {"label": "Commande matériel chantier",
+         "in": [{"lab": "Besoin matériel"}],
+         "steps": [{"act": "Demande de matériel", "tool": "Traktor"},
+                   {"act": "Coffrage, grue, engins", "tool": "ERP MAT"},
+                   {"act": "Bon de commande", "tool": "Pablo"}],
+         "out": {"lab": "Matériel mobilisé sur site"},
+         "links": [{"at": "out", "to": "daf", "mission": "Contrôle budgétaire",
+                    "obj": "Extraction BYMAT — matériel mobilisé"}]},
+
+        {"label": "Commande de main-d'œuvre",
+         "in": [{"lab": "Besoin en main-d'œuvre"}],
+         "steps": [{"act": "Demande par mail", "tool": "Outlook"},
+                   {"act": "Contact de la boîte d'intérim"}],
+         "out": {"lab": "Personnel affecté au chantier"},
+         "links": [{"at": "out", "to": "daf", "mission": "Gestion du personnel et paye",
+                    "obj": "Besoin en personnel intérimaire"}]},
+
+        {"label": "Contrôle budgétaire",
+         "note": "conjoint avec la DAF",
+         "in": [{"lab": "Dépenses chantier (PC100)"}],
+         "steps": [{"act": "Ventilation par atelier", "tool": "Excel"},
+                   {"act": "Analyse des écarts", "tool": "Excel"}],
+         "out": {"lab": "Arbitrage budgétaire chantier"},
+         "links": [{"at": "in", "to": "daf", "mission": "Contrôle budgétaire",
+                    "obj": "PC100 — dépenses ventilées par atelier"}]},
+
+        {"label": "Gestion des contrats et avenants",
+         "in": [{"lab": "Avenant"}],
+         "steps": [{"act": "Rédaction", "tool": "Word"},
+                   {"act": "Validation interne", "tool": "E-Paraph"}],
+         "out": {"lab": "Avenant signé"}},
+    ],
+
+    "tun": [
+        {"label": "Gestion de chantier", "todo": True,
+         "in": [{"lab": "Relevé terrain tunnel", "tool": "Quick Connect"}],
+         "steps": [{"act": "Réserves et contrôles", "tool": "IDCapture"},
+                   {"act": "Plans d'exécution", "tool": "AutoCAD"},
+                   {"act": "Maquettes", "tool": "Trimble Connect"},
+                   {"act": "Suivi d'exécution", "tool": "Excel"}],
+         "out": {"lab": "Creusement piloté"}},
+
+        {"label": "Avancement et jalons chantier", "todo": True,
+         "in": [{"lab": "Avancement tunnelier", "tool": "YELLOW"}],
+         "steps": [{"act": "Planification", "tool": "MS Project"},
+                   {"act": "Tableau de bord", "tool": "Power BI"}],
+         "out": {"lab": "Jalons tunnel tenus"},
+         "links": [{"at": "out", "to": "dir", "mission": "Récolte des KPI",
+                    "obj": "Avancement du creusement"},
+                   {"at": "out", "to": "ctr", "mission": "Avancement et jalons chantier",
+                    "obj": "Jalons tunnel pour la situation"}]},
+
+        {"label": "Commande chantier", "todo": True,
+         "in": [{"lab": "Besoin — stock tunnel", "tool": "GMAO"}],
+         "steps": [{"act": "Bon de commande", "tool": "Pablo"},
+                   {"act": "Matériel et coffrage", "tool": "ERP MAT"}],
+         "out": {"lab": "Consommables et matériel livrés"},
+         "links": [{"at": "out", "to": "daf", "mission": "Contrôle budgétaire",
+                    "obj": "Dépenses matériel tunnel"}]},
+    ],
+
+    "top": [
+        {"label": "Acquisition et traitement des nuages de points",
+         "in": [{"lab": "Acquisition des plans", "tool": "SharePoint"}],
+         "steps": [{"act": "Exploitation des plans", "tool": "Trimble Connect"},
+                   {"act": "Assemblage des scans chantier", "tool": "La Scene"},
+                   {"act": "Création des nuages de points", "tool": "Covadis"}],
+         "out": {"lab": "Nuage de points exploitable"}},
+
+        {"label": "Reporting et diffusion des plans",
+         "in": [{"lab": "Ouverture des plans", "tool": "Trimble Connect"}],
+         "steps": [{"act": "Assemblage et vérification de conformité", "tool": "Cyclone 3DR"},
+                   {"act": "Rapport de contrôle", "tool": "Excel"}],
+         "out": {"lab": "Rapport de conformité diffusé"},
+         "links": [{"at": "out", "to": "met", "mission": "Gestion des maquettes",
+                    "obj": "Plans contrôlés et nuages de points"},
+                   {"at": "out", "to": "tun", "mission": "Gestion de chantier",
+                    "obj": "Plans d'implantation du tunnel"}]},
+
+        {"label": "Guidage du tunnelier",
+         "in": [{"lab": "Position du tunnelier"}],
+         "steps": [{"act": "Guidage temps réel", "tool": "Pixis"}],
+         "out": {"lab": "Tracé guidé en temps réel"},
+         "links": [{"at": "out", "to": "tun", "mission": "Avancement et jalons chantier",
+                    "obj": "Position et tracé du tunnelier"}]},
+    ],
+
+    "sec": [
+        {"label": "Accueil, formation et habilitations",
+         "in": [{"lab": "Nouvel arrivant"}],
+         "steps": [{"act": "Accueil de site et formation au poste", "tool": "Quick Connect"},
+                   {"act": "Habilitations élec. et autorisation de conduite", "tool": "Quick Connect"},
+                   {"act": "Suivi des formations", "tool": "By My Site"},
+                   {"act": "Dossier collaborateur", "tool": "HRMYOU / Global HR"}],
+         "out": {"lab": "Collaborateur habilité au poste"},
+         "links": [{"at": "in", "to": "daf", "mission": "Onboarding RH et formations",
+                    "obj": "Nouvel arrivant à accueillir sur site"}]},
+
+        {"label": "Prévention et suivi terrain",
+         "in": [{"lab": "Terrain · ¼ heure sécurité"}],
+         "steps": [{"act": "Visite sécurité et ¼ h sécurité", "tool": "Quick Connect"},
+                   {"act": "Suivi IDV, addictions, organismes", "tool": "Quick Connect Sécurité"},
+                   {"act": "Comptage tunnel", "tool": "Lotus"},
+                   {"act": "Diffusion documentaire", "tool": "Mezzoteam"},
+                   {"act": "Commande EPI et prestations", "tool": "Pablo"}],
+         "out": {"lab": "Risques maîtrisés sur site"}},
+
+        {"label": "Événements et indicateurs sécurité",
+         "in": [{"lab": "Événement ATB, AT, PAT, HIPO"}],
+         "steps": [{"act": "Reporting événement", "tool": "Cority"},
+                   {"act": "Volume d'heures exposées", "tool": "Heures Travaillées"},
+                   {"act": "Indicateurs sécurité", "tool": "Power BI"}],
+         "out": {"lab": "Taux de fréquence et de gravité publiés"},
+         "links": [{"at": "out", "to": "dir", "mission": "Récolte des KPI",
+                    "obj": "Indicateurs sécurité du chantier"}]},
+    ],
+}
+
+# --------------------------------------------------------------------------- #
+#  Socle commun et outils hors BDD                                            #
+# --------------------------------------------------------------------------- #
 # Socle commun : outils tagués « Socle de données » dans la BDD, complétés par les
 # plateformes transverses que la cartographie source plaçait déjà en logiciel commun.
-# Colonne de gauche = outils échangeant avec les services de gauche, et
-# inversement : l'ordre des listes commande le placement dans la grille 2 colonnes,
-# ce qui évite aux connecteurs de traverser le socle.
-# Les groupes qui alimentent le socle de données (Terrain, Bureautique) sont placés
-# juste au-dessus de celui-ci : les connecteurs internes restent courts.
+# Outlook rejoint la bureautique : le brief le fait porter la commande de main-d'œuvre
+# (Travaux) et l'envoi des situations (Contrat) — c'est un outil transverse.
 SOCLE = [
     ("GED & collaboration",      ["Trimble Connect", "Mezzoteam"]),
     ("Validation & signature",   ["E-Paraph", "DocuSign"]),
     ("Achats, finance & tiers",  ["Pablo", "Harmony", "BATIS", "TIPS", "E-Checking"]),
     ("RH & main-d'œuvre",        ["Puma", "BIP / BAPS"]),
     ("Terrain & intégration",    ["Quick Connect", "YELLOW", "Traktor"]),
-    ("Bureautique",              ["Excel", "Word"]),
+    ("Bureautique",              ["Excel", "Word", "Outlook"]),
 ]
 CORE = ["SharePoint", "Power BI"]
 
@@ -146,9 +400,36 @@ A_QUALIFIER = {
     "CEMEX":     ("qse", "Portail fournisseur béton"),
 }
 
+# Outils absents de la BDD, introduits par le brief métier. Ils sont marqués comme
+# tels sur les planches et dans le référentiel : la base d'entretiens ne les
+# documente pas, leur nature et leur alimentation restent à confirmer.
+HORS_BDD = {
+    "Outlook":                 ("externe", "manuel", "Microsoft",
+                                "Messagerie : demandes de MO et envoi des situations"),
+    "Chorus":                  ("externe", "manuel", "AIFE",
+                                "Facturation par le maître d'ouvrage"),
+    "Appli bancaire":          ("externe", "manuel", "",
+                                "Dispatch des paiements entre partenaires"),
+    "BYCN":                    ("interne", "?", "Bouygues Construction",
+                                "Paye des compagnons Bouygues"),
+    "BYMAT":                   ("interne", "auto", "Bouygues Construction",
+                                "Extraction des coûts matériel pour le contrôle budgétaire"),
+    "Cority":                  ("externe", "manuel", "Cority",
+                                "Reporting des événements sécurité : ATB, AT, PAT, HIPO"),
+    "Quick Connect Sécurité":  ("interne", "manuel", "Bouygues Construction",
+                                "Suivi IDV, addictions et organismes"),
+    "Lotus":                   ("?", "manuel", "",
+                                "Comptage des personnes présentes en tunnel"),
+    "Heures Travaillées":      ("interne", "manuel", "",
+                                "Volume d'heures exposées, dénominateur des taux sécurité"),
+    "HRMYOU / Global HR":      ("interne", "manuel", "Bouygues Construction",
+                                "Outils RH groupe : dossier collaborateur"),
+}
+
 # Flux reconstruits depuis « Alimente quel outil » / « Alimenté par qui ».
 # Le caractère automatique ou manuel d'un flux est celui du mode d'alimentation
-# relevé pour l'outil de destination.
+# relevé pour l'outil de destination. Ils restent strictement adossés à la BDD :
+# les échanges décrits par le brief sont portés par PROCESS, pas ajoutés ici.
 FLOWS = [
     ("s:Excel",             "s:SharePoint",  "Dépôt des tableaux de suivi"),
     ("s:Excel",             "s:Power BI",    "Alimentation de la cabine de pilotage"),
@@ -160,11 +441,10 @@ FLOWS = [
     ("s:BIP / BAPS",        "s:Puma",        "Heures chantier vers la paie"),
     ("trv:ERP MAT",         "s:Power BI",    "Inventaire matériel"),
     ("qse:Wastemarket Place", "s:Power BI",  "Suivi des déchets"),
-    ("s:Trimble Connect",   "top:AutoCAD",   "Maquettes vers le dessin 2D"),
-    ("s:Trimble Connect",   "top:Cyclone 3DR", "Maquettes vers le nuage de points"),
+    ("s:Trimble Connect",   "top:La Scene",  "Plans vers l'assemblage des scans"),
+    ("s:Trimble Connect",   "top:Cyclone 3DR", "Maquettes vers le contrôle de conformité"),
     ("s:Trimble Connect",   "qse:IDCapture", "Repérage des constats — flux indirect, par captures d'écran", False),
-    ("top:La Scene",        "top:Cyclone 3DR", "Scans vers le retraitement"),
-    ("top:AutoCAD",         "top:Covadis",   "Plans vers les calculs topo"),
+    ("top:La Scene",        "top:Covadis",   "Scans assemblés vers les nuages de points"),
 ]
 
 
@@ -239,6 +519,25 @@ def top(counter, default="?"):
     return counter.most_common(1)[0][0] if counter else default
 
 
+def chain_tools(mission):
+    """Outils cités par une chaîne, dans l'ordre de lecture, sans doublon."""
+    refs = ([e.get("tool") for e in mission.get("in", [])] +
+            [s.get("tool") for s in mission.get("steps", [])] +
+            [mission.get("out", {}).get("tool")])
+    out = []
+    for n in refs:
+        if n and n not in out:
+            out.append(n)
+    return out
+
+
+def mission_labels(pid):
+    """Libellés de mission d'un pôle, quel que soit son modèle."""
+    if pid in PROCESS:
+        return [m["label"] for m in PROCESS[pid]]
+    return [e[0] for e in MISSIONS.get(pid, [])]
+
+
 def build_model(T):
     socle_names = [n for _, group in SOCLE for n in group] + CORE
 
@@ -257,7 +556,27 @@ def build_model(T):
     for name, (sid, usage) in A_QUALIFIER.items():
         tools.setdefault(name, {"ie": "?", "alim": "?", "ed": "", "mat": "",
                                 "svc": [sid], "nb": 1, "usage": usage,
-                                "socle": False, "todo": True})
+                                "socle": name in socle_names, "todo": True})
+    for name, (ie, alim, ed, usage) in HORS_BDD.items():
+        tools.setdefault(name, {"ie": ie, "alim": alim, "ed": ed, "mat": "",
+                                "svc": [], "nb": 0, "usage": usage,
+                                "socle": name in socle_names, "brief": True})
+
+    # Un pôle décrit par PROCESS ne retient que les outils cités dans ses chaînes :
+    # c'est la chaîne qui fait foi, pas la déclaration d'entretien. C'est ce qui
+    # retire AutoCAD de la Topographie et rattache Pablo au tunnel.
+    for pid, procs in PROCESS.items():
+        cited = {n for m in procs for n in chain_tools(m)}
+        unknown = cited - set(tools)
+        if unknown:
+            print(f"ATTENTION — {pid} : étape citant un outil inconnu : "
+                  f"{', '.join(sorted(unknown))}", file=sys.stderr)
+        for name, d in tools.items():
+            svc = set(d["svc"])
+            svc.add(pid) if name in cited else svc.discard(pid)
+            d["svc"] = sorted(svc)
+    for d in tools.values():
+        d["nb"] = len(d["svc"])
 
     services = []
     for s in SERVICES:
@@ -271,25 +590,27 @@ def build_model(T):
             return (sorted(n for n in uniq if not tools[n]["socle"]) +
                     sorted(n for n in uniq if tools[n]["socle"]))
 
-        missions, placed = [], set()
-        for entry in MISSIONS.get(pid, []):
-            label, fluxes, extra = entry[:3]
-            todo = entry[3] if len(entry) > 3 else False
-            names = {t for (sid, f, t) in PAIRS if sid == pid and f in fluxes}
-            names.update(extra)
-            ordered = order(names)
-            placed.update(ordered)
-            missions.append({"label": label, "todo": todo, "tools": ordered})
+        if pid in PROCESS:
+            missions = [{"label": m["label"], "todo": m.get("todo", False),
+                         "tools": chain_tools(m)} for m in PROCESS[pid]]
+        else:
+            missions, placed = [], set()
+            for entry in MISSIONS.get(pid, []):
+                label, fluxes, extra = entry[:3]
+                todo = entry[3] if len(entry) > 3 else False
+                names = {t for (sid, f, t) in PAIRS if sid == pid and f in fluxes}
+                names.update(extra)
+                ordered = order(names)
+                placed.update(ordered)
+                missions.append({"label": label, "todo": todo, "tools": ordered})
+            rest = [n for n in own if n not in placed]
+            if rest:
+                missions.append({"label": "Autres outils", "todo": True, "tools": order(rest)})
 
-        rest = [n for n in own if n not in placed]
-        if rest:
-            missions.append({"label": "Autres outils", "todo": True, "tools": order(rest)})
+        services.append(dict(s, tools=own, missions=missions,
+                             mode="process" if pid in PROCESS else "inventory"))
 
-        services.append(dict(s, tools=own, missions=missions))
-
-    missing = [e for f in FLOWS for e in f[:2]
-               if e.split(":", 1)[1] not in tools]
-
+    missing = [e for f in FLOWS for e in f[:2] if e.split(":", 1)[1] not in tools]
     if missing:
         print("ATTENTION — flux vers un outil inconnu :", set(missing), file=sys.stderr)
 
@@ -301,8 +622,42 @@ def build_model(T):
         flows.append({"from": src, "to": dst, "obj": obj, "map": on_map,
                       "alim": tools.get(dst_tool, {}).get("alim", "?")})
 
+    # Les liens saisis dans PROCESS produisent les fils de la planche inter-services.
+    # Une seule saisie, deux rendus : le badge sur l'affiche et le fil sur la planche.
+    xflows, seen = [], set()
+    for pid, procs in PROCESS.items():
+        for m in procs:
+            for lk in m.get("links", []):
+                target = mission_labels(lk["to"])
+                if lk["mission"] not in target:
+                    print(f"ATTENTION — lien {pid}/{m['label']} → {lk['to']} : "
+                          f"mission « {lk['mission']} » inconnue", file=sys.stderr)
+                    continue
+                here, there = f"{pid}:{m['label']}", f"{lk['to']}:{lk['mission']}"
+                src, dst = (here, there) if lk["at"] == "out" else (there, here)
+                if (src, dst) in seen:
+                    continue
+                seen.add((src, dst))
+                # Un enchaînement interne à un pôle n'est pas un flux inter-services :
+                # il reste en badge sur l'affiche et en ligne dans la matrice, mais
+                # n'est pas tracé — le fil repasserait par-dessus les missions.
+                xflows.append({"from": src, "to": dst, "obj": lk.get("obj", ""),
+                               "map": pid != lk["to"], "alim": "manuel"})
+
+    pos = {p: (r, c) for r, row in enumerate(XBOARD_ROWS) for c, p in enumerate(row)}
+    for f in xflows:
+        a, b = f["from"].split(":", 1)[0], f["to"].split(":", 1)[0]
+        if a == b or a not in pos or b not in pos:
+            continue
+        (ra, ca), (rb, cb) = pos[a], pos[b]
+        if abs(ra - rb) > 1 or (ra == rb and abs(ca - cb) > 1):
+            print(f"ATTENTION — planche inter-services : {a} et {b} ne sont pas voisins "
+                  f"dans XBOARD_ROWS, le fil traversera une carte", file=sys.stderr)
+
     return {"socle": [{"group": g, "tools": ts} for g, ts in SOCLE],
-            "core": CORE, "services": services, "tools": tools, "flows": flows}
+            "core": CORE, "services": services, "tools": tools, "flows": flows,
+            "process": PROCESS, "xflows": xflows,
+            "board": {"top": BOARD_TOP, "bottom": BOARD_BOTTOM, "xrows": XBOARD_ROWS}}
 
 
 def inject(model, html_path):
@@ -325,15 +680,25 @@ def main():
     inject(model, args.html)
 
     n_miss = sum(len(s["missions"]) for s in model["services"])
-    orphans = [(s["name"], m["tools"]) for s in model["services"]
-               for m in s["missions"] if m["label"] == "Autres outils"]
-    for name, outils in orphans:
-        print(f"  ! {name} : outils sans mission — {', '.join(outils)}", file=sys.stderr)
+    n_steps = sum(len(m["steps"]) for procs in PROCESS.values() for m in procs)
+    for s in model["services"]:
+        for m in s["missions"]:
+            if m["label"] == "Autres outils":
+                print(f"  ! {s['name']} : outils sans mission — "
+                      f"{', '.join(m['tools'])}", file=sys.stderr)
+    for n, d in sorted(model["tools"].items()):
+        if not d["svc"]:
+            print(f"  ! {n} : outil rattaché à aucun pôle", file=sys.stderr)
+
+    n_brief = sum(1 for d in model["tools"].values() if d.get("brief"))
     n_int = sum(1 for d in model["tools"].values() if d["ie"] == "interne")
     n_ext = sum(1 for d in model["tools"].values() if d["ie"] == "externe")
     n_auto = sum(1 for d in model["tools"].values() if d["alim"] in ("auto", "mixte"))
-    print(f'{len(model["tools"])} outils · {len(model["socle"])} groupes socle · '
-          f'{len(model["services"])} pôles · {n_miss} missions · {len(model["flows"])} flux · '
+    n_proc = sum(1 for s in model["services"] if s["mode"] == "process")
+    print(f'{len(model["tools"])} outils ({n_brief} hors BDD) · '
+          f'{len(model["socle"])} groupes socle · {len(model["services"])} pôles '
+          f'({n_proc} en chaînes) · {n_miss} missions · {n_steps} étapes · '
+          f'{len(model["flows"])} flux applicatifs · {len(model["xflows"])} flux inter-services · '
           f'{n_int} internes / {n_ext} externes · {n_auto} alimentés en automatique')
 
 
