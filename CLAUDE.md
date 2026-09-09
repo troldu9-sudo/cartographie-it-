@@ -10,7 +10,7 @@ Tout le contenu visible est en **français** ; les commentaires du code aussi.
 
 ```
 data/BDD_Cartographie_Outils_IT.xlsx
-        │  data/build_data.py     (agrège, normalise, calcule les missions)
+        │  data/build_data.py     (agrège, normalise, calcule missions et chaînes)
         ▼
 index.html   ← const BDD = {...} injecté entre les marqueurs « DONNÉES BDD »
         │  pptx/build.py + pptx/extract.js   (Playwright mesure le DOM réel)
@@ -21,7 +21,9 @@ dist/Cartographie-Outils-IT.pptx
 **`index.html` est la source de vérité géométrique.** `build.py` ouvre la page
 dans Chromium, relève la position réelle de chaque élément via `extract.js`, et la
 rejoue en formes natives. Ne jamais coder de coordonnées en dur dans `build.py` :
-si la mise en page bouge, le PPTX suit tout seul.
+si la mise en page bouge, le PPTX suit tout seul. `scrape()` ramasse **un `.slide`
+par diapo, dans l'ordre du DOM** — ajouter une planche ne demande aucune
+modification de `build.py`.
 
 ## Commandes
 
@@ -33,66 +35,122 @@ python3 pptx/build.py --out dist/Cartographie-Outils-IT.pptx # index.html → pp
 python3 pptx/build.py --chromium /chemin/vers/chrome         # si Playwright n'a pas son binaire
 ```
 
-`build_data.py` signale sur stderr tout outil d'un pôle non rattaché à une
-mission (« outils sans mission ») — un signalement veut dire que `MISSIONS` est à
-compléter, pas que la sortie est cassée.
+`build_data.py` signale sur stderr, sans jamais casser la sortie : les outils d'un
+pôle non rattachés à une mission, les outils rattachés à aucun pôle, les étapes
+citant un outil inconnu, les liens visant une mission inexistante, et les paires de
+pôles non voisines dans la grille inter-services. Un signalement veut dire qu'une
+constante est à compléter.
+
+## Les deux modèles de mission — la distinction structurante
+
+| Modèle | Constante | Pôles | Rendu |
+|---|---|---|---|
+| **chaîne** | `PROCESS` | daf, ctr, trv, tun, top, sec | entrée → étapes ordonnées → finalité |
+| **inventaire** | `MISSIONS` | dir, met, qse | « Début à documenter » → outils → « Finalité à documenter » |
+
+La BDD ne porte **pas** l'ordre des étapes : `PROCESS` est saisi à la main depuis le
+brief métier, comme `FLOWS`. Un pôle présent dans `PROCESS` ignore `MISSIONS` et ne
+retient **que** les outils cités dans ses chaînes — c'est ce mécanisme qui a retiré
+AutoCAD de la Topographie et rattaché Pablo au tunnel. Retirer un pôle de `PROCESS`
+le fait retomber sur `MISSIONS` sans autre modification.
+
+Forme d'une mission de `PROCESS` :
+
+```python
+{"label": "Contrôle budgétaire",
+ "note": "conjoint avec les Travaux",      # sous-titre ; "todo": True le remplace
+ "in":    [{"lab": "Extraction matériel", "tool": "BYMAT"}],   # tool facultatif
+ "steps": [{"act": "Constitution de la PC100", "tool": "Excel"}],
+ "out":   {"lab": "Budget par atelier arbitré"},
+ "links": [{"at": "out", "to": "trv", "mission": "Contrôle budgétaire", "obj": "PC100…"}]}
+```
+
+`at` vaut `"in"`, `"out"` ou l'index d'une étape. **Un `link` produit deux choses à
+la fois** : le badge posé sur l'affiche du pôle, et le fil tracé sur la planche
+« Flux inter-services ». Une seule saisie, deux rendus — ne jamais les désynchroniser.
+`mission` doit correspondre exactement à un libellé du pôle cible, `PROCESS` ou
+`MISSIONS` : `build_data.py` refuse et signale le reste.
 
 ## Modèle de données (`const BDD` dans index.html)
 
 | Clé | Contenu |
 |---|---|
-| `services[]` | les 7 pôles : `{id, name, kicker, missions[]}` |
-| `services[].missions[]` | `{label, todo, tools[]}` — `todo` = mission proposée, non documentée en BDD |
+| `services[]` | les 9 pôles : `{id, name, kicker, tools[], missions[], mode}` |
+| `services[].mode` | `"process"` ou `"inventory"` — commande le rendu de l'affiche |
+| `services[].missions[]` | `{label, todo, tools[]}` — vue à plat, quel que soit le modèle |
+| `process{}` | par pôle en chaînes : les missions détaillées ci-dessus |
 | `socle[]` | groupes du socle commun : `{group, tools[]}` |
 | `core[]` | SharePoint, Power BI (bloc « socle de données ») |
-| `tools{}` | par outil : `{ie, alim, ed, svc[], nb, socle, todo}` |
-| `flows[]` | `{from, to, obj, alim, map}` |
+| `tools{}` | par outil : `{ie, alim, ed, svc[], nb, socle, todo?, brief?}` |
+| `flows[]` | flux applicatifs d'outil à outil : `{from, to, obj, alim, map}` |
+| `xflows[]` | échanges de mission à mission, dérivés des `links` |
+| `board{}` | `{top[], bottom[], xrows[][]}` — répartition des cartes |
 
-Extrémités de flux : `"s:Excel"` pour le socle, `"daf:Basware"` pour un outil de
-pôle. `map: false` documente le flux dans la matrice sans le tracer sur la carte
-(utilisé pour le flux indirect Trimble Connect → IDCapture, par captures d'écran).
+`brief: true` marque un outil venu du brief et absent de la BDD (`HORS_BDD`) : il
+s'affiche en pointillés, porte « hors BDD · brief » et son nom est coloré dans le
+référentiel.
 
-Identifiants DOM : `b1-s-{slug}` (socle) et `b1-t-{pôle}-{slug}` (outil de pôle).
-Un outil servant plusieurs missions d'un même pôle voit ses occurrences suivantes
-suffixées `-2`, `-3` — la première garde l'identifiant visé par les flux.
+Extrémités de `flows` : `"s:Excel"` pour le socle, `"daf:Basware"` pour un outil de
+pôle. Extrémités de `xflows` : `"daf:Contrôle budgétaire"` — **une mission**, pas un
+outil. `map: false` documente sans tracer : pour `flows`, le flux indirect
+Trimble Connect → IDCapture ; pour `xflows`, les enchaînements internes à un pôle.
+
+Identifiants DOM : `{bid}-s-{slug}` (socle), `{bid}-t-{pôle}-{slug}` (outil ou
+mission). `bid` vaut `b1` (cartographie), `x` (flux inter-services), `f-{pôle}`
+(affiches). **Un `bid` distinct par planche est obligatoire** : sinon
+`getElementById` renvoie l'élément de la planche 1 et les fils partent au mauvais
+endroit.
 
 ## Où intervenir
 
 | Besoin | Endroit |
 |---|---|
-| Missions, libellés, rattachements | `MISSIONS` dans `data/build_data.py` |
+| Chaînes de flux, étapes, finalités, interconnexions | `PROCESS` dans `data/build_data.py` |
+| Missions des pôles sans processus recueilli | `MISSIONS` |
 | Composition des pôles | `SERVICE` + `SERVICES` |
+| Outils du brief absents de la BDD | `HORS_BDD` |
 | Composition du socle | `SOCLE` + `CORE` |
-| Flux | `FLOWS` |
+| Flux applicatifs | `FLOWS` |
 | Libellés d'outils saisis en vrac | `ALIAS` |
-| Répartition haut/bas des pôles | `BOARD` en tête du script de `index.html` |
-| Couleurs | `--met --top --tun --trv --qse --dir --daf --core` en tête du CSS |
+| Répartition des cartes, planche 1 | `BOARD_TOP` + `BOARD_BOTTOM` |
+| Grille de la planche inter-services | `XBOARD_ROWS` |
+| Ordre des affiches | `AFFICHES` dans `index.html` |
+| Couleurs | `--met --top --tun --trv --ctr --qse --dir --daf --sec --core` en tête du CSS |
 
-## Mise en page de la planche 1
+## Les 13 planches
+
+1. Cartographie applicative — 9 pôles, socle en bandeau, flux d'outil à outil
+2. Flux inter-services — les missions en nœuds, les `xflows` en fils
+3-11. Affiches services, dans l'ordre `AFFICHES` : dir, daf, ctr, met, trv, tun, top, qse, sec
+12. Matrice des flux — les deux tableaux, applicatif et inter-services
+13. Référentiel des outils
+
+### Mise en page
 
 Format natif 1600 × 900 px = 13,333 × 7,5 po (1 px = 0,6 pt = 7620 EMU).
 
-Quatre pôles techniques en haut, socle en **bandeau horizontal** au centre, trois
-pôles support en bas. Ce n'est pas un choix esthétique : 31 missions et ~110
-pastilles ne tiennent pas dans une mise en page à socle vertical et deux colonnes.
-Deux leviers ont rendu la page unique possible, à préserver si le volume grandit :
+`.board` et `.affiche` occupent la même zone. `.board` répartit ses rangées en
+`space-between` avec des rangées à hauteur de contenu : **les couloirs entre rangées
+sont l'espace de routage des fils**, les resserrer ramène les croisements.
 
-- les outils du socle mobilisés par une mission sont **cités en ligne**
-  (« via Excel · Power BI ») au lieu d'être répétés en pastilles ;
-- les cartes de la rangée du bas (larges) affichent leurs missions **sur deux
-  colonnes** (`.card.wide`).
+Une affiche en chaînes : une `.pline` par mission, `flex:1 1 0` plafonné à 210 px,
+`space-evenly`. Les blocs `.pin` / `.pstep` / `.pout` se partagent la largeur
+restante à parts égales — c'est ce qui **aligne verticalement les colonnes entrée et
+finalité d'une bande à l'autre**, et rend l'affiche scannable. Jusqu'à 8 blocs par
+chaîne (`137 + 7×(20+137) = 1236 px` sur 1326 px utiles) ; la plus longue aujourd'hui
+en compte 7 (Contrat, gestion des encaissements). Six bandes au maximum par affiche.
 
-Si le contenu déborde à nouveau, le repli déjà éprouvé est de scinder la
-cartographie en deux planches (pôles techniques / pôles support), le socle étant
-repris au centre de chacune — voir l'historique git.
+Sur l'affiche « inventaire », `.pin` et `.pout` sont à largeur fixe (152 px) : en
+`flex:1 1 0` ils avalaient toute la bande dès qu'une mission ne comptait que deux
+outils.
 
 ## Connecteurs
 
 Tracés en Bézier cubique unique (une seule courbe par flux : le générateur PPTX
 n'émet qu'un `cubicBezTo`). Le routage choisit parmi trois cas :
 
-1. **inter-zones** (rangée de pôles ↔ bandeau) → vertical, du bord horizontal le
-   plus proche de la cible ;
+1. **inter-zones ou inter-rangées** → vertical, du bord horizontal le plus proche
+   de la cible ;
 2. **pastilles alignées verticalement** → arc par le couloir central du conteneur,
    pour ne pas traverser les pastilles intermédiaires ;
 3. **sinon** → S horizontal ; en dessous de 26 px d'écart, trait droit.
@@ -100,15 +158,33 @@ n'émet qu'un `cubicBezTo`). Le routage choisit parmi trois cas :
 Les extrémités partagées sont réparties verticalement par `spread()`, triées selon
 la position de l'extrémité opposée : c'est ce qui évite les croisements.
 
+Sur la planche inter-services, `fan()` décale en plus le point de sortie
+horizontalement selon le **rang de la mission dans sa carte**. Sans lui, toutes les
+missions d'une carte partagent le même centre horizontal et leurs fils se
+superposent sur le bord de la carte.
+
+**`XBOARD_ROWS` n'est pas cosmétique.** Une courbe unique ne sait pas contourner :
+un fil ne reste lisible qu'entre deux cartes voisines — même rangée mitoyenne, ou
+rangées consécutives. Ajouter un `link` entre deux pôles éloignés dans la grille
+fait traverser une carte ; `build_data.py` le signale, la réponse est de réordonner
+la grille, pas d'ignorer l'avertissement.
+
 ## Pièges vérifiés — ne pas les redécouvrir
 
 **Métriques de police.** Chromium compose ici en DejaVu Sans, PowerPoint en
-Calibri. Tout texte exporté peut être plus large que mesuré.
-- Centrer le texte des pastilles (`text-align:center`) : l'écart devient
-  symétrique au lieu de déborder à droite.
+Calibri. Tout texte exporté peut être plus large que mesuré. Ces défauts
+n'apparaissent **jamais** dans le rendu HTML : seule la conversion en PDF les
+révèle.
+- Centrer le texte des pastilles et des blocs (`text-align:center`) : l'écart
+  devient symétrique au lieu de déborder à droite.
 - Ne jamais poser deux fragments de texte côte à côte en comptant sur la largeur
   mesurée : ils se chevauchent. Soit un seul paragraphe multi-runs, soit une
-  gouttière large.
+  gouttière large. Les titres de section de la planche 12 étaient en `display:flex`
+  avec leur compteur : les deux fragments se sont chevauchés à l'export. Repassés en
+  `display:block` avec un `<em>` inline, ils fusionnent en un paragraphe.
+- Les badges d'interconnexion tiennent sur **deux lignes** (`<br>` entre le pôle et
+  la mission) : sur une seule, « → Sécurité · Accueil, formation et habilitations »
+  débordait de son bloc.
 - Les libellés de missions sur deux colonnes ont déjà débordé d'une colonne à
   l'autre : d'où les libellés courts et la gouttière à 26 px.
 
@@ -118,7 +194,14 @@ Calibri. Tout texte exporté peut être plus large que mesuré.
 - `inlineRuns()` fusionne les fragments inline en un seul paragraphe, mais
   **abandonne** si l'élément contient un `<br>` ou un descendant peint (pastille,
   puce) : ces éléments sont exportés comme formes à leur position propre, le texte
-  ne peut pas être fusionné avec eux.
+  ne peut pas être fusionné avec eux. Le repli ligne par ligne est correct — c'est
+  même lui qu'on recherche en posant un `<br>`.
+- La casse CSS (`text-transform`) doit être appliquée au texte propre de l'élément
+  autant qu'à celui de ses enfants ; sinon un titre en capitales ressort en
+  minuscules dans le PPTX.
+- Le trait pointillé se lit sur la classe `manuel` posée par `index.html`, pas sur
+  une classe `dashed` : la chercher a longtemps fait sortir tous les flux en trait
+  plein.
 - Le texte enrichi est positionné sur la **boîte de contenu** (hors padding),
   sinon il se décale de la valeur du padding.
 
@@ -129,37 +212,50 @@ Calibri. Tout texte exporté peut être plus large que mesuré.
   relatifs à la boîte englobante de la courbe, pas à la planche.
 - Renseigner remplissage et contour **avant** l'ombre : `effectLst` doit rester le
   dernier enfant de `spPr`.
+- `add_text` pose `word_wrap=False` avec 90 px de marge : un texte trop long
+  déborde silencieusement au lieu de se replier. C'est la contrainte qui impose des
+  libellés courts.
 
-**Regex de slug** : la plage de marques combinantes doit rester écrite
-`[\u0300-\u036f]`. Avec les caractères combinants littéraux, la regex ne
+**Environnement.** Le répertoire `pptx/` du dépôt masque le paquet `python-pptx`
+lorsqu'on teste `import pptx` depuis la racine : la vérification passe alors qu'il
+n'est pas installé. Tester depuis un autre répertoire.
+
+**Regex de slug** : la plage de marques combinantes doit rester écrite `[\u0300-\u036f]`. Avec les caractères combinants littéraux, la regex ne
 survit pas à une réécriture du fichier et `slug()` cesse de dépouiller les
 accents — les identifiants DOM ne correspondent alors plus aux flux.
 
 ## Vérification avant de livrer
 
-1. `python3 data/build_data.py` — vérifier le décompte (7 pôles, 31 missions,
-   54 outils, 15 flux) et l'absence d'outil sans mission.
-2. Capturer les 3 planches avec Playwright et **les regarder** : débordement de
-   carte, chevauchement libellé/pastille, fil qui traverse une carte, erreurs JS
-   en console.
+1. `python3 data/build_data.py` — vérifier le décompte (9 pôles, 37 missions,
+   64 outils, 14 flux applicatifs, 18 flux inter-services) et les avertissements.
+2. Capturer les **13 planches** avec Playwright et **les regarder**. Contrôler en
+   plus par script deux choses que l'œil rate : qu'aucun élément ne sorte de son
+   conteneur (`.wrap`, `.affiche`, `.board` — pas seulement de la planche), et
+   qu'aucune erreur ne remonte en console.
 3. `python3 pptx/build.py` puis `validate.py` du skill pptx.
 4. Convertir le PPTX en PDF (LibreOffice, paquet `libreoffice-impress` requis) et
-   inspecter chaque page : c'est là que les défauts de métriques de police
-   apparaissent, jamais dans le rendu HTML.
+   inspecter chaque page : c'est là et nulle part ailleurs que les défauts de
+   métriques de police apparaissent.
 
 ## Décisions à ne pas défaire sans arbitrage
 
 - **Composition du socle commun** : la colonne `Nature` de la BDD est
   contradictoire d'un entretien à l'autre. Le socle retenu = outils
   majoritairement tagués socle + plateformes transverses de la cartographie
-  d'origine (Excel, Word, SharePoint, Power BI, E-Paraph, DocuSign).
+  d'origine (Excel, Word, SharePoint, Power BI, E-Paraph, DocuSign), plus Outlook,
+  que le brief fait porter la commande de MO et l'envoi des situations.
+- **Contrat est un pôle** : le contract management était rattaché à la DAF ; il est
+  autonome depuis que la chaîne de facturation partenaire circule explicitement
+  entre les deux.
 - **Nature des flux** : la BDD ne qualifie pas l'automatisation flux par flux. Un
   flux est dit automatisé quand son outil de **destination** est alimenté
-  automatiquement.
-- **Missions proposées** : Topographie, Tunnel et les outils Environnement n'ont
-  aucune valeur `FLUX` en BDD. Leurs missions sont déduites de la colonne *Usage*
-  et marquées `todo` — ne pas les présenter comme documentées.
+  automatiquement. Les `xflows`, issus du brief, sont tous déclarés manuels.
+- **Missions proposées** : les missions du tunnel sont décalquées de celles des
+  Travaux et marquées `todo` — ne pas les présenter comme documentées.
 - **Répétitions assumées** : un outil apparaît dans plusieurs pôles ou missions
   quand plusieurs l'ont déclaré. C'est voulu, la carte est organisée par pôle.
+- **Enchaînements internes non tracés** : un `link` d'un pôle vers lui-même reste
+  en badge et en ligne de tableau, mais n'est pas dessiné sur la planche
+  inter-services — le fil repasserait par-dessus les missions de la carte.
 - `archive/` conserve la première version, bâtie sur le seul PDF initial. Ne pas
   la régénérer, elle n'est plus alimentée par la BDD.
