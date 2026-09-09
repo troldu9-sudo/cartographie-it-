@@ -116,7 +116,10 @@ window.__extractSlide = function (slideSelector) {
     const runs = [];
     for (const n of el.childNodes) {
       if (n.nodeType === 3) {
-        const t = n.nodeValue.replace(/\s+/g, " ");
+        let t = n.nodeValue.replace(/\s+/g, " ");
+        /* la casse CSS n'était appliquée qu'aux enfants : le texte porté par
+           l'élément lui-même ressortait en minuscules dans le PPTX */
+        if (getComputedStyle(el).textTransform === "uppercase") t = t.toUpperCase();
         if (t) runs.push(Object.assign({ t: t }, typo(el)));
       } else if (n.nodeType === 1) {
         const kcs = getComputedStyle(n);
@@ -226,7 +229,9 @@ window.__extractSlide = function (slideSelector) {
               [n[4] + B.x, n[5] + B.y], [n[6] + B.x, n[7] + B.y]],
         color: parseColor(getComputedStyle(p).stroke),
         width: parseFloat(getComputedStyle(p).strokeWidth),
-        dashed: p.classList.contains("dashed")
+        /* index.html pose « wire manuel », jamais « dashed » : sans cette classe-là,
+           tous les flux sortaient en trait plein dans le PPTX. */
+        dashed: p.classList.contains("manuel")
       });
     });
     slide.querySelectorAll("svg.wires circle.port").forEach(c => {
